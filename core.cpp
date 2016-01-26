@@ -18,7 +18,7 @@ void Core::setCurrentFileName(const QString &value)
 void Core::parseCurrentFile()
 {
     QFileInfo fileInfo(currentFileName);
-    if (fileInfo.completeSuffix()==RRI_FILES_EXT){
-        model=parseRRIFile(currentFileName);
+    if (fileInfo.completeSuffix().compare(RRI_FILES_EXT)){
+       // model=parseRRIFile(currentFileName);
     }
 }
