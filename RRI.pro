@@ -18,12 +18,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     qcustomplot.cpp \
     csv.cpp \
-    core.cpp
+    core.cpp \
+    microscopicmodel.cpp \
+    rrimodel.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
     csv.h \
     core.h \
-    constants.h
+    constants.h \
+    microscopicmodel.h \
+    rrimodel.h
 
 FORMS    += mainwindow.ui

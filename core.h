@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QFileInfo>
 #include "constants.h"
+#include "rrimodel.h"
 
 class Core
 {
@@ -16,6 +17,7 @@ public:
 
 private:
     QString currentFileName;
+    RRIModel currentModel;
 };
 
 #endif // CORE_H

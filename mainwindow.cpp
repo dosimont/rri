@@ -16,5 +16,5 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionOpen_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open File"), QDir::currentPath(), tr("RRI (*.rri);; All files (*.*)"));
+        tr("Open File"), QDir::currentPath(), tr("RRI file (*.rri);; All files (*.*)"));
 }
