@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     csv.cpp \
     core.cpp \
     microscopicmodel.cpp \
-    rrimodel.cpp
+    rrimodel.cpp \
+    rriobject.cpp \
+    biqmap.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -28,6 +30,8 @@ HEADERS  += mainwindow.h \
     core.h \
     constants.h \
     microscopicmodel.h \
-    rrimodel.h
+    rrimodel.h \
+    rriobject.h \
+    biqmap.h
 
 FORMS    += mainwindow.ui
