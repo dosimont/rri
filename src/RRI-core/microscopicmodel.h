@@ -2,15 +2,18 @@
 #define MICROSCOPICMODEL_H
 
 #include <QObject>
+#include <vector>
+
+using std::vector;
 
 class MicroscopicModel
 {
 public:
     MicroscopicModel();
-    virtual void parseFile(QString fileName)=0;
-
+    ~MicroscopicModel();
 protected:
     QString currentFileName;
+    vector< vector< vector<double> > > microscopicModel;
 };
 
 #endif // MICROSCOPICMODEL_H

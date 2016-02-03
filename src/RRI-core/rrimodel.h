@@ -23,7 +23,6 @@ public:
     void parseFile(QString fileName);
 private:
     QVector<RRIObject*>* objects;
-    vector< vector<double> > microscopicModel;
     BiQMap<int, int> routineMap;
     void addToMicroscopicModel(RRIObject* object);
 };

@@ -1,10 +1,17 @@
 #include "rrimodel.h"
 
-RRIModel::RRIModel():objects(new QVector<RRIObject*>()),
-                             microscopicModel(vector< vector<double> >()),
+RRIModel::RRIModel():MicroscopicModel(),objects(new QVector<RRIObject*>()),
                              routineMap(BiQMap<int, int>())
 {
 
+}
+
+RRIModel::~RRIModel()
+{
+    for (int i=0; i<objects->size(); i++){
+        delete objects->at(i);
+    }
+    delete objects;
 }
 
 void RRIModel::parseFile(QString fileName)
@@ -39,12 +46,13 @@ void RRIModel::parseFile(QString fileName)
 void RRIModel::addToMicroscopicModel(RRIObject *object)
 {
     while (microscopicModel.size()<(unsigned int) object->getSample()){
-        microscopicModel.push_back(vector<double>());
+        microscopicModel.push_back(vector< vector<double> >());
     }
     for (unsigned int i=0; i<microscopicModel.size();i++){
         while (microscopicModel[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())){
-            microscopicModel[i].push_back(0.0);
+            microscopicModel[i].push_back(vector<double>());
+            microscopicModel[i][microscopicModel[i].size()-1][0]=0.0;
         }
     }
-    microscopicModel[object->getSample()][routineMap.getFromValue(object->getRoutineId())]+=1.0;
+    microscopicModel[object->getSample()][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
 }

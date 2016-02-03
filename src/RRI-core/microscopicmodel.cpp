@@ -1,6 +1,6 @@
 #include "microscopicmodel.h"
 
-MicroscopicModel::MicroscopicModel()
+MicroscopicModel::MicroscopicModel():currentFileName(""),microscopicModel(vector< vector< vector<double> > >())
 {
 
 }

@@ -23,6 +23,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 unix {
-    target.path = /usr/bin
+    target.path = /usr/local/bin
     INSTALLS += target
 }

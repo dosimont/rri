@@ -17,7 +17,9 @@ SOURCES += biqmap.cpp \
     microscopicmodel.cpp \
     rrimodel.cpp \
     rriobject.cpp \
-    rricore.cpp
+    rricore.cpp \
+    macroscopicmodel.cpp \
+    omacroscopicmodel.cpp
 
 HEADERS += biqmap.h \
     csv.h \
@@ -26,13 +28,17 @@ HEADERS += biqmap.h \
     rriobject.h \
     rricore.h \
     constants.h \
-    rricore_global.h
+    rricore_global.h \
+    macroscopicmodel.h \
+    omacroscopicmodel.h
 
 unix {
-    target.path = /usr/lib
+    target.path = /usr/local/lib
     header_files.files = $$HEADERS
-    header_files.path = /usr/include/$$TARGET
+    header_files.path = /usr/local/include/$$TARGET
     INSTALLS += target \
                 header_files
 }
 
+
+unix:!macx: LIBS += -llpaggreg
