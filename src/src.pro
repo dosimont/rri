@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    src
+    RRI-core \
+    RRI-ui

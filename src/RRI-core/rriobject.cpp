@@ -3,7 +3,7 @@
 RRIObject::RRIObject()
                      :id(0), sample(0), tsPercentage(0),
                      tsAbsolute(0), callstackLvl(0),
-                     routineId(0), routineName(0),
+                     routineId(0), routineName(""),
                      codelineId(0), codelineNumber(0)
 {
 
@@ -12,7 +12,7 @@ RRIObject::RRIObject()
 
 RRIObject::RRIObject(int id, int sample, double tsPercentage,
                      int tsAbsolute, int callstackLvl, int routineId,
-                     int routineName, int codelineId, int codelineNumber)
+                     QString routineName, int codelineId, int codelineNumber)
                      :id(id), sample(sample), tsPercentage(tsPercentage),
                      tsAbsolute(tsAbsolute), callstackLvl(callstackLvl),
                      routineId(routineId), routineName(routineName),
@@ -31,6 +31,11 @@ void RRIObject::setId(int value)
     id = value;
 }
 
+void RRIObject::setId(QString value)
+{
+    setId(value.toInt());
+}
+
 int RRIObject::getSample() const
 {
     return sample;
@@ -39,6 +44,11 @@ int RRIObject::getSample() const
 void RRIObject::setSample(int value)
 {
     sample = value;
+}
+
+void RRIObject::setSample(QString value)
+{
+    setSample(value.toInt());
 }
 
 double RRIObject::getTsPercentage() const
@@ -51,6 +61,11 @@ void RRIObject::setTsPercentage(double value)
     tsPercentage = value;
 }
 
+void RRIObject::setTsPercentage(QString value)
+{
+    setTsPercentage(value.toDouble());
+}
+
 int RRIObject::getTsAbsolute() const
 {
     return tsAbsolute;
@@ -59,6 +74,11 @@ int RRIObject::getTsAbsolute() const
 void RRIObject::setTsAbsolute(int value)
 {
     tsAbsolute = value;
+}
+
+void RRIObject::setTsAbsolute(QString value)
+{
+    setTsAbsolute(value.toInt());
 }
 
 int RRIObject::getCallstackLvl() const
@@ -71,6 +91,11 @@ void RRIObject::setCallstackLvl(int value)
     callstackLvl = value;
 }
 
+void RRIObject::setCallstackLvl(QString value)
+{
+    setCallstackLvl(value.toInt());
+}
+
 int RRIObject::getRoutineId() const
 {
     return routineId;
@@ -81,12 +106,17 @@ void RRIObject::setRoutineId(int value)
     routineId = value;
 }
 
-int RRIObject::getRoutineName() const
+void RRIObject::setRoutineId(QString value)
+{
+    setRoutineId(value.toInt());
+}
+
+QString RRIObject::getRoutineName() const
 {
     return routineName;
 }
 
-void RRIObject::setRoutineName(int value)
+void RRIObject::setRoutineName(QString value)
 {
     routineName = value;
 }
@@ -101,6 +131,11 @@ void RRIObject::setCodelineId(int value)
     codelineId = value;
 }
 
+void RRIObject::setCodelineId(QString value)
+{
+    setCodelineId(value.toInt());
+}
+
 int RRIObject::getCodelineNumber() const
 {
     return codelineNumber;
@@ -109,4 +144,9 @@ int RRIObject::getCodelineNumber() const
 void RRIObject::setCodelineNumber(int value)
 {
     codelineNumber = value;
+}
+
+void RRIObject::setCodelineNumber(QString value)
+{
+    setCodelineNumber(value.toInt());
 }
