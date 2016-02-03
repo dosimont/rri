@@ -3,6 +3,7 @@
 # Project created by QtCreator 2016-02-03T11:53:02
 #
 #-------------------------------------------------
+include(../../config.pri)
 
 QT       -= gui
 
@@ -30,7 +31,8 @@ HEADERS += biqmap.h \
 unix {
     target.path = /usr/lib
     header_files.files = $$HEADERS
-    header_files.path = usr/incude/$$TARGET
+    header_files.path = /usr/include/$$TARGET
     INSTALLS += target \
                 header_files
 }
+

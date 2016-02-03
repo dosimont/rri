@@ -3,6 +3,7 @@
 # Project created by QtCreator 2016-02-03T11:54:17
 #
 #-------------------------------------------------
+include(../../config.pri)
 
 QT       += core gui
 
@@ -20,3 +21,8 @@ HEADERS  += mainwindow.h \
     qcustomplot.h
 
 FORMS    += mainwindow.ui
+
+unix {
+    target.path = /usr/bin
+    INSTALLS += target
+}
