@@ -1,3 +1,6 @@
+# Binaries
+/bin
+
 # C++ objects and libs
 
 *.slo
@@ -29,6 +32,9 @@ Makefile*
 
 *.autosave
 
-#QtCtreator Qml
+# QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+# Vi
+*.swp
