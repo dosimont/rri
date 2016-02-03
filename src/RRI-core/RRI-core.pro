@@ -7,7 +7,7 @@ include(../../config.pri)
 
 QT       -= gui
 
-TARGET = RRI-core
+TARGET = rri
 TEMPLATE = lib
 
 DEFINES += CORE_LIBRARY
