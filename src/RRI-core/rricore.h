@@ -6,20 +6,27 @@
 #include "rricore_global.h"
 #include "constants.h"
 #include "rrimodel.h"
+#include "omacroscopicmodel.h"
+#include "parameters.h"
+
+using InputData::DataType;
 
 class CORESHARED_EXPORT RRICore
 {
 
 public:
     RRICore();
-    QString getCurrentFileName() const;
-    void setCurrentFileName(const QString &value);
-    void parseCurrentFile();
-    void parseFile(const QString &value);
+    void buildMicroscopicModel();
+    void buildMacroscopicModels();
+
+    Parameters getParameters() const;
 
 private:
-    QString currentFileName;
-    RRIModel currentModel;
+    Parameters parameters;
+    MicroscopicModel microscopicModel;
+    MacroscopicModel macroscopicModel;
+
+
 };
 
 #endif // RRICORE_H

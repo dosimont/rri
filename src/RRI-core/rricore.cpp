@@ -5,27 +5,32 @@ RRICore::RRICore()
 
 }
 
-QString RRICore::getCurrentFileName() const
+void RRICore::buildMicroscopicModel()
 {
-    return currentFileName;
-}
-
-void RRICore::setCurrentFileName(const QString &value)
-{
-    currentFileName = value;
-}
-
-void RRICore::parseCurrentFile()
-{
-    QFileInfo fileInfo(currentFileName);
-    if (fileInfo.completeSuffix().compare(RRI_FILE_EXT)){
-       currentModel=RRIModel();
-       currentModel.parseFile(currentFileName);
+    QFileInfo fileInfo(parameters.getCurrentFileName());
+    if (fileInfo.completeSuffix().compare(FILE_EXT_RRI)){
+        parameters.setAnalysisType(RRI);
+        microscopicModel=RRIModel();
+        ((RRIModel) microscopicModel).parseFile(parameters.getCurrentFileName());
     }
 }
 
-void RRICore::parseFile(const QString &value)
+void RRICore::initMacroscopicModels()
 {
-    setCurrentFileName(value);
-    parseCurrentFile();
+    switch (analysisType){
+       case RRI:macroscopicModel=OMacroscopicModel(microscopicModel);
+        break;
+       case DEFAULT:;
+    }
+}
+
+void RRICore::buildMacroscopicModels()
+{
+    macroscopicModel.computeQualities(parameters.getNormalize());
+    macroscopicModel.computeBestPartitions(parameters.getThreshold());
+}
+
+Parameters RRICore::getParameters() const
+{
+    return parameters;
 }

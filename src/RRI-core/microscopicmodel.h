@@ -11,9 +11,13 @@ class MicroscopicModel
 public:
     MicroscopicModel();
     ~MicroscopicModel();
+
+    vector<vector<vector<double> > > getMatrix() const;
+    void setMatrix(const vector<vector<vector<double> > > &value);
+
 protected:
     QString currentFileName;
-    vector< vector< vector<double> > > microscopicModel;
+    vector< vector< vector<double> > > matrix;
 };
 
 #endif // MICROSCOPICMODEL_H

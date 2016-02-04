@@ -19,7 +19,9 @@ SOURCES += biqmap.cpp \
     rriobject.cpp \
     rricore.cpp \
     macroscopicmodel.cpp \
-    omacroscopicmodel.cpp
+    omacroscopicmodel.cpp \
+    parameters.cpp \
+    part.cpp
 
 HEADERS += biqmap.h \
     csv.h \
@@ -30,7 +32,9 @@ HEADERS += biqmap.h \
     constants.h \
     rricore_global.h \
     macroscopicmodel.h \
-    omacroscopicmodel.h
+    omacroscopicmodel.h \
+    parameters.h \
+    part.h
 
 unix {
     target.path = /usr/local/lib

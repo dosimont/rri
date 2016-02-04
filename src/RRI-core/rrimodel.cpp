@@ -27,13 +27,13 @@ void RRIModel::parseFile(QString fileName)
         int i=0;
         for (stringList=csv.parseLine();stringList.size()>0;stringList=csv.parseLine()){
             RRIObject* tempObject=new RRIObject();
-            tempObject->setId(stringList[RRI_CSV_ID]);
-            tempObject->setSample(stringList[RRI_CSV_SAMPLE]);
-            tempObject->setTsPercentage(stringList[RRI_CSV_TS_PERCENTAGE]);
-            tempObject->setTsAbsolute(stringList[RRI_CSV_TS_ABSOLUTE]);
-            tempObject->setCallstackLvl(stringList[RRI_CSV_CALLSTACK_LVL]);
-            tempObject->setRoutineId(stringList[RRI_CSV_ROUTINE_ID]);
-            tempObject->setCodelineId(stringList[RRI_CSV_CODELINE_ID]);
+            tempObject->setId(stringList[CSV_RRI_ID]);
+            tempObject->setSample(stringList[CSV_RRI_SAMPLE]);
+            tempObject->setTsPercentage(stringList[CSV_RRI_TS_PERCENTAGE]);
+            tempObject->setTsAbsolute(stringList[CSV_RRI_TS_ABSOLUTE]);
+            tempObject->setCallstackLvl(stringList[CSV_RRI_CALLSTACK_LVL]);
+            tempObject->setRoutineId(stringList[CSV_RRI_ROUTINE_ID]);
+            tempObject->setCodelineId(stringList[CSV_RRI_CODELINE_ID]);
             if (!routineMap.containsValue(tempObject->getRoutineId())){
                 routineMap.add(i++,tempObject->getRoutineId());
             }
