@@ -19,6 +19,7 @@ class RRIModel : public MicroscopicModel
 {
 public:
     RRIModel();
+    RRIModel(MicroscopicModel);
     ~RRIModel();
     void parseFile(QString fileName);
 private:

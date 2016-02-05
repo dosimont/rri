@@ -9,25 +9,31 @@ void RRICore::buildMicroscopicModel()
 {
     QFileInfo fileInfo(parameters.getCurrentFileName());
     if (fileInfo.completeSuffix().compare(FILE_EXT_RRI)){
-        parameters.setAnalysisType(RRI);
-        microscopicModel=RRIModel();
-        ((RRIModel) microscopicModel).parseFile(parameters.getCurrentFileName());
+        parameters.setAnalysisType(InputData::RRI);
+        microscopicModel=new RRIModel();
+        RRIModel *castModel=dynamic_cast<RRIModel*>(microscopicModel);
+        castModel->parseFile(parameters.getCurrentFileName());
     }
 }
 
 void RRICore::initMacroscopicModels()
 {
-    switch (analysisType){
-       case RRI:macroscopicModel=OMacroscopicModel(microscopicModel);
+    switch (parameters.getAnalysisType()){
+       case InputData::RRI:macroscopicModel=new OMacroscopicModel(microscopicModel);
         break;
-       case DEFAULT:;
+       case InputData::DEFAULT:;
     }
 }
 
 void RRICore::buildMacroscopicModels()
 {
-    macroscopicModel.computeQualities(parameters.getNormalize());
-    macroscopicModel.computeBestPartitions(parameters.getThreshold());
+    macroscopicModel->computeQualities(parameters.getNormalize());
+    macroscopicModel->computeBestPartitions(parameters.getThreshold());
+}
+
+void RRICore::selectMacroscopicModel()
+{
+    macroscopicModel->computeBestPartition(parameters.getParameter());
 }
 
 Parameters RRICore::getParameters() const

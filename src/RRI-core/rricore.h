@@ -17,14 +17,16 @@ class CORESHARED_EXPORT RRICore
 public:
     RRICore();
     void buildMicroscopicModel();
+    void initMacroscopicModels();
     void buildMacroscopicModels();
+    void selectMacroscopicModel();
 
     Parameters getParameters() const;
 
 private:
     Parameters parameters;
-    MicroscopicModel microscopicModel;
-    MacroscopicModel macroscopicModel;
+    MicroscopicModel *microscopicModel;
+    MacroscopicModel *macroscopicModel;
 
 
 };

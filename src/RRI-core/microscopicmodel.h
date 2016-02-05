@@ -10,7 +10,7 @@ class MicroscopicModel
 {
 public:
     MicroscopicModel();
-    ~MicroscopicModel();
+    virtual ~MicroscopicModel();
 
     vector<vector<vector<double> > > getMatrix() const;
     void setMatrix(const vector<vector<vector<double> > > &value);

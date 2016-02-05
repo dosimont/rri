@@ -2,6 +2,7 @@
 #define PARAMETERS_H
 
 #include "constants.h"
+#include <QString>
 
 using InputData::DataType;
 

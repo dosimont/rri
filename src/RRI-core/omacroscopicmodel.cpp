@@ -7,7 +7,7 @@ OMacroscopicModel::OMacroscopicModel()
 
 void OMacroscopicModel::initializeAggregator()
 {
-    lpaggreg=OLPAggreg3(microscopicModel->getMicroscopicModel());
+    lpaggreg=OLPAggreg3(microscopicModel->getMatrix());
 
 }
 
@@ -18,8 +18,8 @@ void OMacroscopicModel::computeQualities(bool normalize)
 
 void OMacroscopicModel::computeBestPartitions(float threshold)
 {
-    parameters=QVector::fromStdVector(lpaggreg.getParameters(threshold));
-    qualities=QVector::fromStdVector(lpaggreg.getQualityList());
+    parameters=QVector<float>::fromStdVector(lpaggreg.getParameters(threshold));
+    qualities=QVector<Quality*>::fromStdVector(lpaggreg.getQualityList());
 }
 
 void OMacroscopicModel::computeBestPartition(float parameter)
@@ -42,14 +42,4 @@ void OMacroscopicModel::computeBestPartition(float parameter)
     }
     currentPart->setLastTimeSlice(i);
     parts.append(currentPart);
-}
-
-MicroscopicModel *OMacroscopicModel::getMicroscopicModel() const
-{
-    return microscopicModel;
-}
-
-void OMacroscopicModel::setMicroscopicModel(MicroscopicModel *value)
-{
-    microscopicModel = value;
 }
