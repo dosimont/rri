@@ -2,7 +2,12 @@
 
 Parameters::Parameters()
 {
-
+    currentFileName="";
+    analysisType=InputData::DEFAULT;
+    normalize=DEFAULT_PARAMETER_NORMALIZE;
+    threshold=DEFAULT_PARAMETER_THRESHOLD;
+    parameter=DEFAULT_PARAMETER_PARAMETER;
+    timesliceNumber=DEFAULT_PARAMETER_TIMESLICENUMBER;
 }
 
 QString Parameters::getCurrentFileName() const

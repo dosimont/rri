@@ -43,3 +43,8 @@ void OMacroscopicModel::computeBestPartition(float parameter)
     currentPart->setLastTimeSlice(i);
     parts.append(currentPart);
 }
+
+QVector<Part *> OMacroscopicModel::getParts() const
+{
+    return parts;
+}

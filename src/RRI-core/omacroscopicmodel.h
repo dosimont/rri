@@ -15,6 +15,8 @@ public:
     void computeBestPartitions(float threshold);
     void computeBestPartition(float parameter);
 
+    QVector<Part *> getParts() const;
+
 private:
     OLPAggreg3 lpaggreg;
     QVector<Part*> parts;

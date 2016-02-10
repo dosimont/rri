@@ -20,13 +20,14 @@ public:
     void initMacroscopicModels();
     void buildMacroscopicModels();
     void selectMacroscopicModel();
-
-    Parameters getParameters() const;
+    Parameters* getParameters() const;
+    MacroscopicModel* getMacroscopicModel() const;
+    MicroscopicModel* getMicroscopicModel() const;
 
 private:
-    Parameters parameters;
-    MicroscopicModel *microscopicModel;
-    MacroscopicModel *macroscopicModel;
+    Parameters* parameters;
+    MicroscopicModel* microscopicModel;
+    MacroscopicModel* macroscopicModel;
 
 
 };

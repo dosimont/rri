@@ -16,9 +16,7 @@ public:
     virtual void computeBestPartition(float parameter)=0;
     MicroscopicModel *getMicroscopicModel() const;
     void setMicroscopicModel(MicroscopicModel *value);
-
     QVector<Quality *> getQualities() const;
-
     QVector<float> getParameters() const;
 
 protected:
