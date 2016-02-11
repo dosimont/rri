@@ -5,6 +5,11 @@ Part::Part():firstTimeSlice(0), lastTimeSlice(0), totalTimeSlice(1)
 
 }
 
+Part::Part(int totalTimeSlice):firstTimeSlice(0), lastTimeSlice(0), totalTimeSlice(totalTimeSlice)
+{
+
+}
+
 int Part::getFirstTimeSlice() const
 {
     return firstTimeSlice;
@@ -42,12 +47,12 @@ void Part::setTotalTimeSlice(int value)
 
 double Part::getFirstRelative() const
 {
-    return (double) firstRelative/(double) totalTimeSlice;
+    return (double) firstTimeSlice/(double) totalTimeSlice;
 }
 
 double Part::getLastRelative() const
 {
-    return (double) (lastRelative+1)/(double) totalTimeSlice;
+    return (double) (lastTimeSlice+1)/(double) totalTimeSlice;
 }
 
 double Part::getSizeRelative() const

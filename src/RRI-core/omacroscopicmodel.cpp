@@ -32,7 +32,7 @@ void OMacroscopicModel::computeBestPartition(float parameter)
 {
     vector<int>partsTemp=lpaggreg.getParts(parameter);
     parts=QVector<Part*>();
-    Part* currentPart=new Part();
+    Part* currentPart=new Part(microscopicModel->getMatrix().size());
     currentPart->setFirstTimeSlice(0);
     int currentPartIndice=0;
     unsigned int i=0;
@@ -40,7 +40,7 @@ void OMacroscopicModel::computeBestPartition(float parameter)
         if (partsTemp[i+1]!=currentPartIndice){
             currentPart->setLastTimeSlice(i);
             parts.append(currentPart);
-            currentPart=new Part();
+            currentPart=new Part(microscopicModel->getMatrix().size());
             currentPart->setFirstTimeSlice(i+1);
             currentPartIndice=partsTemp[i+1];
         }
@@ -50,7 +50,7 @@ void OMacroscopicModel::computeBestPartition(float parameter)
     parts.append(currentPart);
 }
 
-QVector<Part *> OMacroscopicModel::getParts() const
+QVector<Part*> OMacroscopicModel::getParts() const
 {
     return parts;
 }

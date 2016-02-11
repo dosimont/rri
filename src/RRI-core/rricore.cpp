@@ -8,18 +8,14 @@ RRICore::RRICore():parameters(new Parameters())
 bool RRICore::buildMicroscopicModel()
 {
     QFileInfo fileInfo(parameters->getCurrentFileName());
-    if (fileInfo.suffix().compare(FILE_EXT_RRI)){
-        RRILOG("Extension Type is RRI");
+    if (fileInfo.suffix().compare(FILE_EXT_RRI)==0){
         parameters->setAnalysisType(InputData::RRI);
-        RRILOG("Analysis Type has been set");
         microscopicModel=new RRIModel();
-        RRILOG("RRIModel has been instancied");
         RRIModel *castModel=dynamic_cast<RRIModel*>(microscopicModel);
-        RRILOG("RRIModel dynamic cast");
-        castModel->parseFile(parameters->getCurrentFileName());
-        RRILOG("Parsing has been done");
+        castModel->parseFile(parameters->getCurrentFileName(), parameters->getTimesliceNumber());
+        return true;
     }else{
-        RRILOG("Extension Type is unknown");
+        return false;
     }
 }
 
@@ -47,6 +43,11 @@ void RRICore::selectMacroscopicModel()
 Parameters* RRICore::getParameters() const
 {
     return parameters;
+}
+
+QVector<Part*> RRICore::getParts()
+{
+    return dynamic_cast<OMacroscopicModel*>(macroscopicModel)->getParts();
 }
 
 MacroscopicModel *RRICore::getMacroscopicModel() const

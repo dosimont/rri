@@ -3,13 +3,14 @@
 
 #include <QObject>
 #include <QFileInfo>
-#include <QDebug>
+#include <QVector>
 #include "rricore_global.h"
 #include "constants.h"
 #include "rrimodel.h"
 #include "omacroscopicmodel.h"
 #include "parameters.h"
 #include "debug.h"
+#include "part.h"
 
 using InputData::DataType;
 
@@ -23,6 +24,7 @@ public:
     void buildMacroscopicModels();
     void selectMacroscopicModel();
     Parameters* getParameters() const;
+    QVector<Part*> getParts();
     MacroscopicModel* getMacroscopicModel() const;
     MicroscopicModel* getMicroscopicModel() const;
 

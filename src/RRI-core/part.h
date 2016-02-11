@@ -6,6 +6,7 @@ class Part
 {
 public:
     Part();
+    Part(int totalTimeSlice);
     int getFirstTimeSlice() const;
     void setFirstTimeSlice(int value);
 
