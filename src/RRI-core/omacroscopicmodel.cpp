@@ -5,6 +5,12 @@ OMacroscopicModel::OMacroscopicModel()
 
 }
 
+OMacroscopicModel::OMacroscopicModel(MicroscopicModel* microscopicModel):
+    MacroscopicModel(microscopicModel)
+{
+
+}
+
 void OMacroscopicModel::initializeAggregator()
 {
     lpaggreg=OLPAggreg3(microscopicModel->getMatrix());

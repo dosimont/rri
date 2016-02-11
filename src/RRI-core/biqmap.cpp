@@ -63,3 +63,5 @@ bool BiQMap<Key,Value>::containsValue(Value value)
 {
     return map2.contains(value);
 }
+
+template class BiQMap<int, int>;

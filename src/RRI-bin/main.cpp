@@ -2,7 +2,7 @@
 #include <QTextStream>
 #include <QFile>
 
-#include "../RRI-core/rricore.h"
+#include <rricore.h>
 
 
 int main(int argc, char *argv[])

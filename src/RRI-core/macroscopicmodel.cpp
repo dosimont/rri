@@ -5,6 +5,12 @@ MacroscopicModel::MacroscopicModel()
 
 }
 
+MacroscopicModel::MacroscopicModel(MicroscopicModel* microscopicModel):
+    microscopicModel(microscopicModel)
+{
+
+}
+
 MicroscopicModel *MacroscopicModel::getMicroscopicModel() const
 {
     return microscopicModel;

@@ -5,6 +5,11 @@ MicroscopicModel::MicroscopicModel():currentFileName(""),matrix(vector< vector< 
 
 }
 
+MicroscopicModel::~MicroscopicModel()
+{
+
+}
+
 vector<vector<vector<double> > > MicroscopicModel::getMatrix() const
 {
     return matrix;
