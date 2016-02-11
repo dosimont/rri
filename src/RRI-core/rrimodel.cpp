@@ -103,7 +103,7 @@ void RRIModel::buildWithPreAggregation(int timeSlices)
 
 void RRIModel::addToMicroscopicModel(RRIObject *object)
 {
-    while (matrix.size()<(unsigned int) object->getSample()){
+    while (matrix.size()<(unsigned int) object->getSample()+1){
         matrix.push_back(vector< vector<double> >());
     }
     for (unsigned int i=0; i<matrix.size();i++){
@@ -113,19 +113,17 @@ void RRIModel::addToMicroscopicModel(RRIObject *object)
             matrix[i][matrix[i].size()-1].push_back(0.0);
         }
     }
-    matrix[object->getSample()-1][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
+    matrix[object->getSample()][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
     //TODO change sample numeration
 }
 
 void RRIModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
 {
     for (unsigned int i=0; i<matrix.size();i++){
-        //TODO change sample numeration
         while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())+1){
             matrix[i].push_back(vector<double>());
             matrix[i][matrix[i].size()-1].push_back(0.0);
         }
     }
     matrix[timeSlice][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
-    //TODO change sample numeration
 }
