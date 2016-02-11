@@ -5,14 +5,21 @@ RRICore::RRICore():parameters(new Parameters())
 
 }
 
-void RRICore::buildMicroscopicModel()
+bool RRICore::buildMicroscopicModel()
 {
     QFileInfo fileInfo(parameters->getCurrentFileName());
-    if (fileInfo.completeSuffix().compare(FILE_EXT_RRI)){
+    if (fileInfo.suffix().compare(FILE_EXT_RRI)){
+        RRILOG("Extension Type is RRI");
         parameters->setAnalysisType(InputData::RRI);
+        RRILOG("Analysis Type has been set");
         microscopicModel=new RRIModel();
+        RRILOG("RRIModel has been instancied");
         RRIModel *castModel=dynamic_cast<RRIModel*>(microscopicModel);
+        RRILOG("RRIModel dynamic cast");
         castModel->parseFile(parameters->getCurrentFileName());
+        RRILOG("Parsing has been done");
+    }else{
+        RRILOG("Extension Type is unknown");
     }
 }
 
@@ -20,6 +27,7 @@ void RRICore::initMacroscopicModels()
 {
     switch (parameters->getAnalysisType()){
        case InputData::RRI:macroscopicModel=new OMacroscopicModel(microscopicModel);
+        macroscopicModel->initializeAggregator();
         break;
        case InputData::DEFAULT:;
     }

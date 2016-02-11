@@ -12,6 +12,7 @@
 #include "csv.h"
 #include "biqmap.h"
 #include "constants.h"
+#include "debug.h"
 
 using std::vector;
 

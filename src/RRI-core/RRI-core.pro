@@ -34,7 +34,8 @@ HEADERS += biqmap.h \
     macroscopicmodel.h \
     omacroscopicmodel.h \
     parameters.h \
-    part.h
+    part.h \
+    debug.h
 
 unix {
     target.path = /usr/local/lib

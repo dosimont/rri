@@ -3,11 +3,13 @@
 
 #include <QObject>
 #include <QFileInfo>
+#include <QDebug>
 #include "rricore_global.h"
 #include "constants.h"
 #include "rrimodel.h"
 #include "omacroscopicmodel.h"
 #include "parameters.h"
+#include "debug.h"
 
 using InputData::DataType;
 
@@ -16,7 +18,7 @@ class CORESHARED_EXPORT RRICore
 
 public:
     RRICore();
-    void buildMicroscopicModel();
+    bool buildMicroscopicModel();
     void initMacroscopicModels();
     void buildMacroscopicModels();
     void selectMacroscopicModel();

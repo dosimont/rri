@@ -25,13 +25,14 @@ void RRIModel::parseFile(QString fileName)
     currentFileName=fileName;
     QFile file(currentFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        //TODO exception
+        RRIERR("Input file can not be open");
         return;
     }else{
         CSV csv(&file);
+        RRILOG("CSV object has been initalized");
         QStringList stringList;
         int i=0;
-        for (stringList=csv.parseLine();stringList.size()>0;stringList=csv.parseLine()){
+        for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=new RRIObject();
             tempObject->setId(stringList[CSV_RRI_ID]);
             tempObject->setSample(stringList[CSV_RRI_SAMPLE]);
@@ -55,10 +56,12 @@ void RRIModel::addToMicroscopicModel(RRIObject *object)
         matrix.push_back(vector< vector<double> >());
     }
     for (unsigned int i=0; i<matrix.size();i++){
-        while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())){
+        //TODO change sample numeration
+        while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())+1){
             matrix[i].push_back(vector<double>());
-            matrix[i][matrix[i].size()-1][0]=0.0;
+            matrix[i][matrix[i].size()-1].push_back(0.0);
         }
     }
-    matrix[object->getSample()][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
+    matrix[object->getSample()-1][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
+    //TODO change sample numeration
 }
