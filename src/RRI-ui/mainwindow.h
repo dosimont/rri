@@ -12,6 +12,7 @@ enum State { STATE_DEFAULT, STATE_NEWFILE, STATE_TIMESLICE,
              STATE_PARAMETER, STATE_NOCHANGE };
 }
 
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

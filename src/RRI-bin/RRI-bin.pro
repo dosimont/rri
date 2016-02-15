@@ -11,7 +11,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp
+SOURCES += \
+    RRI-bin.cpp
 
 unix:!macx: LIBS += -L$$LPAGGREG_PATH/lib -llpaggreg
 unix:!macx: LIBS += -L$$DESTDIR -lrri

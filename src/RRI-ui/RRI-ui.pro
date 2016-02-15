@@ -13,9 +13,10 @@ TARGET = RRI-gui
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES +=\
         mainwindow.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    RRI-gui.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h
