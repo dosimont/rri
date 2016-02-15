@@ -35,17 +35,19 @@ void MainWindow::on_runButton_clicked()
 
 void MainWindow::on_homeButton_clicked()
 {
-    core.getParameters()->setParameter(1.0);
+    core.setP(rri::MAX);
     ui->pEdit->setText(core.getParameters()->getParameter());
     state=Ui::PARAMETER;
 }
 
 void MainWindow::on_previousButton_clicked()
 {
-
+    ui->pEdit->setText(core.previousP());
+    state=Ui::PARAMETER;
 }
 
 void MainWindow::on_nextButton_clicked()
 {
-
+    ui->pEdit->setText(core.nextP());
+    state=Ui::PARAMETER;
 }

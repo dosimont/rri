@@ -42,17 +42,37 @@ void RRICore::selectMacroscopicModel()
 
 float RRICore::getCurrentP()
 {
-
+    return parameters->getP();
 }
 
 float RRICore::nextP()
 {
-
+    if (currentPIndex!=-1){
+        if (currentPIndex<getPs().size()-1){
+            setCurrentPIndex(currentPIndex+1);
+        }
+    }else{
+        int i;
+        for (i=0; i<getPs.size()&&getPs()[i]<=getCurrentP();i++){
+        }
+        setCurrentPIndex(i);
+    }
+    return getCurrentP();
 }
 
 float RRICore::previousP()
 {
-
+    if (currentPIndex!=-1){
+        if (currentPIndex>1){
+            setCurrentPIndex(currentPIndex-1);
+        }
+    }else{
+        int i;
+        for (i=getPs.size()-1; i<&&getPs()[i]<=getCurrentP();i--){
+        }
+        setCurrentPIndex(i);
+    }
+    return getCurrentP();
 }
 
 Parameters* RRICore::getParameters() const
@@ -82,18 +102,34 @@ int RRICore::getCurrentPIndex() const
 
 void RRICore::setCurrentPIndex(int value)
 {
-    currentPIndex = value;
+    if (value > 0 && value <getPs().size()){
+        currentPIndex = value;
+        parameters->setP(getPs()[currentPIndex]);
+    }
 }
 
 void RRICore::setP(rri::PDefaultValue defaultValue)
 {
-
+    switch (defaultValue) {
+    case rri::MAX:setP(1.0);
+        break;
+    case rri::MIN:setP(0.0);
+        break;
+    default:setP(1.0);
+        break;
+    }
 }
 
 void RRICore::setP(float value)
 {
     parameters->setP(value);
-    p
+    currentPIndex=-1;
+    for (int i=0; i<getPs().size(); i++){
+        if (getPs()[i]==value){
+            currentPIndex=i;
+            break;
+        }
+    }
 }
 
 QVector<float> RRICore::getPs() const
