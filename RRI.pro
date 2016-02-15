@@ -19,4 +19,4 @@ RRI-gui.subdir  = src/RRI-gui
 RRI-gui.depends = RRI-core
 }
 
-QMAKE_CLEAN += $(TARGET) $(QMAKE_TARGET)
+QMAKE_CLEAN += $$QMAKE_TARGET $$DESTDIR\*

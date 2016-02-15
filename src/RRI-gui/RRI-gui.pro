@@ -34,5 +34,3 @@ unix {
     target.path = $$TARGET_PATH/bin
     INSTALLS += target
 }
-
-QMAKE_CLEAN += $(TARGET) $(QMAKE_TARGET)
