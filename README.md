@@ -16,7 +16,7 @@
 
 ## Compile
 
-*You can edit `options.pri` to enable or disable the compilation of the command line program and/or the GUI*
+*You can edit `options.pri` to enable or disable the compilation of subsidiary functionalities*
 
     $ qmake-qt4
     $ make
