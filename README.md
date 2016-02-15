@@ -9,7 +9,8 @@
 ## Get the sources
 
     $ git clone https://github.com/bsc-performance-tools/RRI.git
-  or
+or
+
     $ git clone git@github.com:bsc-performance-tools/RRI.git
     $ cd RRI
 
