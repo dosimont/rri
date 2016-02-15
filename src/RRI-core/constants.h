@@ -19,9 +19,17 @@
 #define DEFAULT_PARAMETER_PARAMETER 0
 #define DEFAULT_PARAMETER_TIMESLICENUMBER -1
 
+
+namespace rri {
+
 //Analysis type
-namespace InputData {
-    enum DataType { RRI, DEFAULT };
+    enum InputFileType { RRI, DEFAULT };
+
+//P default value
+    enum PDefaultValue { MAX, MIN };
 }
+
+
+
 
 #endif // CONSTANTS_H

@@ -4,7 +4,7 @@
 #include "constants.h"
 #include <QString>
 
-using InputData::DataType;
+using rri::InputFileType;
 
 class Parameters
 {
@@ -13,8 +13,8 @@ public:
     QString getCurrentFileName() const;
     void setCurrentFileName(const QString &value);
 
-    DataType getAnalysisType() const;
-    void setAnalysisType(const DataType &value);
+    InputFileType getAnalysisType() const;
+    void setAnalysisType(const InputFileType &value);
 
     bool getNormalize() const;
     void setNormalize(bool value);
@@ -30,7 +30,7 @@ public:
 
 private:
     QString currentFileName;
-    DataType analysisType;
+    InputFileType analysisType;
     bool normalize;
     float threshold;
     float p;

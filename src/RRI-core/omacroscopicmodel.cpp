@@ -24,7 +24,7 @@ void OMacroscopicModel::computeQualities(bool normalize)
 
 void OMacroscopicModel::computeBestPartitions(float threshold)
 {
-    parameters=QVector<float>::fromStdVector(lpaggreg.getParameters(threshold));
+    ps=QVector<float>::fromStdVector(lpaggreg.getParameters(threshold));
     qualities=QVector<Quality*>::fromStdVector(lpaggreg.getQualityList());
 }
 

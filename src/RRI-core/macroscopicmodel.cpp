@@ -26,7 +26,7 @@ QVector<Quality *> MacroscopicModel::getQualities() const
     return qualities;
 }
 
-QVector<float> MacroscopicModel::getParameters() const
+QVector<float> MacroscopicModel::getPs() const
 {
-    return parameters;
+    return ps;
 }

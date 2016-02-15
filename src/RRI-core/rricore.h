@@ -12,7 +12,7 @@
 #include "debug.h"
 #include "part.h"
 
-using InputData::DataType;
+using rri::InputFileType;
 
 class CORESHARED_EXPORT RRICore
 {
@@ -23,13 +23,19 @@ public:
     void initMacroscopicModels();
     void buildMacroscopicModels();
     void selectMacroscopicModel();
-    float getCurrentP();
-    float nextP();
-    float previousP();
     Parameters* getParameters() const;
     QVector<Part*> getParts();
     MacroscopicModel* getMacroscopicModel() const;
     MicroscopicModel* getMicroscopicModel() const;
+
+    float getCurrentP();
+    float nextP();
+    float previousP();
+    int getCurrentPIndex() const;
+    void setCurrentPIndex(int value);
+    void setP(rri::PDefaultValue defaultValue);
+    void setP(float value);
+    QVector<float> getPs() const;
 
 private:
     Parameters* parameters;

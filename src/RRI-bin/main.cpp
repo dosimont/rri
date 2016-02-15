@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
         }
         core.initMacroscopicModels();
         core.buildMacroscopicModels();
-        for (int i=0; i<core.getMacroscopicModel()->getParameters().size(); i++){
-            qualitiesStream<<core.getMacroscopicModel()->getParameters()[i]<<","
+        for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
+            qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()
                            <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
                return 2;
             }
             QTextStream pStream(&pFile);
-            core.getParameters()->setParameter(core.getMacroscopicModel()->getParameters()[i]);
+            core.getParameters()->setP(core.getMacroscopicModel()->getPs()[i]);
             core.selectMacroscopicModel();
             QVector<Part*> parts=core.getParts();
             for (int j=0; j< parts.size(); j++){

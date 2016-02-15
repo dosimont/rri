@@ -17,11 +17,11 @@ public:
     MicroscopicModel *getMicroscopicModel() const;
     void setMicroscopicModel(MicroscopicModel *value);
     QVector<Quality *> getQualities() const;
-    QVector<float> getParameters() const;
+    QVector<float> getPs() const;
 
 protected:
     QVector<Quality*> qualities;
-    QVector<float> parameters;
+    QVector<float> ps;
     MicroscopicModel* microscopicModel;
 };
 

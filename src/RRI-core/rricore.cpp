@@ -9,7 +9,7 @@ bool RRICore::buildMicroscopicModel()
 {
     QFileInfo fileInfo(parameters->getCurrentFileName());
     if (fileInfo.suffix().compare(FILE_EXT_RRI)==0){
-        parameters->setAnalysisType(InputData::RRI);
+        parameters->setAnalysisType(rri::RRI);
         microscopicModel=new RRIModel();
         RRIModel *castModel=dynamic_cast<RRIModel*>(microscopicModel);
         castModel->parseFile(parameters->getCurrentFileName(), parameters->getTimesliceNumber());
@@ -22,10 +22,10 @@ bool RRICore::buildMicroscopicModel()
 void RRICore::initMacroscopicModels()
 {
     switch (parameters->getAnalysisType()){
-       case InputData::RRI:macroscopicModel=new OMacroscopicModel(microscopicModel);
+       case rri::RRI:macroscopicModel=new OMacroscopicModel(microscopicModel);
         macroscopicModel->initializeAggregator();
         break;
-       case InputData::DEFAULT:;
+       case rri::DEFAULT:;
     }
 }
 
@@ -38,6 +38,21 @@ void RRICore::buildMacroscopicModels()
 void RRICore::selectMacroscopicModel()
 {
     macroscopicModel->computeBestPartition(parameters->getP());
+}
+
+float RRICore::getCurrentP()
+{
+
+}
+
+float RRICore::nextP()
+{
+
+}
+
+float RRICore::previousP()
+{
+
 }
 
 Parameters* RRICore::getParameters() const
@@ -58,4 +73,29 @@ MacroscopicModel *RRICore::getMacroscopicModel() const
 MicroscopicModel *RRICore::getMicroscopicModel() const
 {
     return microscopicModel;
+}
+
+int RRICore::getCurrentPIndex() const
+{
+    return currentPIndex;
+}
+
+void RRICore::setCurrentPIndex(int value)
+{
+    currentPIndex = value;
+}
+
+void RRICore::setP(rri::PDefaultValue defaultValue)
+{
+
+}
+
+void RRICore::setP(float value)
+{
+    parameters->setP(value);
+}
+
+QVector<float> RRICore::getPs() const
+{
+    return macroscopicModel->getPs();
 }
