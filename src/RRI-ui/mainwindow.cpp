@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    state=Ui::DEFAULT;
+    currentFile="";
+    core = RRICore();
 }
 
 MainWindow::~MainWindow()
@@ -15,6 +18,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
+    currentFile = QFileDialog::getOpenFileName(this,
         tr("Open File"), QDir::currentPath(), tr("RRI file (*.rri);; All files (*.*)"));
+    state=Ui::NEWFILE;
 }

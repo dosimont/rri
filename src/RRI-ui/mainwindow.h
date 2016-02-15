@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QDir>
 #include <QFileDialog>
+#include <rricore.h>
 
 namespace Ui {
 class MainWindow;
+enum State { DEFAULT, NEWFILE, TIMESLICE, PARAMETER, NOCHANGE };
 }
 
 class MainWindow : public QMainWindow
@@ -22,6 +24,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    Ui::State state;
+    QString currentFile;
+
 };
 
 #endif // MAINWINDOW_H

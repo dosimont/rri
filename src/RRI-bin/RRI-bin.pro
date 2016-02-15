@@ -19,3 +19,8 @@ unix:!macx: LIBS += -L$$DESTDIR -lrri
 
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
+
+unix {
+    target.path = /usr/local/bin
+    INSTALLS += target
+}
