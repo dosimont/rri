@@ -93,6 +93,7 @@ void RRICore::setP(rri::PDefaultValue defaultValue)
 void RRICore::setP(float value)
 {
     parameters->setP(value);
+    p
 }
 
 QVector<float> RRICore::getPs() const

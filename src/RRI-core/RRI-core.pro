@@ -38,12 +38,12 @@ HEADERS += biqmap.h \
     debug.h
 
 unix {
-    target.path = /usr/local/lib
+    target.path = $$TARGET_PATH/lib
     header_files.files = $$HEADERS
-    header_files.path = /usr/local/include/$$TARGET
+    header_files.path = $$TARGET_PATH/include/$$TARGET
     INSTALLS += target \
                 header_files
 }
 
 
-unix:!macx: LIBS += -llpaggreg
+unix:!macx: LIBS += -L$$LPAGGREG_PATH/lib -llpaggreg
