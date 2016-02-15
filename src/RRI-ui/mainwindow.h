@@ -8,7 +8,8 @@
 
 namespace Ui {
 class MainWindow;
-enum State { DEFAULT, NEWFILE, TIMESLICE, PARAMETER, NOCHANGE };
+enum State { STATE_DEFAULT, STATE_NEWFILE, STATE_TIMESLICE,
+             STATE_PARAMETER, STATE_NOCHANGE };
 }
 
 class MainWindow : public QMainWindow
