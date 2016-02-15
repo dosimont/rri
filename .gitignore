@@ -1,5 +1,6 @@
 # Binaries
 /bin
+/generated_files
 
 # C++ objects and libs
 

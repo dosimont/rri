@@ -13,9 +13,10 @@ RRI-bin.subdir  = src/RRI-bin
 RRI-bin.depends = RRI-core
 }
 
-equals(BUILD_UI, true){
-SUBDIRS += RRI-ui
-RRI-ui.subdir  = src/RRI-ui
-RRI-ui.depends = RRI-core
+equals(BUILD_GUI, true){
+SUBDIRS += RRI-gui
+RRI-gui.subdir  = src/RRI-gui
+RRI-gui.depends = RRI-core
 }
 
+QMAKE_CLEAN += $(TARGET) $(QMAKE_TARGET)

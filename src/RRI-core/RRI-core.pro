@@ -48,3 +48,5 @@ unix {
 
 unix:!macx: LIBS += -L$$LPAGGREG_PATH/lib -llpaggreg
 INCLUDEPATH += $$LPAGGREG_PATH/include
+
+QMAKE_CLEAN += $(TARGET) $(QMAKE_TARGET)
