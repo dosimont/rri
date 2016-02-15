@@ -1,3 +1,5 @@
+include(options.pri)
+
 VERSION = 1.0.0
 
 PROJECT_ROOT_DIRECTORY=$$PWD
