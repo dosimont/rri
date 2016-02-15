@@ -42,7 +42,7 @@ RRIObject *RRIModel::buildRRIObject(QStringList fields)
     rRIObject->setRoutineName(CSV_RRI_ROUTINE_NAME);
     rRIObject->setCodelineId(fields[CSV_RRI_CODELINE_ID]);
     rRIObject->setFileName(CSV_RRI_FILE_NAME);
-    rRIObject->setCodelineNumber(CSV_RRI_CODELINE);
+    rRIObject->setCodeline(CSV_RRI_CODELINE);
     return rRIObject;
 }
 
