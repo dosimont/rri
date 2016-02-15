@@ -1,2 +1,2 @@
-BUILD_UI=true
+BUILD_UI=false
 BUILD_BIN=true
