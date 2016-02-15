@@ -73,7 +73,7 @@ float RRICore::nextP()
         }
     }else{
         int i;
-        for (i=0; i<getPs.size()&&getPs()[i]<=getCurrentP();i++){
+        for (i=0; i<getPs().size()&&getPs()[i]<=getCurrentP();i++){
         }
         setCurrentPIndex(i);
     }
@@ -88,7 +88,7 @@ float RRICore::previousP()
         }
     }else{
         int i;
-        for (i=getPs.size()-1; i>=0&&getPs()[i]>=getCurrentP();i--){
+        for (i=getPs().size()-1; i>=0&&getPs()[i]>=getCurrentP();i--){
         }
         setCurrentPIndex(i);
     }
