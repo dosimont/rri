@@ -8,6 +8,7 @@
 class MacroscopicModel
 {
 public:
+    MacroscopicModel();
     MacroscopicModel(MicroscopicModel* microscopicModel);
     virtual ~MacroscopicModel();
     virtual void initializeAggregator()=0;
