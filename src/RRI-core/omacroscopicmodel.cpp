@@ -13,7 +13,7 @@ OMacroscopicModel::OMacroscopicModel(MicroscopicModel* microscopicModel):
 
 OMacroscopicModel::~OMacroscopicModel()
 {
-    for (int i=part.size()-1; i>=0; i--){
+    for (int i=parts.size()-1; i>=0; i--){
         delete parts[i];
     }
 }
