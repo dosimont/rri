@@ -53,7 +53,7 @@ void MainWindow::on_runButton_clicked()
 void MainWindow::on_homeButton_clicked()
 {
     core.setP(rri::MAX);
-    ui->pEdit->setText(core.getCurrentP());
+    ui->pEdit->setText(QString::number(core.getCurrentP()));
     if (state==Ui::STATE_NOCHANGE){
         state=Ui::STATE_PARAMETER;
     }
@@ -61,7 +61,7 @@ void MainWindow::on_homeButton_clicked()
 
 void MainWindow::on_previousButton_clicked()
 {
-    ui->pEdit->setText(core.previousP());
+    ui->pEdit->setText(QString::number(core.previousP()));
     if (state==Ui::STATE_NOCHANGE){
         state=Ui::STATE_PARAMETER;
     }
@@ -69,7 +69,7 @@ void MainWindow::on_previousButton_clicked()
 
 void MainWindow::on_nextButton_clicked()
 {
-    ui->pEdit->setText(core.nextP());
+    ui->pEdit->setText(QString::number(core.nextP()));
     if (state==Ui::STATE_NOCHANGE){
         state=Ui::STATE_PARAMETER;
     }

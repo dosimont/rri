@@ -82,7 +82,6 @@ void RRIModel::buildWithPreAggregation(int timeSlices)
         }
         CSV csv(&file);
         QStringList stringList;
-        int line=0;
         int i=0;
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=buildRRIObject(stringList);

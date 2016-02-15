@@ -8,8 +8,8 @@
 class MacroscopicModel
 {
 public:
-    MacroscopicModel();
     MacroscopicModel(MicroscopicModel* microscopicModel);
+    virtual ~MacroscopicModel();
     virtual void initializeAggregator()=0;
     virtual void computeQualities(bool normalize)=0;
     virtual void computeBestPartitions(float threshold)=0;

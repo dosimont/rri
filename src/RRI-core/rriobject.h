@@ -54,8 +54,8 @@ private:
     int callstackLvl;
     int routineId;
     QString routineName;
-    QString fileName;
     int codelineId;
+    QString fileName;
     int codeline;
 };
 
