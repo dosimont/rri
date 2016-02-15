@@ -1,7 +1,17 @@
 #include "macroscopicmodel.h"
 
+MacroscopicModel::MacroscopicModel()
+{
+
+}
+
 MacroscopicModel::MacroscopicModel(MicroscopicModel* microscopicModel):
     microscopicModel(microscopicModel)
+{
+
+}
+
+MacroscopicModel::~MacroscopicModel()
 {
 
 }
