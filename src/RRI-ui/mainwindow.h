@@ -33,6 +33,10 @@ private slots:
     void on_nextButton_clicked();
 
 private:
+    void setParametersNEWFILE();
+    void setParametersTIMESLICE();
+
+private:
     Ui::MainWindow *ui;
     Ui::State state;
     QString currentFile;

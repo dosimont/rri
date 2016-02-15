@@ -11,6 +11,13 @@ OMacroscopicModel::OMacroscopicModel(MicroscopicModel* microscopicModel):
 
 }
 
+OMacroscopicModel::~OMacroscopicModel()
+{
+    for (int i=part.size()-1; i>=0; i--){
+        delete parts[i];
+    }
+}
+
 void OMacroscopicModel::initializeAggregator()
 {
     lpaggreg=OLPAggreg3(microscopicModel->getMatrix());

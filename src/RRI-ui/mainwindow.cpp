@@ -30,13 +30,26 @@ void MainWindow::on_timeSliceNumberSpinBox_editingFinished()
 
 void MainWindow::on_runButton_clicked()
 {
-
+    switch (state) {
+    case Ui::NEWFILE:
+        setParametersNEWFILE();
+    case Ui::TIMESLICE:
+        setParametersTIMESLICE();
+        core.buildMicroscopicModel();
+        core.initMacroscopicModels();
+        core.buildMacroscopicModels();
+        on_homeButton_clicked();
+    case Ui::PARAMETER:
+        core.selectMacroscopicModel();
+    default:
+        break;
+    }
 }
 
 void MainWindow::on_homeButton_clicked()
 {
     core.setP(rri::MAX);
-    ui->pEdit->setText(core.getParameters()->getParameter());
+    ui->pEdit->setText(core.getCurrentP());
     state=Ui::PARAMETER;
 }
 
@@ -50,4 +63,14 @@ void MainWindow::on_nextButton_clicked()
 {
     ui->pEdit->setText(core.nextP());
     state=Ui::PARAMETER;
+}
+
+void MainWindow::setParametersNEWFILE()
+{
+    core.getParameters()->setCurrentFileName(currentFile);
+}
+
+void MainWindow::setParametersTIMESLICE()
+{
+    core.getParameters()->setTimesliceNumber(ui->timeSliceNumberSpinBox->text().toInt());
 }

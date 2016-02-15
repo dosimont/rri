@@ -10,6 +10,7 @@ class OMacroscopicModel : public MacroscopicModel
 public:
     OMacroscopicModel();
     OMacroscopicModel(MicroscopicModel* microscopicModel);
+    ~OMacroscopicModel();
     void initializeAggregator();
     void computeQualities(bool normalize);
     void computeBestPartitions(float threshold);

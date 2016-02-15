@@ -1,8 +1,19 @@
 #include "rricore.h"
 
-RRICore::RRICore():parameters(new Parameters())
+RRICore::RRICore():parameters(new Parameters()), microscopicModelAllocated(false), macroscopicModelAllocated(false)
 {
 
+}
+
+RRICore::~RRICore()
+{
+    delete parameters;
+    if (microscopicModelAllocated){
+        delete microscopicModel;
+    }
+    if (macroscopicModelAllocated){
+        delete macroscopicModel;
+    }
 }
 
 bool RRICore::buildMicroscopicModel()
@@ -10,7 +21,11 @@ bool RRICore::buildMicroscopicModel()
     QFileInfo fileInfo(parameters->getCurrentFileName());
     if (fileInfo.suffix().compare(FILE_EXT_RRI)==0){
         parameters->setAnalysisType(rri::RRI);
+        if (microscopicModelAllocated){
+            delete microscopicModel;
+        }
         microscopicModel=new RRIModel();
+        microscopicModelAllocated=true;
         RRIModel *castModel=dynamic_cast<RRIModel*>(microscopicModel);
         castModel->parseFile(parameters->getCurrentFileName(), parameters->getTimesliceNumber());
         return true;
@@ -22,7 +37,12 @@ bool RRICore::buildMicroscopicModel()
 void RRICore::initMacroscopicModels()
 {
     switch (parameters->getAnalysisType()){
-       case rri::RRI:macroscopicModel=new OMacroscopicModel(microscopicModel);
+       case rri::RRI:
+        if (macroscopicModelAllocated){
+            delete macroscopicModel;
+        }
+        macroscopicModelAllocated=true;
+        macroscopicModel=new OMacroscopicModel(microscopicModel);
         macroscopicModel->initializeAggregator();
         break;
        case rri::DEFAULT:;
@@ -68,7 +88,7 @@ float RRICore::previousP()
         }
     }else{
         int i;
-        for (i=getPs.size()-1; i<&&getPs()[i]<=getCurrentP();i--){
+        for (i=getPs.size()-1; i>=0&&getPs()[i]>=getCurrentP();i--){
         }
         setCurrentPIndex(i);
     }

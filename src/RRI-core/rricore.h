@@ -19,6 +19,7 @@ class CORESHARED_EXPORT RRICore
 
 public:
     RRICore();
+    ~RRICore();
     bool buildMicroscopicModel();
     void initMacroscopicModels();
     void buildMacroscopicModels();
@@ -41,6 +42,8 @@ private:
     Parameters* parameters;
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
+    bool microscopicModelAllocated;
+    bool macroscopicModelAllocated;
     int currentPIndex;
 };
 
