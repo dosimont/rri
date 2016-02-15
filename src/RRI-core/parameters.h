@@ -25,15 +25,15 @@ public:
     int getTimesliceNumber() const;
     void setTimesliceNumber(int value);
 
-    float getParameter() const;
-    void setParameter(float value);
+    float getP() const;
+    void setP(float value);
 
 private:
     QString currentFileName;
     DataType analysisType;
     bool normalize;
     float threshold;
-    float parameter;
+    float p;
     int timesliceNumber;
 };
 

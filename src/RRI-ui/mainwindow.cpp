@@ -22,3 +22,30 @@ void MainWindow::on_actionOpen_triggered()
         tr("Open File"), QDir::currentPath(), tr("RRI file (*.rri);; All files (*.*)"));
     state=Ui::NEWFILE;
 }
+
+void MainWindow::on_timeSliceNumberSpinBox_editingFinished()
+{
+    state=Ui::TIMESLICE;
+}
+
+void MainWindow::on_runButton_clicked()
+{
+
+}
+
+void MainWindow::on_homeButton_clicked()
+{
+    core.getParameters()->setParameter(1.0);
+    ui->pEdit->setText(core.getParameters()->getParameter());
+    state=Ui::PARAMETER;
+}
+
+void MainWindow::on_previousButton_clicked()
+{
+
+}
+
+void MainWindow::on_nextButton_clicked()
+{
+
+}

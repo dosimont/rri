@@ -6,7 +6,7 @@ Parameters::Parameters()
     analysisType=InputData::DEFAULT;
     normalize=DEFAULT_PARAMETER_NORMALIZE;
     threshold=DEFAULT_PARAMETER_THRESHOLD;
-    parameter=DEFAULT_PARAMETER_PARAMETER;
+    p=DEFAULT_PARAMETER_PARAMETER;
     timesliceNumber=DEFAULT_PARAMETER_TIMESLICENUMBER;
 }
 
@@ -60,12 +60,12 @@ void Parameters::setTimesliceNumber(int value)
     timesliceNumber = value;
 }
 
-float Parameters::getParameter() const
+float Parameters::getP() const
 {
-    return parameter;
+    return p;
 }
 
-void Parameters::setParameter(float value)
+void Parameters::setP(float value)
 {
-    parameter = value;
+    p = value;
 }

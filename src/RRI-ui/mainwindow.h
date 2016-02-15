@@ -22,10 +22,21 @@ public:
 private slots:
     void on_actionOpen_triggered();
 
+    void on_timeSliceNumberSpinBox_editingFinished();
+
+    void on_runButton_clicked();
+
+    void on_homeButton_clicked();
+
+    void on_previousButton_clicked();
+
+    void on_nextButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Ui::State state;
     QString currentFile;
+    RRICore core;
 
 };
 

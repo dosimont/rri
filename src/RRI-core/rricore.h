@@ -23,6 +23,9 @@ public:
     void initMacroscopicModels();
     void buildMacroscopicModels();
     void selectMacroscopicModel();
+    float getCurrentP();
+    float nextP();
+    float previousP();
     Parameters* getParameters() const;
     QVector<Part*> getParts();
     MacroscopicModel* getMacroscopicModel() const;
@@ -32,8 +35,7 @@ private:
     Parameters* parameters;
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
-
-
+    int currentPIndex;
 };
 
 #endif // RRICORE_H

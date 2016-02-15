@@ -37,7 +37,7 @@ void RRICore::buildMacroscopicModels()
 
 void RRICore::selectMacroscopicModel()
 {
-    macroscopicModel->computeBestPartition(parameters->getParameter());
+    macroscopicModel->computeBestPartition(parameters->getP());
 }
 
 Parameters* RRICore::getParameters() const
