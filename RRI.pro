@@ -1,5 +1,4 @@
 include(config.pri)
-include(options.pri)
 
 TEMPLATE = subdirs
 
