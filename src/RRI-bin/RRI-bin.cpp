@@ -10,7 +10,7 @@
 #include <part.h>
 
 #define TS_NUMBER 200
-#define THRESHOLD_FACTOR 10
+#define THRESHOLD_FACTOR 1000
 
 int main(int argc, char *argv[])
 {
