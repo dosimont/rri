@@ -3,7 +3,7 @@
 ## Dependencies
 
 - lpaggreg library - BSC version (sources available here: https://github.com/bsc-performance-tools/lpaggreg)
-- qt, qt-devel
+- qt, qt-devel (version 5 -- do not compile with version 4)
 - qmake
 
 ## Get the sources
@@ -16,15 +16,15 @@
 
 ## Compile
 
-*You can edit `options.pri` to enable or disable the compilation of subsidiary functionalities*
+*Edit* `options.pri` *to enable or disable the compilation of subsidiary functionalities and change the target directory and the dependency location*
 
-    $ qmake-qt4
+    $ qmake-qt5
     $ make
 
 ## Install
 
-    # make install
+    $ make install
 
-## Run
+## Run (command line program)
 
-    # ./bin/RRI-bin file.callerdata
+    # RRI-bin file.callerdata
