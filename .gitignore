@@ -2,11 +2,9 @@
 /bin
 /generated_files
 
-# Generated dir
-/rri
-
 # Generated files
 *.csv
+*.pdf
 
 # C++ objects and libs
 
