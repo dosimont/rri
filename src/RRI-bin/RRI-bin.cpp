@@ -14,6 +14,14 @@
 
 int main(int argc, char *argv[])
 {
+    vector<QString> colors;
+    colors.push_back("red");
+    colors.push_back("blue");
+    colors.push_back("green");
+    colors.push_back("yellow");
+    colors.push_back("black");
+    colors.push_back("orange");
+    colors.push_back("purple");
     if (argc==2){
         QString input = QString(argv[1]);
         std::cout<<"Input file: "<<input.toStdString()<<std::endl;
@@ -52,8 +60,9 @@ int main(int argc, char *argv[])
                 nextPs=core.getMacroscopicModel()->getPs()[i+1]-(core.getParameters()->getThreshold()/THRESHOLD_FACTOR);
             }
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
-                           <<core.getMacroscopicModel()->getQualities()[i]->getGain()
-                           <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
+                           <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
+                           <<core.getMacroscopicModel()->getQualities()[i]->getLoss()<<","
+                           <<colors[i%7]
                            <<endl;
             /*
              * qualitiesStream<<nextPs<<","
