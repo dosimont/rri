@@ -1,5 +1,5 @@
 library(ggplot2)
-Sys.setlocale("LC_MESSAGES", 'en')
+Sys.setlocale("LC_MESSAGES", 'en_US')
 
 h <- 6
 w <- 12
@@ -7,7 +7,7 @@ w <- 12
 parts_input_file="parts.csv"
 qualities_input_file="qualities.csv"
 parts_output_file="parts"
-qualities_output_file="parts.pdf"
+qualities_output_file="qualities.pdf"
 
 cheader_parts<-c("P", "START", "END", "COLOR")
 cheader_qualities<-c("P", "GAIN", "LOSS")
@@ -26,6 +26,7 @@ read_parts <- function(file) {
 
 make_plist <- function(data){
   plist<-data[["P"]]
+  plist<-unique(plist)
   plist
 }
 
@@ -47,16 +48,13 @@ print_qualities <- function(data){
 }
 
 print_parts <- function(data, p){
-  dtemp<-data[(data$P == P)]
+  dtemp<-data[(data$P %in% p),]
+  print(dtemp)
   xlabel<-  paste("Time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
-  plot<-ggplot(data)
-  start<-dtemp[["START"]]
-  end<-dtemp[["END"]]
-  color<-dtemp[["COLOR"]]
-  for (i in 1:length(start)){
-    plot <- plot + geom_rect(xmin = start[i], xmax=end[i], ymin=0, ymax=1, fill=color[i])
-  }
+  plot<-ggplot()
+  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=COLOR), color="black", ymin=0, ymax=1)
   plot<-plot + theme_bw()
   plot
 }
@@ -67,12 +65,12 @@ qualities_data <-read_qualities(qualities_input)
 qualities_output <- paste(args[2],'/',qualities_output_file, sep="")
 ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = h)
 parts_input <- paste(args[1],'/',parts_input_file, sep="")
-parts_data <-read_qualities(parts_input)
-plist<-make_plist(qualities_data)
+parts_data <-read_parts(parts_input)
+plist<-make_plist(parts_data)
+plist
 for (p in plist){
-  print_parts(parts_data, p)
   parts_output <- paste(args[2],'/',parts_output_file, "_" , p, ".pdf", sep="")
   ggsave(parts_output, plot = print_parts(parts_data, p), width = w, height = h)
 }
-
+warnings()
 
