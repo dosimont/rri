@@ -7,8 +7,6 @@ class RRIObject
 {
 public:
     RRIObject();
-    RRIObject(int id, int sample, double tsPercentage, int tsAbsolute,
-              int callstackLvl, int routineId, QString routineName, int codelineId, int codelineNumber);
 
     int getId() const;
     void setId(int value);
@@ -41,9 +39,12 @@ public:
     void setCodelineId(int value);
     void setCodelineId(QString value);
 
-    int getCodelineNumber() const;
-    void setCodelineNumber(int value);
-    void setCodelineNumber(QString value);
+    int getCodeline() const;
+    void setCodeline(int value);
+    void setCodeline(QString value);
+
+    QString getFileName() const;
+    void setFileName(const QString &value);
 
 private:
     int id;
@@ -52,11 +53,10 @@ private:
     int tsAbsolute;
     int callstackLvl;
     int routineId;
-    //TODO add this field in csv
     QString routineName;
     int codelineId;
-    //TODO add this field in csv
-    int codelineNumber;
+    QString fileName;
+    int codeline;
 };
 
 #endif // RRIOBJECT_H

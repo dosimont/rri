@@ -3,10 +3,10 @@
 Parameters::Parameters()
 {
     currentFileName="";
-    analysisType=InputData::DEFAULT;
+    analysisType=rri::DEFAULT;
     normalize=DEFAULT_PARAMETER_NORMALIZE;
     threshold=DEFAULT_PARAMETER_THRESHOLD;
-    parameter=DEFAULT_PARAMETER_PARAMETER;
+    p=DEFAULT_PARAMETER_PARAMETER;
     timesliceNumber=DEFAULT_PARAMETER_TIMESLICENUMBER;
 }
 
@@ -20,12 +20,12 @@ void Parameters::setCurrentFileName(const QString &value)
     currentFileName = value;
 }
 
-DataType Parameters::getAnalysisType() const
+InputFileType Parameters::getAnalysisType() const
 {
     return analysisType;
 }
 
-void Parameters::setAnalysisType(const DataType &value)
+void Parameters::setAnalysisType(const InputFileType &value)
 {
     analysisType = value;
 }
@@ -60,12 +60,12 @@ void Parameters::setTimesliceNumber(int value)
     timesliceNumber = value;
 }
 
-float Parameters::getParameter() const
+float Parameters::getP() const
 {
-    return parameter;
+    return p;
 }
 
-void Parameters::setParameter(float value)
+void Parameters::setP(float value)
 {
-    parameter = value;
+    p = value;
 }

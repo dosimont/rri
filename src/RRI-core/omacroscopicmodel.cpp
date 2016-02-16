@@ -11,6 +11,13 @@ OMacroscopicModel::OMacroscopicModel(MicroscopicModel* microscopicModel):
 
 }
 
+OMacroscopicModel::~OMacroscopicModel()
+{
+    for (int i=parts.size()-1; i>=0; i--){
+        delete parts[i];
+    }
+}
+
 void OMacroscopicModel::initializeAggregator()
 {
     lpaggreg=OLPAggreg3(microscopicModel->getMatrix());
@@ -24,7 +31,7 @@ void OMacroscopicModel::computeQualities(bool normalize)
 
 void OMacroscopicModel::computeBestPartitions(float threshold)
 {
-    parameters=QVector<float>::fromStdVector(lpaggreg.getParameters(threshold));
+    ps=QVector<float>::fromStdVector(lpaggreg.getParameters(threshold));
     qualities=QVector<Quality*>::fromStdVector(lpaggreg.getQualityList());
 }
 

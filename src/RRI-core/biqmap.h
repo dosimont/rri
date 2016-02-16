@@ -2,6 +2,7 @@
 #define BIQMAP_H
 
 #include <QMap>
+#include <QString>
 
 template<typename Key, typename Value>class BiQMap
 {

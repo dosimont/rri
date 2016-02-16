@@ -8,8 +8,10 @@
 
 namespace Ui {
 class MainWindow;
-enum State { DEFAULT, NEWFILE, TIMESLICE, PARAMETER, NOCHANGE };
+enum State { STATE_DEFAULT, STATE_NEWFILE, STATE_TIMESLICE,
+             STATE_PARAMETER, STATE_NOCHANGE };
 }
+
 
 class MainWindow : public QMainWindow
 {
@@ -22,10 +24,25 @@ public:
 private slots:
     void on_actionOpen_triggered();
 
+    void on_timeSliceNumberSpinBox_editingFinished();
+
+    void on_runButton_clicked();
+
+    void on_homeButton_clicked();
+
+    void on_previousButton_clicked();
+
+    void on_nextButton_clicked();
+
+private:
+    void setParametersNEWFILE();
+    void setParametersTIMESLICE();
+
 private:
     Ui::MainWindow *ui;
     Ui::State state;
     QString currentFile;
+    RRICore core;
 
 };
 

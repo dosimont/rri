@@ -1,5 +1,5 @@
-#ifndef RRIMODEL_H
-#define RRIMODEL_H
+#ifndef RRIMICROSCOPICMODEL_H
+#define RRIMICROSCOPICMODEL_H
 
 #include <QObject>
 #include <QFile>
@@ -16,21 +16,21 @@
 
 using std::vector;
 
-class RRIModel : public MicroscopicModel
+class RRIMicroscopicModel : public MicroscopicModel
 {
 public:
-    RRIModel();
-    RRIModel(MicroscopicModel);
-    ~RRIModel();
+    RRIMicroscopicModel();
+    RRIMicroscopicModel(MicroscopicModel);
+    ~RRIMicroscopicModel();
     void parseFile(QString fileName, int timeSlices);
 private:
     RRIObject* buildRRIObject(QStringList fields);
     void buildWithoutPreAggregation();
     void buildWithPreAggregation(int timeSlices);
-    QVector<RRIObject*>* objects;
-    BiQMap<int, int> routineMap;
     void addToMicroscopicModel(RRIObject* object);
     void addToPreAggregateMicroscopicModel(RRIObject* object, int timeslice);
+    QVector<RRIObject*>* objects;
+    BiQMap<int, QString> routineMap;
 };
 
-#endif // RRIMODEL_H
+#endif // RRIMICROSCOPICMODEL_H

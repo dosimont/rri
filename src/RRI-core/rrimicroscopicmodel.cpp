@@ -1,18 +1,18 @@
-#include "rrimodel.h"
+#include "rrimicroscopicmodel.h"
 
-RRIModel::RRIModel():MicroscopicModel(),objects(new QVector<RRIObject*>()),
-                             routineMap(BiQMap<int, int>())
+RRIMicroscopicModel::RRIMicroscopicModel():MicroscopicModel(),objects(new QVector<RRIObject*>()),
+                             routineMap(BiQMap<int, QString>())
 {
 
 }
 
-RRIModel::RRIModel(MicroscopicModel microscopicModel):MicroscopicModel(microscopicModel),objects(new QVector<RRIObject*>()),
-    routineMap(BiQMap<int, int>())
+RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):MicroscopicModel(microscopicModel),objects(new QVector<RRIObject*>()),
+    routineMap(BiQMap<int, QString>())
 {
 
 }
 
-RRIModel::~RRIModel()
+RRIMicroscopicModel::~RRIMicroscopicModel()
 {
     for (int i=0; i<objects->size(); i++){
         delete objects->at(i);
@@ -20,17 +20,17 @@ RRIModel::~RRIModel()
     delete objects;
 }
 
-void RRIModel::parseFile(QString fileName, int timeSlices)
+void RRIMicroscopicModel::parseFile(QString fileName, int timeSlices)
 {
     currentFileName=fileName;
     if (timeSlices>2){
         buildWithPreAggregation(timeSlices);
-    }else if (timeSlices==-1){
+    }else if (timeSlices==0){
         buildWithoutPreAggregation();
     }
 }
 
-RRIObject *RRIModel::buildRRIObject(QStringList fields)
+RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
 {
     RRIObject* rRIObject=new RRIObject();
     rRIObject->setId(fields[CSV_RRI_ID]);
@@ -39,11 +39,14 @@ RRIObject *RRIModel::buildRRIObject(QStringList fields)
     rRIObject->setTsAbsolute(fields[CSV_RRI_TS_ABSOLUTE]);
     rRIObject->setCallstackLvl(fields[CSV_RRI_CALLSTACK_LVL]);
     rRIObject->setRoutineId(fields[CSV_RRI_ROUTINE_ID]);
+    rRIObject->setRoutineName(fields[CSV_RRI_ROUTINE_NAME]);
     rRIObject->setCodelineId(fields[CSV_RRI_CODELINE_ID]);
+    rRIObject->setFileName(fields[CSV_RRI_FILE_NAME]);
+    rRIObject->setCodeline(fields[CSV_RRI_CODELINE]);
     return rRIObject;
 }
 
-void RRIModel::buildWithoutPreAggregation()
+void RRIMicroscopicModel::buildWithoutPreAggregation()
 {
     QFile file(currentFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -54,10 +57,12 @@ void RRIModel::buildWithoutPreAggregation()
         RRILOG("CSV object has been initalized");
         QStringList stringList;
         int i=0;
+        //header
+        csv.parseLine();
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=buildRRIObject(stringList);
-            if (!routineMap.containsValue(tempObject->getRoutineId())){
-                routineMap.add(i++,tempObject->getRoutineId());
+            if (!routineMap.containsValue(tempObject->getRoutineName())){
+                routineMap.add(i++,tempObject->getRoutineName());
             }
             objects->append(tempObject);
             addToMicroscopicModel(tempObject);
@@ -65,7 +70,7 @@ void RRIModel::buildWithoutPreAggregation()
     }
 }
 
-void RRIModel::buildWithPreAggregation(int timeSlices)
+void RRIMicroscopicModel::buildWithPreAggregation(int timeSlices)
 {
     QFile file(currentFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -79,12 +84,13 @@ void RRIModel::buildWithPreAggregation(int timeSlices)
         }
         CSV csv(&file);
         QStringList stringList;
-        int line=0;
         int i=0;
+        //header
+        csv.parseLine();
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=buildRRIObject(stringList);
-            if (!routineMap.containsValue(tempObject->getRoutineId())){
-                routineMap.add(i++,tempObject->getRoutineId());
+            if (!routineMap.containsValue(tempObject->getRoutineName())){
+                routineMap.add(i++,tempObject->getRoutineName());
             }
             objects->append(tempObject);
             addToPreAggregateMicroscopicModel(tempObject, (int) ((double)tempObject->getTsPercentage()*(double) timeSlices));
@@ -101,29 +107,27 @@ void RRIModel::buildWithPreAggregation(int timeSlices)
 
 
 
-void RRIModel::addToMicroscopicModel(RRIObject *object)
+void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object)
 {
     while (matrix.size()<(unsigned int) object->getSample()+1){
         matrix.push_back(vector< vector<double> >());
     }
     for (unsigned int i=0; i<matrix.size();i++){
-        //TODO change sample numeration
-        while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())+1){
+        while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineName())+1){
             matrix[i].push_back(vector<double>());
             matrix[i][matrix[i].size()-1].push_back(0.0);
         }
     }
-    matrix[object->getSample()][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
-    //TODO change sample numeration
+    matrix[object->getSample()][routineMap.getFromValue(object->getRoutineName())][0]+=1.0;
 }
 
-void RRIModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
+void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
 {
     for (unsigned int i=0; i<matrix.size();i++){
-        while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())+1){
+        while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineName())+1){
             matrix[i].push_back(vector<double>());
             matrix[i][matrix[i].size()-1].push_back(0.0);
         }
     }
-    matrix[timeSlice][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
+    matrix[timeSlice][routineMap.getFromValue(object->getRoutineName())][0]+=1.0;
 }

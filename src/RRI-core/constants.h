@@ -11,7 +11,10 @@
 #define CSV_RRI_TS_ABSOLUTE 3
 #define CSV_RRI_CALLSTACK_LVL 4
 #define CSV_RRI_ROUTINE_ID 5
-#define CSV_RRI_CODELINE_ID 6
+#define CSV_RRI_ROUTINE_NAME 6
+#define CSV_RRI_CODELINE_ID 7
+#define CSV_RRI_FILE_NAME 8
+#define CSV_RRI_CODELINE 9
 
 //Default parameters
 #define DEFAULT_PARAMETER_NORMALIZE true
@@ -19,9 +22,17 @@
 #define DEFAULT_PARAMETER_PARAMETER 0
 #define DEFAULT_PARAMETER_TIMESLICENUMBER -1
 
+
+namespace rri {
+
 //Analysis type
-namespace InputData {
-    enum DataType { RRI, DEFAULT };
+    enum InputFileType { RRI, DEFAULT };
+
+//P default value
+    enum PDefaultValue { MAX, MIN };
 }
+
+
+
 
 #endif // CONSTANTS_H

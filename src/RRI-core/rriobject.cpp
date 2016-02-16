@@ -4,19 +4,7 @@ RRIObject::RRIObject()
                      :id(0), sample(0), tsPercentage(0),
                      tsAbsolute(0), callstackLvl(0),
                      routineId(0), routineName(""),
-                     codelineId(0), codelineNumber(0)
-{
-
-}
-
-
-RRIObject::RRIObject(int id, int sample, double tsPercentage,
-                     int tsAbsolute, int callstackLvl, int routineId,
-                     QString routineName, int codelineId, int codelineNumber)
-                     :id(id), sample(sample), tsPercentage(tsPercentage),
-                     tsAbsolute(tsAbsolute), callstackLvl(callstackLvl),
-                     routineId(routineId), routineName(routineName),
-                     codelineId(codelineId), codelineNumber(codelineNumber)
+                     codelineId(0), fileName(""), codeline(0)
 {
 
 }
@@ -136,17 +124,27 @@ void RRIObject::setCodelineId(QString value)
     setCodelineId(value.toInt());
 }
 
-int RRIObject::getCodelineNumber() const
+int RRIObject::getCodeline() const
 {
-    return codelineNumber;
+    return codeline;
 }
 
-void RRIObject::setCodelineNumber(int value)
+void RRIObject::setCodeline(int value)
 {
-    codelineNumber = value;
+    codeline = value;
 }
 
-void RRIObject::setCodelineNumber(QString value)
+void RRIObject::setCodeline(QString value)
 {
-    setCodelineNumber(value.toInt());
+    setCodeline(value.toInt());
+}
+
+QString RRIObject::getFileName() const
+{
+    return fileName;
+}
+
+void RRIObject::setFileName(const QString &value)
+{
+    fileName = value;
 }
