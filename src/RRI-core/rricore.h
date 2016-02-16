@@ -6,7 +6,7 @@
 #include <QVector>
 #include "rricore_global.h"
 #include "constants.h"
-#include "rrimodel.h"
+#include "rrimicroscopicmodel.h"
 #include "omacroscopicmodel.h"
 #include "parameters.h"
 #include "debug.h"

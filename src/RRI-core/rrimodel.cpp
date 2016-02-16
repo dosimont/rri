@@ -1,18 +1,18 @@
-#include "rrimodel.h"
+#include "rrimicroscopicmodel.h"
 
-RRIModel::RRIModel():MicroscopicModel(),objects(new QVector<RRIObject*>()),
+RRIMicroscopicModel::RRIMicroscopicModel():MicroscopicModel(),objects(new QVector<RRIObject*>()),
                              routineMap(BiQMap<int, int>())
 {
 
 }
 
-RRIModel::RRIModel(MicroscopicModel microscopicModel):MicroscopicModel(microscopicModel),objects(new QVector<RRIObject*>()),
+RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):MicroscopicModel(microscopicModel),objects(new QVector<RRIObject*>()),
     routineMap(BiQMap<int, int>())
 {
 
 }
 
-RRIModel::~RRIModel()
+RRIMicroscopicModel::~RRIMicroscopicModel()
 {
     for (int i=0; i<objects->size(); i++){
         delete objects->at(i);
@@ -20,7 +20,7 @@ RRIModel::~RRIModel()
     delete objects;
 }
 
-void RRIModel::parseFile(QString fileName, int timeSlices)
+void RRIMicroscopicModel::parseFile(QString fileName, int timeSlices)
 {
     currentFileName=fileName;
     if (timeSlices>2){
@@ -30,7 +30,7 @@ void RRIModel::parseFile(QString fileName, int timeSlices)
     }
 }
 
-RRIObject *RRIModel::buildRRIObject(QStringList fields)
+RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
 {
     RRIObject* rRIObject=new RRIObject();
     rRIObject->setId(fields[CSV_RRI_ID]);
@@ -46,7 +46,7 @@ RRIObject *RRIModel::buildRRIObject(QStringList fields)
     return rRIObject;
 }
 
-void RRIModel::buildWithoutPreAggregation()
+void RRIMicroscopicModel::buildWithoutPreAggregation()
 {
     QFile file(currentFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -70,7 +70,7 @@ void RRIModel::buildWithoutPreAggregation()
     }
 }
 
-void RRIModel::buildWithPreAggregation(int timeSlices)
+void RRIMicroscopicModel::buildWithPreAggregation(int timeSlices)
 {
     QFile file(currentFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -107,7 +107,7 @@ void RRIModel::buildWithPreAggregation(int timeSlices)
 
 
 
-void RRIModel::addToMicroscopicModel(RRIObject *object)
+void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object)
 {
     while (matrix.size()<(unsigned int) object->getSample()+1){
         matrix.push_back(vector< vector<double> >());
@@ -121,7 +121,7 @@ void RRIModel::addToMicroscopicModel(RRIObject *object)
     matrix[object->getSample()][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
 }
 
-void RRIModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
+void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
 {
     for (unsigned int i=0; i<matrix.size();i++){
         while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())+1){

@@ -24,9 +24,9 @@ bool RRICore::buildMicroscopicModel()
         if (microscopicModelAllocated){
             delete microscopicModel;
         }
-        microscopicModel=new RRIModel();
+        microscopicModel=new RRIMicroscopicModel();
         microscopicModelAllocated=true;
-        RRIModel *castModel=dynamic_cast<RRIModel*>(microscopicModel);
+        RRIMicroscopicModel *castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
         castModel->parseFile(parameters->getCurrentFileName(), parameters->getTimesliceNumber());
         return true;
     }else{

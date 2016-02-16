@@ -63,12 +63,6 @@ int main(int argc, char *argv[])
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
-            /*
-             * qualitiesStream<<nextPs<<","
-                           <<core.getMacroscopicModel()->getQualities()[i]->getGain()
-                           <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
-                           <<endl;
-                           */
             core.getParameters()->setP(core.getMacroscopicModel()->getPs()[i]);
             core.selectMacroscopicModel();
             QVector<Part*> parts=core.getParts();
