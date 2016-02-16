@@ -31,39 +31,41 @@ int main(int argc, char *argv[])
         if (!qualitiesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
            return 2;
         }
+        QString p = "rri/parts.csv";
+        QFile pFile(p);
+        if (!pFile.open(QIODevice::ReadWrite | QIODevice::Text)){
+           return 3;
+        }
         QTextStream qualitiesStream(&qualitiesFile);
+        QTextStream pStream(&pFile);
         RRICore core = RRICore();
         core.getParameters()->setCurrentFileName(input);
         core.getParameters()->setTimesliceNumber(TS_NUMBER);
         if (!core.buildMicroscopicModel()){
-            return 3;
+            return 4;
         }
         core.initMacroscopicModels();
         core.buildMacroscopicModels();
         for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
             float nextPs=1;
             if (i<core.getMacroscopicModel()->getPs().size()-1){
-                nextPs=core.getMacroscopicModel()->getPs()[i+1]-core.getParameters()->getThreshold()/THRESHOLD_FACTOR;
+                nextPs=core.getMacroscopicModel()->getPs()[i+1]-(core.getParameters()->getThreshold()/THRESHOLD_FACTOR);
             }
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()
                            <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
-            qualitiesStream<<nextPs<<","
+            /*
+             * qualitiesStream<<nextPs<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()
                            <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
-            QString p = QString("rri/p_%1.csv").arg(i);
-            QFile pFile(p);
-            if (!pFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-               return 2;
-            }
-            QTextStream pStream(&pFile);
+                           */
             core.getParameters()->setP(core.getMacroscopicModel()->getPs()[i]);
             core.selectMacroscopicModel();
             QVector<Part*> parts=core.getParts();
             for (int j=0; j< parts.size(); j++){
-                pStream<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<endl;
+                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<endl;
             }
         }
         return 0;

@@ -2,6 +2,9 @@
 /bin
 /generated_files
 
+# Generated dir
+/rri
+
 # Generated files
 *.csv
 
