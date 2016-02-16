@@ -25,7 +25,7 @@ void RRIModel::parseFile(QString fileName, int timeSlices)
     currentFileName=fileName;
     if (timeSlices>2){
         buildWithPreAggregation(timeSlices);
-    }else if (timeSlices==-1){
+    }else if (timeSlices==0){
         buildWithoutPreAggregation();
     }
 }
@@ -57,6 +57,8 @@ void RRIModel::buildWithoutPreAggregation()
         RRILOG("CSV object has been initalized");
         QStringList stringList;
         int i=0;
+        //header
+        csv.parseLine();
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=buildRRIObject(stringList);
             if (!routineMap.containsValue(tempObject->getRoutineId())){
@@ -83,6 +85,8 @@ void RRIModel::buildWithPreAggregation(int timeSlices)
         CSV csv(&file);
         QStringList stringList;
         int i=0;
+        //header
+        csv.parseLine();
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=buildRRIObject(stringList);
             if (!routineMap.containsValue(tempObject->getRoutineId())){
@@ -109,14 +113,12 @@ void RRIModel::addToMicroscopicModel(RRIObject *object)
         matrix.push_back(vector< vector<double> >());
     }
     for (unsigned int i=0; i<matrix.size();i++){
-        //TODO change sample numeration
         while (matrix[i].size()<(unsigned int)routineMap.getFromValue(object->getRoutineId())+1){
             matrix[i].push_back(vector<double>());
             matrix[i][matrix[i].size()-1].push_back(0.0);
         }
     }
     matrix[object->getSample()][routineMap.getFromValue(object->getRoutineId())][0]+=1.0;
-    //TODO change sample numeration
 }
 
 void RRIModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
