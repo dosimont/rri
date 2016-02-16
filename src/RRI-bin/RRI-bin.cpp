@@ -61,8 +61,7 @@ int main(int argc, char *argv[])
             }
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
-                           <<core.getMacroscopicModel()->getQualities()[i]->getLoss()<<","
-                           <<colors[i%7]
+                           <<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
             /*
              * qualitiesStream<<nextPs<<","
@@ -74,7 +73,7 @@ int main(int argc, char *argv[])
             core.selectMacroscopicModel();
             QVector<Part*> parts=core.getParts();
             for (int j=0; j< parts.size(); j++){
-                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<endl;
+                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<colors[j%7]<<endl;
             }
         }
         return 0;
