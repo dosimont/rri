@@ -24,8 +24,3 @@ void RedistributedModel::setMacroscopicModel(MacroscopicModel *value)
 {
     macroscopicModel = value;
 }
-
-MacroscopicModel *RedistributedModel::getMacroscopicModel() const
-{
-    return macroscopicModel;
-}

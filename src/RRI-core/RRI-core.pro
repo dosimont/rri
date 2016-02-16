@@ -15,14 +15,16 @@ DEFINES += CORE_LIBRARY
 SOURCES += biqmap.cpp \
     csv.cpp \
     microscopicmodel.cpp \
-    rrimodel.cpp \
     rriobject.cpp \
     rricore.cpp \
     macroscopicmodel.cpp \
     omacroscopicmodel.cpp \
     parameters.cpp \
     part.cpp \
-    redistributedmodel.cpp
+    redistributedmodel.cpp \
+    rriredistributedmodel.cpp \
+    rrimicroscopicmodel.cpp \
+    rripart.cpp
 
 HEADERS += biqmap.h \
     csv.h \
@@ -37,7 +39,9 @@ HEADERS += biqmap.h \
     part.h \
     debug.h \
     redistributedmodel.h \
-    rrimicroscopicmodel.h
+    rrimicroscopicmodel.h \
+    rriredistributedmodel.h \
+    rripart.h
 
 unix {
     target.path = $$TARGET_PATH/lib

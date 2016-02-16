@@ -65,3 +65,4 @@ bool BiQMap<Key,Value>::containsValue(Value value)
 }
 
 template class BiQMap<int, int>;
+template class BiQMap<QString, int>;
