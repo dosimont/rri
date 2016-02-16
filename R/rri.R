@@ -43,7 +43,7 @@ print_qualities <- function(data){
   plot<-plot + geom_line(aes(y=LOSS, colour = "Information loss"))
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
-  plot<-plot + scale_colour_manual(name="Quality measures",values = c("red","green"))
+  plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
   plot
 }
 
