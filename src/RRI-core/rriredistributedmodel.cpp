@@ -25,7 +25,7 @@ void RRIRedistributedModel::setMacroscopicModel(MacroscopicModel *value)
 void RRIRedistributedModel::generateRoutines(float minPercentage)
 {
     for (int i=0; i<oMacroscopicModel->getParts().size(); i++){
-        rRIParts.push_back(new RRIPart(oMacroscopicModel->getParts()));
+        rRIParts.push_back(new RRIPart(oMacroscopicModel->getParts().at(i)));
         rRIParts[i]->setRoutinesFromMicroscopicModel(microscopicModel->getMatrix());
         float mainRoutineValue=0.0;
         int mainRoutineIndex=-1;
@@ -48,7 +48,7 @@ void RRIRedistributedModel::generateRoutines(float minPercentage)
                 }
             }
         }
-        mainRoutineMap.insert(rriParts[i], mainRoutineIndex);
+        mainRoutineMap.insert(rRIParts[i], mainRoutineIndex);
     }
 }
 
