@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
             core.selectMacroscopicModel();
             QVector<Part*> parts=core.getParts();
             for (int j=0; j< parts.size(); j++){
-                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<colors[j%7]<<endl;
+                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<colors[j%7]<<endl;
             }
         }
         return 0;
