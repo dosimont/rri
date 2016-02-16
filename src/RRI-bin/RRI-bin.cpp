@@ -10,6 +10,7 @@
 #include <part.h>
 
 #define TS_NUMBER 200
+#define THRESHOLD_FACTOR 10
 
 int main(int argc, char *argv[])
 {
@@ -40,7 +41,15 @@ int main(int argc, char *argv[])
         core.initMacroscopicModels();
         core.buildMacroscopicModels();
         for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
+            float nextPs=1;
+            if (i<core.getMacroscopicModel()->getPs().size()-1){
+                nextPs=core.getMacroscopicModel()->getPs()[i+1]-core.getParameters()->getThreshold()/THRESHOLD_FACTOR;
+            }
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
+                           <<core.getMacroscopicModel()->getQualities()[i]->getGain()
+                           <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
+                           <<endl;
+            qualitiesStream<<nextPs<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()
                            <<","<<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
@@ -59,6 +68,6 @@ int main(int argc, char *argv[])
         }
         return 0;
         }
-    std::cerr<<"Not enough arguments"<<std::endl;
+    std::cerr<<"Usage: "<<argv[0]<<" <file.callerdata>"<<std::endl;
     return 1;
 }
