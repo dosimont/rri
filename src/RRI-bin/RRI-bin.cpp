@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
         QString input = QString(argv[1]);
         std::cout<<"Input file: "<<input.toStdString()<<std::endl;
         QFileInfo fileInfo(input);
-        QString path=fileInfo.absolutePath() + "/" + fileInfo.baseName();
+        QString path=fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
         QDir dir(path);
         dir.setNameFilters(QStringList() << "*.*");
         dir.setFilter(QDir::Files);
