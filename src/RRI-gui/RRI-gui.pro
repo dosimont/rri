@@ -23,12 +23,16 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-unix:!macx: LIBS += -L$$LPAGGREG_PATH/lib -llpaggreg
 unix:!macx: LIBS += -L$$DESTDIR -lrri
-
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
-INCLUDEPATH += $$LPAGGREG_PATH/include
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
+
+unix:!macx: LIBS += -llpaggreg
+isEmpty($$LPAGGREG_PATH){
+} else {
+unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
+INCLUDEPATH += $$LPAGGREG_PATH/include
+}
 
 unix {
     target.path = $$TARGET_PATH/bin

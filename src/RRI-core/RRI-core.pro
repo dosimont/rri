@@ -43,6 +43,13 @@ HEADERS += biqmap.h \
     rriredistributedmodel.h \
     rripart.h
 
+unix:!macx: LIBS += -llpaggreg
+isEmpty($$LPAGGREG_PATH){
+} else {
+unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
+INCLUDEPATH += $$LPAGGREG_PATH/include
+}
+
 unix {
     target.path = $$TARGET_PATH/lib
     header_files.files = $$HEADERS
@@ -50,7 +57,3 @@ unix {
     INSTALLS += target \
                 header_files
 }
-
-
-unix:!macx: LIBS += -L$$LPAGGREG_PATH/lib -llpaggreg
-INCLUDEPATH += $$LPAGGREG_PATH/include
