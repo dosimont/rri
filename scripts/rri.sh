@@ -10,9 +10,6 @@ usage_fct(){
   exit 2
 }
 
-
-
-
 if [ -f "rri.R" ]
 then
 rscript=rri.R
@@ -46,8 +43,14 @@ input_dir=$1
 for input_file in $input_dir/*.callerdata
 do
 RRI-bin $input_file
+return_code=$?
+if [[ $return_code -eq 0 ]]
+then
 output_dir=${input_file%.callerdata}
 R --vanilla --args $output_dir $output_dir < $rscript
+else
+echo "Nan value detected, skipping this iteration"
+fi
 done
 
 

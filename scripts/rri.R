@@ -49,7 +49,6 @@ print_qualities <- function(data){
 
 print_parts <- function(data, p){
   dtemp<-data[(data$P %in% p),]
-  print(dtemp)
   xlabel<-  paste("Time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
   plot<-ggplot()
@@ -67,7 +66,6 @@ ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, heig
 parts_input <- paste(args[1],'/',parts_input_file, sep="")
 parts_data <-read_parts(parts_input)
 plist<-make_plist(parts_data)
-plist
 for (p in plist){
   parts_output <- paste(args[2],'/',parts_output_file, "_" , p, ".pdf", sep="")
   ggsave(parts_output, plot = print_parts(parts_data, p), width = w, height = h)
