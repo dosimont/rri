@@ -35,6 +35,10 @@ print_qualities <- function(data){
   ntemp <- data.frame(P= dtemp[2:(nrow(dtemp)),1]-0.0000001, GAIN= dtemp[1:nrow(dtemp)-1,2], LOSS= dtemp[1:nrow(dtemp)-1,3])
   ntemp[1,]<-c(1,1,1)
   dtemp<-rbind(dtemp, ntemp)
+  dtemp<- dtemp[order(dtemp$P),] 
+  dtemp$LABELX<-dtemp$P
+  dtemp$LABELX[seq(2,nrow(dtemp),2)]<-""
+  dtemp$LABELY<- with(dtemp, pmax(GAIN, LOSS))
   xlabel<- "Parameter p"
   ylabel<- "Amplitude (normalized)"
   legend<- "Quality Measures vs Parameter p"
@@ -44,8 +48,7 @@ print_qualities <- function(data){
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
   plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
-  dtemp$AMPLITUDE<- with(dtemp, pmax(GAIN, LOSS))
-  plot<-plot + geom_text(aes(label=P,y=AMPLITUDE),hjust=0, vjust=-1)
+  #plot<-plot + geom_text(aes(label=LABELX,y=LABELY),hjust=0, vjust=-1)
   plot
 }
 
