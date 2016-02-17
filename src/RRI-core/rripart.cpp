@@ -28,4 +28,9 @@ void RRIPart::setRoutinesFromMicroscopicModel(vector< vector <vector <double> > 
     }
 }
 
+QVector<float> RRIPart::getRoutines() const
+{
+    return routines;
+}
+
 

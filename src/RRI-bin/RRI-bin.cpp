@@ -55,10 +55,6 @@ int main(int argc, char *argv[])
         core.initMacroscopicModels();
         core.buildMacroscopicModels();
         for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
-            float nextPs=1;
-            if (i<core.getMacroscopicModel()->getPs().size()-1){
-                nextPs=core.getMacroscopicModel()->getPs()[i+1]-(core.getParameters()->getThreshold()/THRESHOLD_FACTOR);
-            }
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getLoss()

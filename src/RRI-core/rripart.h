@@ -15,6 +15,7 @@ public:
 
     int getRoutineNumber() const;
     void setRoutinesFromMicroscopicModel(vector< vector< vector <double> > > matrix);
+
     QVector<float> getRoutines() const;
 
 private:

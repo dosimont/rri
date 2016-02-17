@@ -19,11 +19,4 @@ RRI-gui.subdir  = src/RRI-gui
 RRI-gui.depends = RRI-core
 }
 
-unix {
-    target.path = $$TARGET_PATH/bin
-    INSTALLS += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
-    INSTALLS += $$PROJECT_ROOT_DIRECTORY/scripts/rri.sh
-    INSTALLS += $$PROJECT_ROOT_DIRECTORY/scripts/rri
-}
-
 QMAKE_CLEAN += $$QMAKE_TARGET $$DESTDIR\*

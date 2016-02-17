@@ -30,7 +30,8 @@ private:
     void addToMicroscopicModel(RRIObject* object);
     void addToPreAggregateMicroscopicModel(RRIObject* object, int timeslice);
     QVector<RRIObject*>* objects;
-    BiQMap<int, QString> routineMap;
+    BiQMap<int, int> matrixIndexToRoutineId;
+    BiQMap<int, QString> RoutineIdToFileRoutineName;
 };
 
 #endif // RRIMICROSCOPICMODEL_H

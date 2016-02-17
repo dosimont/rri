@@ -5,6 +5,11 @@ RedistributedModel::RedistributedModel()
 
 }
 
+RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel)
+{
+
+}
+
 MicroscopicModel *RedistributedModel::getMicroscopicModel() const
 {
     return microscopicModel;
