@@ -91,6 +91,7 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSlices)
             RRIObject* tempObject=buildRRIObject(stringList);
             if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
                 matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
+                RoutineIdToFileRoutineName.add(tempObject->getRoutineId(), tempObject->getFileName()+":"+tempObject->getRoutineName());
             }
             objects->append(tempObject);
             addToPreAggregateMicroscopicModel(tempObject, (int) ((double)tempObject->getTsPercentage()*(double) timeSlices));
@@ -130,4 +131,14 @@ void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, i
         }
     }
     matrix[timeSlice][matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
+}
+
+BiQMap<int, QString> RRIMicroscopicModel::getRoutineIdToFileRoutineName() const
+{
+    return RoutineIdToFileRoutineName;
+}
+
+BiQMap<int, int> RRIMicroscopicModel::getMatrixIndexToRoutineId() const
+{
+    return matrixIndexToRoutineId;
 }

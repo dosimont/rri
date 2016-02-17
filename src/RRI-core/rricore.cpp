@@ -1,6 +1,9 @@
 #include "rricore.h"
 
-RRICore::RRICore():parameters(new Parameters()), microscopicModelAllocated(false), macroscopicModelAllocated(false)
+RRICore::RRICore():parameters(new Parameters()),
+    microscopicModelAllocated(false),
+    macroscopicModelAllocated(false),
+    redistributedModelAllocated(false)
 {
 
 }
@@ -13,6 +16,9 @@ RRICore::~RRICore()
     }
     if (macroscopicModelAllocated){
         delete macroscopicModel;
+    }
+    if (redistributedModelAllocated){
+        delete redistributedModel;
     }
 }
 
@@ -58,6 +64,22 @@ void RRICore::buildMacroscopicModels()
 void RRICore::selectMacroscopicModel()
 {
     macroscopicModel->computeBestPartition(parameters->getP());
+}
+
+void RRICore::buildRedistributedModel()
+{
+    switch (parameters->getAnalysisType()){
+       case rri::RRI:
+        if (redistributedModelAllocated){
+            delete redistributedModel;
+        }
+        redistributedModelAllocated=true;
+        redistributedModel=new RRIRedistributedModel(microscopicModel, macroscopicModel);
+        RRIRedistributedModel* rRIRedistributedModel=dynamic_cast<RRIRedistributedModel*>(redistributedModel);
+        rRIRedistributedModel->generateRoutines(DEFAULT_ROUTINE_MIN_DURATION);
+        break;
+       case rri::DEFAULT:;
+    }
 }
 
 float RRICore::getCurrentP()
@@ -155,4 +177,9 @@ void RRICore::setP(float value)
 QVector<float> RRICore::getPs() const
 {
     return macroscopicModel->getPs();
+}
+
+RedistributedModel *RRICore::getRedistributedModel() const
+{
+    return redistributedModel;
 }

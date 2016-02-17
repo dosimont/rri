@@ -1,11 +1,11 @@
 #include "redistributedmodel.h"
 
-RedistributedModel::RedistributedModel()
+RedistributedModel::RedistributedModel():partMap(QMap<Part*, QString>())
 {
 
 }
 
-RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel)
+RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel), partMap(QMap<Part*, QString>())
 {
 
 }

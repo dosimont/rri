@@ -14,9 +14,10 @@ class RRIRedistributedModel : public RedistributedModel
 public:
     RRIRedistributedModel();
     RRIRedistributedModel(MicroscopicModel* microscopicModel, MacroscopicModel* macroscopicModel);
+    ~RRIRedistributedModel();
     void setMicroscopicModel(MicroscopicModel *value);
     void setMacroscopicModel(MacroscopicModel *value);
-    void generateRoutines(float minPercentage);
+    QMap<RRIPart*, int> generateRoutines(float minPercentage);
 private:
     RRIMicroscopicModel* rRIMicroscopicModel;
     OMacroscopicModel* oMacroscopicModel;

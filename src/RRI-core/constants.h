@@ -16,12 +16,14 @@
 #define CSV_RRI_FILE_NAME 8
 #define CSV_RRI_CODELINE 9
 
-//Default parameters
+//Default lpaggreg parameters
 #define DEFAULT_PARAMETER_NORMALIZE true
 #define DEFAULT_PARAMETER_THRESHOLD 0.0001
 #define DEFAULT_PARAMETER_PARAMETER 0
 #define DEFAULT_PARAMETER_TIMESLICENUMBER -1
 
+//Default rendering parameters
+#define DEFAULT_ROUTINE_MIN_DURATION 0.5
 
 namespace rri {
 

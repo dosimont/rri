@@ -8,6 +8,8 @@
 #include "constants.h"
 #include "rrimicroscopicmodel.h"
 #include "omacroscopicmodel.h"
+#include "redistributedmodel.h"
+#include "rriredistributedmodel.h"
 #include "parameters.h"
 #include "debug.h"
 #include "part.h"
@@ -24,10 +26,12 @@ public:
     void initMacroscopicModels();
     void buildMacroscopicModels();
     void selectMacroscopicModel();
+    void buildRedistributedModel();
     Parameters* getParameters() const;
     QVector<Part*> getParts();
     MacroscopicModel* getMacroscopicModel() const;
     MicroscopicModel* getMicroscopicModel() const;
+    RedistributedModel *getRedistributedModel() const;
 
     float getCurrentP();
     float nextP();
@@ -42,8 +46,10 @@ private:
     Parameters* parameters;
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
+    RedistributedModel* redistributedModel;
     bool microscopicModelAllocated;
     bool macroscopicModelAllocated;
+    bool redistributedModelAllocated;
     int currentPIndex;
 };
 
