@@ -4,7 +4,7 @@ Sys.setlocale("LC_MESSAGES", 'en_US')
 h <- 6
 w <- 12
 
-parts_input_file="parts.csv"
+parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
 parts_output_file="parts"
 qualities_output_file="qualities.pdf"

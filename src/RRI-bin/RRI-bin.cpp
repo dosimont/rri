@@ -3,6 +3,7 @@
 #include <QString>
 #include <QTextStream>
 #include <QFile>
+#include <QFileInfo>
 #include <QDir>
 #include <QVector>
 
@@ -25,7 +26,8 @@ int main(int argc, char *argv[])
     if (argc==2){
         QString input = QString(argv[1]);
         std::cout<<"Input file: "<<input.toStdString()<<std::endl;
-        QString path = "rri";
+        QFileInfo fileInfo(input);
+        QString path=fileInfo.absolutePath() + "/" + fileInfo.baseName();
         QDir dir(path);
         dir.setNameFilters(QStringList() << "*.*");
         dir.setFilter(QDir::Files);
@@ -33,13 +35,13 @@ int main(int argc, char *argv[])
         {
             dir.remove(dirFile);
         }
-        QDir().mkdir("rri");
-        QString qualities = "rri/qualities.csv";
+        QDir().mkdir(path);
+        QString qualities = path +"/qualities.csv";
         QFile qualitiesFile(qualities);
         if (!qualitiesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
            return 2;
         }
-        QString p = "rri/parts.csv";
+        QString p = path +"/partitions.csv";
         QFile pFile(p);
         if (!pFile.open(QIODevice::ReadWrite | QIODevice::Text)){
            return 3;
