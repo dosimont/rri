@@ -15,7 +15,7 @@ RRIRedistributedModel::RRIRedistributedModel(MicroscopicModel *microscopicModel,
 RRIRedistributedModel::~RRIRedistributedModel()
 {
     for (int i=0; i<rRIParts.size(); i++){
-        delete rRIParts;
+        delete rRIParts[i];
     }
 }
 
@@ -29,7 +29,7 @@ void RRIRedistributedModel::setMacroscopicModel(MacroscopicModel *value)
     oMacroscopicModel=dynamic_cast<OMacroscopicModel*>(value);
 }
 
-void RRIRedistributedModel::generateRoutines(float minPercentage)
+QMap<RRIPart*, int> RRIRedistributedModel::generateRoutines(float minPercentage)
 {
     for (int i=0; i<oMacroscopicModel->getParts().size(); i++){
         rRIParts.push_back(new RRIPart(oMacroscopicModel->getParts().at(i)));
@@ -57,10 +57,12 @@ void RRIRedistributedModel::generateRoutines(float minPercentage)
         }
         mainRoutineMap.insert(rRIParts[i], mainRoutineIndex);
     }
+    return mainRoutineMap;
 }
 
 QMap<Part*, QString> RRIRedistributedModel::getParts(){
     for (int i=0; i<rRIParts.size(); i++){
         partMap.insert(rRIParts[i], rRIMicroscopicModel->getRoutineIdToFileRoutineName().getFromKey(mainRoutineMap[rRIParts[i]]));
     }
+    return partMap;
 }

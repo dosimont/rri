@@ -14,17 +14,17 @@ int RRIPart::getRoutineNumber() const
 
 void RRIPart::setRoutinesFromMicroscopicModel(vector< vector <vector <double> > > matrix)
 {
-    routineNumber = matrix.at(0).at(0).size();
+    routineNumber = matrix[0].size();
     for (int i=0; i<routineNumber; i++){
         routines.push_back(0.0);
     }
     for (int i=getFirstTimeSlice(); i<=getLastTimeSlice(); i++){
         for (int j=0; j<routineNumber; j++){
-            routines[j]++;
+            routines[j]+=matrix[i][j][0];
         }
     }
     for (int i=0; i<routineNumber; i++){
-        routines[i]/=getTotalTimeSlice();
+        routines[i]/=(float)getSizeTimeSlice();
     }
 }
 

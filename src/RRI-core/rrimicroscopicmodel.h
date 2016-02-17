@@ -23,6 +23,9 @@ public:
     RRIMicroscopicModel(MicroscopicModel);
     ~RRIMicroscopicModel();
     void parseFile(QString fileName, int timeSlices);
+    BiQMap<int, int> getMatrixIndexToRoutineId() const;
+    BiQMap<int, QString> getRoutineIdToFileRoutineName() const;
+
 private:
     RRIObject* buildRRIObject(QStringList fields);
     void buildWithoutPreAggregation();

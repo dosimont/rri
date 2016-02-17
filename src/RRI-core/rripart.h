@@ -5,6 +5,7 @@
 #include <vector>
 #include "part.h"
 #include "rriobject.h"
+#include "debug.h"
 
 using std::vector;
 
