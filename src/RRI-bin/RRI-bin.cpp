@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         core.buildMacroscopicModels();
         std::cout<<"Generating the macroscopic models"<<path<<std::endl;
         for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
-            if (isnan(getQualities()[i]->getGain())||isnan(getQualities()[i]->getLoss())){
+            if (isnan(core.getMacroscopicModel()->getQualities()[i]->getGain())||isnan(core.getMacroscopicModel()->getQualities()[i]->getLoss())){
                 std::cerr<<"NaN value detected, stopping the rendering and removing the results"<<path<<std::endl;
                 QDir().mkdir(path);
                 return 5;
