@@ -17,6 +17,8 @@
 
 int main(int argc, char *argv[])
 {
+    std::cout.setf(ios::fixed, ios::floatfield);
+    std::cout.setf(ios::showpoint);
     vector<QString> colors;
     colors.push_back("red");
     colors.push_back("blue");

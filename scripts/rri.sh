@@ -40,14 +40,17 @@ echo "$1 is not a valid directory"
 usage_fct
 fi
 input_dir=$1
+mkdir -p $input_dir/rri
+rm -fr $input_dir/rri/*
 for input_file in $input_dir/*.callerdata
 do
+output_dir=${input_file%.callerdata}
 RRI-bin $input_file
 return_code=$?
 if [[ $return_code -eq 0 ]]
 then
-output_dir=${input_file%.callerdata}
-R --quiet --vanilla --args $output_dir $output_dir < $rscript
+R --slave --vanilla --args $output_dir $output_dir < $rscript
+mv $output_dir $input_dir/rri/
 else
 echo "Nan value detected, skipping this iteration"
 rm -fr $output_dir
