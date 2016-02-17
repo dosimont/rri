@@ -71,8 +71,7 @@ int main(int argc, char *argv[])
         std::cout<<"Generating the macroscopic models"<<std::endl;
         for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
             if (std::isnan(core.getMacroscopicModel()->getQualities()[i]->getGain())||std::isnan(core.getMacroscopicModel()->getQualities()[i]->getLoss())){
-                std::cerr<<"NaN value detected, stopping the rendering and removing the results"<<std::endl;
-                QDir().mkdir(path);
+                std::cerr<<"NaN value detected, stopping the rendering"<<std::endl;
                 return 5;
             }
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","

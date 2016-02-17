@@ -47,9 +47,10 @@ return_code=$?
 if [[ $return_code -eq 0 ]]
 then
 output_dir=${input_file%.callerdata}
-R --vanilla --args $output_dir $output_dir < $rscript
+R --quiet --vanilla --args $output_dir $output_dir < $rscript
 else
 echo "Nan value detected, skipping this iteration"
+rm -fr $output_dir
 fi
 done
 
