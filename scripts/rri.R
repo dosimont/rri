@@ -44,6 +44,8 @@ print_qualities <- function(data){
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
   plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
+  dtemp$AMPLITUDE<- with(dtemp, pmax(GAIN, LOSS))
+  plot<-plot + geom_text(aes(label=P,y=AMPLITUDE),hjust=0, vjust=-1)
   plot
 }
 
@@ -53,7 +55,7 @@ print_parts <- function(data, p){
   legend<-  paste("Relevant routines, p=", p, sep="")
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
-  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=COLOR), color="black", ymin=0, ymax=1)
+  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=COLOR), color="white", ymin=0, ymax=1)
   plot<-plot + theme_bw()
   plot
 }
