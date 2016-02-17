@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             QVector<Part*> parts=core.getParts();
             QMap<Part*, QString> advParts=core.getRedistributedModel()->getParts();
             for (int j=0; j< parts.size(); j++){
-                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<colors[i%7]<<endl;
+                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<colors[j%7]<<endl;
             }
         }
         return 0;
