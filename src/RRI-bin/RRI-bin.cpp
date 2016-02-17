@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
             dir.remove(dirFile);
         }
         std::cout<<"Done"<<std::endl;
-        std::cout<<"Creating result directory: "<<path<<std::endl;
+        std::cout<<"Creating the result directory: "<<path.toStdString()<<std::endl;
         QDir().mkdir(path);
         std::cout<<"Done"<<std::endl;
         QString qualities = path +"/qualities.csv";
@@ -55,23 +55,23 @@ int main(int argc, char *argv[])
         }
         QTextStream qualitiesStream(&qualitiesFile);
         QTextStream pStream(&pFile);
-        std::cout<<"Initializing the core"<<path<<std::endl;
+        std::cout<<"Initializing the core"<<std::endl;
         RRICore core = RRICore();
-        std::cout<<"Setting the parameters"<<path<<std::endl;
+        std::cout<<"Setting the parameters"<<std::endl;
         core.getParameters()->setCurrentFileName(input);
         core.getParameters()->setTimesliceNumber(TS_NUMBER);
-        std::cout<<"Parsing the input file and generating the microscopic model"<<path<<std::endl;
+        std::cout<<"Parsing the input file and generating the microscopic model"<<std::endl;
         if (!core.buildMicroscopicModel()){
             return 4;
         }
-        std::cout<<"Initializing the macroscopic model"<<path<<std::endl;
+        std::cout<<"Initializing the macroscopic model"<<std::endl;
         core.initMacroscopicModels();
-        std::cout<<"Generating the parameter p list"<<path<<std::endl;
+        std::cout<<"Generating the parameter p list"<<std::endl;
         core.buildMacroscopicModels();
-        std::cout<<"Generating the macroscopic models"<<path<<std::endl;
+        std::cout<<"Generating the macroscopic models"<<std::endl;
         for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
-            if (isnan(core.getMacroscopicModel()->getQualities()[i]->getGain())||isnan(core.getMacroscopicModel()->getQualities()[i]->getLoss())){
-                std::cerr<<"NaN value detected, stopping the rendering and removing the results"<<path<<std::endl;
+            if (std::isnan(core.getMacroscopicModel()->getQualities()[i]->getGain())||std::isnan(core.getMacroscopicModel()->getQualities()[i]->getLoss())){
+                std::cerr<<"NaN value detected, stopping the rendering and removing the results"<<std::endl;
                 QDir().mkdir(path);
                 return 5;
             }
