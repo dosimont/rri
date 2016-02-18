@@ -19,7 +19,7 @@ public:
     ~RRIRedistributedModel();
     void setMicroscopicModel(MicroscopicModel *value);
     void setMacroscopicModel(MacroscopicModel *value);
-    QMap<RRIPart*, RRIRoutineInfo*> generateRoutines(float minPercentage);
+    QMap<RRIPart*, RRIRoutineInfo*> generateRoutines(double minPercentage);
     QVector<QString> getParts();
 private:
     RRIMicroscopicModel* rRIMicroscopicModel;

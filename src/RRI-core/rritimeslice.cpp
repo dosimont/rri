@@ -1,18 +1,15 @@
 #include "rritimeslice.h"
 
-RRITimeSlice::RRITimeSlice():routines(QVector<RRIRoutineInfo>()), objects(QVector<RRIObject *>(), samples(0))
+RRITimeSlice::RRITimeSlice():routines(QMap<int, RRIRoutineInfo*>()), objects(QVector<RRIObject*>()), samples(0)
 {
 
 }
 
-QVector<RRIObject *> RRITimeSlice::getObjects() const
+RRITimeSlice::~RRITimeSlice()
 {
-    return objects;
-}
-
-void RRITimeSlice::setObjects(const QVector<RRIObject *> &value)
-{
-    objects = value;
+    for (int i=0; i<routines.size(); i++){
+        delete routines[i];
+    }
 }
 
 void RRITimeSlice::addObject(RRIObject *object, int routine)
@@ -23,7 +20,7 @@ void RRITimeSlice::addObject(RRIObject *object, int routine)
             samples++;
     }
     if (!routines.contains(routine)){
-        routines.insert(routine, RRIRoutineInfo());
+        routines.insert(routine, new RRIRoutineInfo());
         routines[routine]->setIndex(routine);
         routines[routine]->setId(object->getRoutineId());
         routines[routine]->setName(object->getRoutineName());
@@ -47,4 +44,9 @@ void RRITimeSlice::finalize()
 QMap<int, RRIRoutineInfo *> RRITimeSlice::getRoutines() const
 {
     return routines;
+}
+
+QVector<RRIObject *> RRITimeSlice::getObjects() const
+{
+    return objects;
 }

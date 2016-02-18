@@ -22,7 +22,7 @@ public:
 protected:
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
-    Vector<QString> partMap;
+    QVector<QString> partMap;
 };
 
 #endif // REDISTRIBUTEDMODEL_H

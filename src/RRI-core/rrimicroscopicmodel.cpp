@@ -3,7 +3,7 @@
 RRIMicroscopicModel::RRIMicroscopicModel():
                             MicroscopicModel(),
                             objects(QVector<RRIObject*>()),
-                            timeSlices(QVector<RRITimeSlice>()),
+                            timeSlices(QVector<RRITimeSlice*>()),
                             matrixIndexToRoutineId(BiQMap<int, int>())
 {
 
@@ -12,7 +12,7 @@ RRIMicroscopicModel::RRIMicroscopicModel():
 RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):
                             MicroscopicModel(microscopicModel),
                             objects(QVector<RRIObject*>()),
-                            timeSlices(QVector<RRITimeSlice>()),
+                            timeSlices(QVector<RRITimeSlice*>()),
                             matrixIndexToRoutineId(BiQMap<int, int>())
 {
 
@@ -20,11 +20,11 @@ RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):
 
 RRIMicroscopicModel::~RRIMicroscopicModel()
 {
-    for (int i=0; i<objects->size(); i++){
-        delete objects->at(i);
+    for (int i=0; i<objects.size(); i++){
+        delete objects.at(i);
     }
-    for (int i=0; i<timeSlices>size(); i++){
-        delete timeSlices->at(i);
+    for (int i=0; i<timeSlices.size(); i++){
+        delete timeSlices.at(i);
     }
 }
 
@@ -115,7 +115,7 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
                 matrix[i][j][0]/=(double) objectCount[i];
             }
         }
-        for (unsigned int i=0; i<timeSlices.size(); i++){
+        for (int i=0; i<timeSlices.size(); i++){
             timeSlices[i]->finalize();
         }
     }
@@ -149,7 +149,7 @@ void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, i
     for (int i=0; i<timeSlices.size(); i++){
         timeSlices.push_back(new RRITimeSlice());
     }
-    timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId());
+    timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId()));
 }
 
 QVector<RRITimeSlice *> RRIMicroscopicModel::getTimeSlices() const

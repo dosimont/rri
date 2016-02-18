@@ -1,6 +1,7 @@
 #ifndef RRIROUTINEINFO_H
 #define RRIROUTINEINFO_H
 
+#include <QString>
 
 class RRIRoutineInfo
 {
@@ -30,7 +31,7 @@ public:
     void initAverageCallStackLevel(double value);
     void addToAverageCallStackLevel(double value);
     void normalizeAverageCallStackLevel(double value);
-    void setPercentageDuration(double value);
+    void setAverageCallStackLevel(double value);
 
 private:
     int index;

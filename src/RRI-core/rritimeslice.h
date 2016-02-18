@@ -10,11 +10,11 @@ class RRITimeSlice
 {
 public:
     RRITimeSlice();
-
-    QVector<RRIObject*> getObjects() const;
+    ~RRITimeSlice();
     void addObject(RRIObject* object, int routine);
     void finalize();
     QMap<int, RRIRoutineInfo *> getRoutines() const;
+    QVector<RRIObject *> getObjects() const;
 
 private:
     QMap<int, RRIRoutineInfo*> routines;

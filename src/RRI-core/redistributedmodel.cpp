@@ -5,7 +5,7 @@ RedistributedModel::RedistributedModel():partMap(QVector<QString>())
 
 }
 
-RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel), partMap(QMap<Part*, QString>())
+RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel), partMap(QVector<QString>())
 {
 
 }
