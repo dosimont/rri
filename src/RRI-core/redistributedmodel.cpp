@@ -1,6 +1,6 @@
 #include "redistributedmodel.h"
 
-RedistributedModel::RedistributedModel():partMap(QMap<Part*, QString>())
+RedistributedModel::RedistributedModel():partMap(QVector<QString>())
 {
 
 }

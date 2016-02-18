@@ -8,6 +8,7 @@
 #include "omacroscopicmodel.h"
 #include "rrimicroscopicmodel.h"
 #include "rripart.h"
+#include "rriroutineinfo.h"
 #include "debug.h"
 
 class RRIRedistributedModel : public RedistributedModel
@@ -18,14 +19,14 @@ public:
     ~RRIRedistributedModel();
     void setMicroscopicModel(MicroscopicModel *value);
     void setMacroscopicModel(MacroscopicModel *value);
-    QMap<RRIPart*, int> generateRoutines(float minPercentage);
-    QMap<Part *, QString> getParts();
+    QMap<RRIPart*, RRIRoutineInfo*> generateRoutines(float minPercentage);
+    QVector<QString> getParts();
 private:
     RRIMicroscopicModel* rRIMicroscopicModel;
     OMacroscopicModel* oMacroscopicModel;
-    QMap<float, int> codelines;
+    //QMap<float, int> codelines;
     QVector<RRIPart*> rRIParts;
-    QMap<RRIPart*, int> mainRoutineMap;
+    QMap<RRIPart*, RRIRoutineInfo*> mainRoutineMap;
 
 };
 

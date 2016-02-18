@@ -1,13 +1,19 @@
 #include "rrimicroscopicmodel.h"
 
-RRIMicroscopicModel::RRIMicroscopicModel():MicroscopicModel(),objects(new QVector<RRIObject*>()),
-                             matrixIndexToRoutineId(BiQMap<int, int>())
+RRIMicroscopicModel::RRIMicroscopicModel():
+                            MicroscopicModel(),
+                            objects(QVector<RRIObject*>()),
+                            timeSlices(QVector<RRITimeSlice>()),
+                            matrixIndexToRoutineId(BiQMap<int, int>())
 {
 
 }
 
-RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):MicroscopicModel(microscopicModel),objects(new QVector<RRIObject*>()),
-    matrixIndexToRoutineId(BiQMap<int, int>())
+RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):
+                            MicroscopicModel(microscopicModel),
+                            objects(QVector<RRIObject*>()),
+                            timeSlices(QVector<RRITimeSlice>()),
+                            matrixIndexToRoutineId(BiQMap<int, int>())
 {
 
 }
@@ -17,17 +23,16 @@ RRIMicroscopicModel::~RRIMicroscopicModel()
     for (int i=0; i<objects->size(); i++){
         delete objects->at(i);
     }
-    delete objects;
+    for (int i=0; i<timeSlices>size(); i++){
+        delete timeSlices->at(i);
+    }
 }
 
 void RRIMicroscopicModel::parseFile(QString fileName, int timeSlices)
 {
     currentFileName=fileName;
-    if (timeSlices>2){
-        buildWithPreAggregation(timeSlices);
-    }else if (timeSlices==0){
-        buildWithoutPreAggregation();
-    }
+    buildWithPreAggregation(timeSlices);
+
 }
 
 RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
@@ -46,6 +51,7 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
     return rRIObject;
 }
 
+//deprecated
 void RRIMicroscopicModel::buildWithoutPreAggregation()
 {
     QFile file(currentFileName);
@@ -64,13 +70,13 @@ void RRIMicroscopicModel::buildWithoutPreAggregation()
             if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
                 matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
             }
-            objects->append(tempObject);
+            objects.push_back(tempObject);
             addToMicroscopicModel(tempObject);
         }
     }
 }
 
-void RRIMicroscopicModel::buildWithPreAggregation(int timeSlices)
+void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
 {
     QFile file(currentFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -78,24 +84,30 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSlices)
         return;
     }else{
         QVector<int> objectCount=QVector<int>();
-        while (matrix.size()<(unsigned int) timeSlices){
+        while (matrix.size()<(unsigned int) timeSliceNumber){
             matrix.push_back(vector< vector<double> >());
             objectCount.push_back(0);
         }
         CSV csv(&file);
         QStringList stringList;
         int i=0;
+        double currentTimeStamp=-1;
         //header
         csv.parseLine();
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
             RRIObject* tempObject=buildRRIObject(stringList);
             if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
                 matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
-                RoutineIdToFileRoutineName.add(tempObject->getRoutineId(), tempObject->getFileName()+":"+tempObject->getRoutineName());
             }
-            objects->append(tempObject);
-            addToPreAggregateMicroscopicModel(tempObject, (int) ((double)tempObject->getTsPercentage()*(double) timeSlices));
-            objectCount[(int)((double)tempObject->getTsPercentage()*(double) timeSlices)]+=1;
+            objects.push_back(tempObject);
+            addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
+            if (tempObject->getTsPercentage()>currentTimeStamp){
+                currentTimeStamp=tempObject->getTsPercentage();
+                objectCount[(int)(tempObject->getTsPercentage()*(double) timeSliceNumber)]+=1;
+            }else if(tempObject->getTsPercentage()<currentTimeStamp){
+                RRIERR("Input file is not ordered");
+                return;
+            }
 
         }
         for (unsigned int i=0; i<matrix.size(); i++){
@@ -103,11 +115,14 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSlices)
                 matrix[i][j][0]/=(double) objectCount[i];
             }
         }
+        for (unsigned int i=0; i<timeSlices.size(); i++){
+            timeSlices[i]->finalize();
+        }
     }
 }
 
 
-
+//deprecated
 void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object)
 {
     while (matrix.size()<(unsigned int) object->getSample()+1){
@@ -131,11 +146,15 @@ void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, i
         }
     }
     matrix[timeSlice][matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
+    for (int i=0; i<timeSlices.size(); i++){
+        timeSlices.push_back(new RRITimeSlice());
+    }
+    timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId());
 }
 
-BiQMap<int, QString> RRIMicroscopicModel::getRoutineIdToFileRoutineName() const
+QVector<RRITimeSlice *> RRIMicroscopicModel::getTimeSlices() const
 {
-    return RoutineIdToFileRoutineName;
+    return timeSlices;
 }
 
 BiQMap<int, int> RRIMicroscopicModel::getMatrixIndexToRoutineId() const

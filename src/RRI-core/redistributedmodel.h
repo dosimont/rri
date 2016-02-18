@@ -1,7 +1,7 @@
 #ifndef REDISTRIBUTEDMODEL_H
 #define REDISTRIBUTEDMODEL_H
 
-#include <QMap>
+#include <QVector>
 #include <QString>
 
 #include "microscopicmodel.h"
@@ -18,11 +18,11 @@ public:
     void setMicroscopicModel(MicroscopicModel *value);
     MacroscopicModel *getMacroscopicModel() const;
     void setMacroscopicModel(MacroscopicModel *value);
-    virtual QMap<Part*, QString> getParts()=0;
+    virtual QVector<QString> getParts()=0;
 protected:
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
-    QMap<Part*, QString> partMap;
+    Vector<QString> partMap;
 };
 
 #endif // REDISTRIBUTEDMODEL_H

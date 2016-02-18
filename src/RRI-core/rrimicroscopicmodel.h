@@ -13,6 +13,7 @@
 #include "biqmap.h"
 #include "constants.h"
 #include "debug.h"
+#include "rritimeslice.h"
 
 using std::vector;
 
@@ -24,7 +25,7 @@ public:
     ~RRIMicroscopicModel();
     void parseFile(QString fileName, int timeSlices);
     BiQMap<int, int> getMatrixIndexToRoutineId() const;
-    BiQMap<int, QString> getRoutineIdToFileRoutineName() const;
+    QVector<RRITimeSlice*> getTimeSlices() const;
 
 private:
     RRIObject* buildRRIObject(QStringList fields);
@@ -32,9 +33,9 @@ private:
     void buildWithPreAggregation(int timeSlices);
     void addToMicroscopicModel(RRIObject* object);
     void addToPreAggregateMicroscopicModel(RRIObject* object, int timeslice);
-    QVector<RRIObject*>* objects;
+    QVector<RRIObject*> objects;
+    QVector<RRITimeSlice*> timeSlices;
     BiQMap<int, int> matrixIndexToRoutineId;
-    BiQMap<int, QString> RoutineIdToFileRoutineName;
 };
 
 #endif // RRIMICROSCOPICMODEL_H

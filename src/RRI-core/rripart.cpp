@@ -1,34 +1,46 @@
 #include "rripart.h"
 
 
-RRIPart::RRIPart(Part *part):Part(part->getTotalTimeSlice()), routineNumber(0), routines(QVector<float>())
+RRIPart::RRIPart(Part *part):Part(part->getTotalTimeSlice()),
+                            routines(QMap<int, RRIRoutineInfo*>())
 {
     setFirstTimeSlice(part->getFirstTimeSlice());
     setLastTimeSlice(part->getLastTimeSlice());
 }
 
-int RRIPart::getRoutineNumber() const
+RRIPart::~RRIPart()
 {
-    return routineNumber;
+    for(int routine : routines.keys()){
+        delete routines[routine];
+    }
 }
 
-void RRIPart::setRoutinesFromMicroscopicModel(vector< vector <vector <double> > > matrix)
+void RRIPart::setRoutines(QVector<RRITimeSlice *> timeSlices)
 {
-    routineNumber = matrix[0].size();
-    for (int i=0; i<routineNumber; i++){
-        routines.push_back(0.0);
+    if (timeSlices.size()<getLastTimeSlice()){
+        return;
     }
-    for (int i=getFirstTimeSlice(); i<=getLastTimeSlice(); i++){
-        for (int j=0; j<routineNumber; j++){
-            routines[j]+=matrix[i][j][0];
+    for (int i=getFirstTimeSlice(); i<getLastTimeSlice(); i++){
+        QMap<int, RRIRoutineInfo *>currentRoutines=timeSlices[i]->getRoutines();
+        for(int currentRoutine : currentRoutines.keys()){
+            if (!routines.contains(currentRoutine)){
+                routines.insert(currentRoutine, new RRIRoutineInfo(currentRoutines[currentRoutine]));
+            }
+            else{
+                routines[currentRoutine]->addToPercentageDuration(currentRoutines[currentRoutine]->getPercentageDuration());
+                routines[currentRoutine]->addToAverageCallStackLevel(currentRoutines[currentRoutine]->getAverageCallStackLevel());
+            }
         }
     }
-    for (int i=0; i<routineNumber; i++){
-        routines[i]/=(float)getSizeTimeSlice();
+    for(RRIRoutineInfo* routine : routines.values()){
+       routine->normalizePercentageDuration(getSizeTimeSlice());
+       routine->normalizeAverageCallStackLevel(getSizeTimeSlice());
     }
 }
 
-QVector<float> RRIPart::getRoutines() const
+
+
+QMap<int, RRIRoutineInfo *> RRIPart::getRoutines() const
 {
     return routines;
 }

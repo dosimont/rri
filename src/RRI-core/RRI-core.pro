@@ -24,7 +24,9 @@ SOURCES += biqmap.cpp \
     redistributedmodel.cpp \
     rriredistributedmodel.cpp \
     rrimicroscopicmodel.cpp \
-    rripart.cpp
+    rripart.cpp \
+    rritimeslice.cpp \
+    rriroutineinfo.cpp
 
 HEADERS += biqmap.h \
     csv.h \
@@ -41,7 +43,9 @@ HEADERS += biqmap.h \
     redistributedmodel.h \
     rrimicroscopicmodel.h \
     rriredistributedmodel.h \
-    rripart.h
+    rripart.h \
+    rritimeslice.h \
+    rriroutineinfo.h
 
 unix:!macx: LIBS += -llpaggreg
 isEmpty($$LPAGGREG_PATH){

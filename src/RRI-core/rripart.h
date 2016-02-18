@@ -1,10 +1,10 @@
 #ifndef RRIPART_H
 #define RRIPART_H
 
-#include <QVector>
-#include <vector>
+#include <QMap>
 #include "part.h"
 #include "rriobject.h"
+#include "rritimeslice.h"
 #include "debug.h"
 
 using std::vector;
@@ -13,15 +13,13 @@ class RRIPart : public Part
 {
 public:
     RRIPart(Part* part);
-
-    int getRoutineNumber() const;
-    void setRoutinesFromMicroscopicModel(vector< vector< vector <double> > > matrix);
-
-    QVector<float> getRoutines() const;
+    ~RRIPart();
+    void setRoutines(QVector<RRITimeSlice*> timeSlices);
+    QMap<int, RRIRoutineInfo*> getRoutines() const;
 
 private:
     int routineNumber;
-    QVector<float> routines;
+    QMap<int, RRIRoutineInfo*> routines;
 
 };
 
