@@ -50,11 +50,10 @@ return_code=$?
 if [[ $return_code -eq 0 ]]
 then
 R --slave --vanilla --args $output_dir $output_dir < $rscript
-mv $output_dir $input_dir/rri/
 else
 echo "Error detected, skipping this iteration"
-#rm -fr $output_dir
 fi
+mv $output_dir $input_dir/rri/
 done
 
 

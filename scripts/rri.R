@@ -9,7 +9,7 @@ qualities_input_file="qualities.csv"
 parts_output_file="parts"
 qualities_output_file="qualities.pdf"
 
-cheader_parts<-c("P", "START", "END", "COLOR")
+cheader_parts<-c("P", "START", "END", "Function")
 cheader_qualities<-c("P", "GAIN", "LOSS")
 
 read_qualities <- function(file) {
@@ -58,7 +58,8 @@ print_parts <- function(data, p){
   legend<-  paste("Relevant routines, p=", p, sep="")
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
-  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=COLOR), color="white", ymin=0, ymax=1)
+  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=0, ymax=1)
+  plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
   plot<-plot + theme_bw()
   plot
 }
