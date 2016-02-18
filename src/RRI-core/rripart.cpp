@@ -20,7 +20,7 @@ void RRIPart::setRoutines(QVector<RRITimeSlice *> timeSlices)
     if (timeSlices.size()<getLastTimeSlice()){
         return;
     }
-    for (int i=getFirstTimeSlice(); i<getLastTimeSlice(); i++){
+    for (int i=getFirstTimeSlice(); i<=getLastTimeSlice(); i++){
         QMap<int, RRIRoutineInfo *>currentRoutines=timeSlices[i]->getRoutines();
         for(int currentRoutine : currentRoutines.keys()){
             if (!routines.contains(currentRoutine)){
@@ -34,7 +34,7 @@ void RRIPart::setRoutines(QVector<RRITimeSlice *> timeSlices)
     }
     for(RRIRoutineInfo* routine : routines.values()){
        routine->normalizePercentageDuration(getSizeTimeSlice());
-       routine->normalizeAverageCallStackLevel(getSizeTimeSlice());
+       routine->normalizeAverageCallStackLevel();
     }
 }
 

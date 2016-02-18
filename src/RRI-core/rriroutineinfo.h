@@ -30,12 +30,13 @@ public:
     double getAverageCallStackLevel() const;
     void initAverageCallStackLevel(double value);
     void addToAverageCallStackLevel(double value);
-    void normalizeAverageCallStackLevel(double value);
+    void normalizeAverageCallStackLevel();
     void setAverageCallStackLevel(double value);
 
 private:
     int index;
     int id;
+    int countRoutines;
     QString file;
     QString name;
     double percentageDuration;

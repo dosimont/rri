@@ -87,6 +87,7 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
         while (matrix.size()<(unsigned int) timeSliceNumber){
             matrix.push_back(vector< vector<double> >());
             objectCount.push_back(0);
+            timeSlices.push_back(new RRITimeSlice());
         }
         CSV csv(&file);
         QStringList stringList;
@@ -116,7 +117,7 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
             }
         }
         for (int i=0; i<timeSlices.size(); i++){
-            timeSlices[i]->finalize();
+            timeSlices[i]->finalize(objectCount[i]);
         }
     }
 }
@@ -146,9 +147,6 @@ void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, i
         }
     }
     matrix[timeSlice][matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
-    for (int i=0; i<timeSlices.size(); i++){
-        timeSlices.push_back(new RRITimeSlice());
-    }
     timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId()));
 }
 

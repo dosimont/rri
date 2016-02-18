@@ -1,6 +1,6 @@
 #include "rriroutineinfo.h"
 
-RRIRoutineInfo::RRIRoutineInfo()
+RRIRoutineInfo::RRIRoutineInfo():countRoutines(0)
 {
 
 }
@@ -8,6 +8,7 @@ RRIRoutineInfo::RRIRoutineInfo()
 RRIRoutineInfo::RRIRoutineInfo(RRIRoutineInfo * rRIRoutineInfo):
                                   index(rRIRoutineInfo->getIndex()),
                                   id(rRIRoutineInfo->getId()),
+                                  countRoutines(1),
                                   file(rRIRoutineInfo->getFile()),
                                   name(rRIRoutineInfo->getName()),
                                   percentageDuration(rRIRoutineInfo->getPercentageDuration()),
@@ -73,7 +74,7 @@ void RRIRoutineInfo::addToPercentageDuration(double value)
 
 void RRIRoutineInfo::normalizePercentageDuration(double value)
 {
-    percentageDuration /= value;
+    percentageDuration /= (double)value;
 }
 
 void RRIRoutineInfo::setPercentageDuration(double value)
@@ -89,19 +90,23 @@ double RRIRoutineInfo::getAverageCallStackLevel() const
 void RRIRoutineInfo::initAverageCallStackLevel(double value)
 {
     averageCallStackLevel = value;
+    countRoutines++;
 }
 
 void RRIRoutineInfo::addToAverageCallStackLevel(double value)
 {
     averageCallStackLevel += value;
+    countRoutines++;
 }
 
-void RRIRoutineInfo::normalizeAverageCallStackLevel(double value)
+void RRIRoutineInfo::normalizeAverageCallStackLevel()
 {
-    averageCallStackLevel /= value;
+    averageCallStackLevel /= (double)countRoutines;
+    countRoutines=1;
 }
 
 void RRIRoutineInfo::setAverageCallStackLevel(double value)
 {
     averageCallStackLevel = value;
+    countRoutines=1;
 }

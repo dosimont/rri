@@ -13,6 +13,7 @@ public:
     ~RRITimeSlice();
     void addObject(RRIObject* object, int routine);
     void finalize();
+    void finalize(int count);
     QMap<int, RRIRoutineInfo *> getRoutines() const;
     QVector<RRIObject *> getObjects() const;
 

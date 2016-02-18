@@ -52,8 +52,8 @@ then
 R --slave --vanilla --args $output_dir $output_dir < $rscript
 mv $output_dir $input_dir/rri/
 else
-echo "Nan value detected, skipping this iteration"
-rm -fr $output_dir
+echo "Error detected, skipping this iteration"
+#rm -fr $output_dir
 fi
 done
 

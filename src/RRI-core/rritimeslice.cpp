@@ -1,6 +1,6 @@
 #include "rritimeslice.h"
 
-RRITimeSlice::RRITimeSlice():routines(QMap<int, RRIRoutineInfo*>()), objects(QVector<RRIObject*>()), samples(0)
+RRITimeSlice::RRITimeSlice():routines(QMap<int, RRIRoutineInfo*>()), objects(QVector<RRIObject*>()), samples(1)
 {
 
 }
@@ -16,7 +16,7 @@ void RRITimeSlice::addObject(RRIObject *object, int routine)
 {
     objects.push_back(object);
     if (objects.size()>1){
-        if (object[objects.size()-2].getTsPercentage()<object[objects.size()-1].getTsPercentage())
+        if (objects[objects.size()-2]->getTsPercentage()<objects[objects.size()-1]->getTsPercentage())
             samples++;
     }
     if (!routines.contains(routine)){
@@ -35,9 +35,17 @@ void RRITimeSlice::addObject(RRIObject *object, int routine)
 
 void RRITimeSlice::finalize()
 {
-    for (int i=0; i<routines.size(); i++){
-        routines[i]->normalizeAverageCallStackLevel(samples);
-        routines[i]->normalizePercentageDuration(samples);
+    for (RRIRoutineInfo* routine:routines.values()){
+        routine->normalizeAverageCallStackLevel();
+        routine->normalizePercentageDuration(samples);
+    }
+}
+
+void RRITimeSlice::finalize(int count)
+{
+    for (RRIRoutineInfo* routine:routines.values()){
+        routine->normalizeAverageCallStackLevel();
+        routine->normalizePercentageDuration(count);
     }
 }
 

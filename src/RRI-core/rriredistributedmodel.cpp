@@ -38,24 +38,27 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
         rRIParts[i]->setRoutines(rRIMicroscopicModel->getTimeSlices());
         RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
         for (RRIRoutineInfo* currentRoutine:rRIParts[i]->getRoutines().values()){
+            RRIERR(currentRoutine->getId()<<" "<<currentRoutine->getName().toStdString()<<" "<<currentRoutine->getPercentageDuration()<<" "<<currentRoutine->getAverageCallStackLevel());
             if (currentRoutine->getPercentageDuration()>=minPercentage){
-                if (currentRoutine->getAverageCallStackLevel()>mainRoutine->getAverageCallStackLevel()){
+                if (currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
                     mainRoutine=currentRoutine;
                 }
             }else{
                 if (currentRoutine->getPercentageDuration()>mainRoutine->getPercentageDuration()){
+                    mainRoutine=currentRoutine;
+                }else if(currentRoutine->getPercentageDuration()>=mainRoutine->getPercentageDuration()&&currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
                     mainRoutine=currentRoutine;
                 }
             }
         }
         mainRoutineMap.insert(rRIParts[i], mainRoutine);
     }
+    for (int i=0; i<rRIParts.size(); i++){
+        partsAsStrings.insert(i, mainRoutineMap[rRIParts[i]]->getFile()+":"+mainRoutineMap[rRIParts[i]]->getName());
+    }
     return mainRoutineMap;
 }
 
-QVector<QString> RRIRedistributedModel::getParts(){
-    for (int i=0; i<rRIParts.size(); i++){
-        partMap.insert(i, mainRoutineMap[rRIParts[i]]->getFile()+":"+mainRoutineMap[rRIParts[i]]->getName());
-    }
-    return partMap;
+QVector<QString> RRIRedistributedModel::getPartsAsStrings(){
+    return partsAsStrings;
 }

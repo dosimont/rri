@@ -18,11 +18,11 @@ public:
     void setMicroscopicModel(MicroscopicModel *value);
     MacroscopicModel *getMacroscopicModel() const;
     void setMacroscopicModel(MacroscopicModel *value);
-    virtual QVector<QString> getParts()=0;
+    virtual QVector<QString> getPartsAsStrings()=0;
 protected:
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
-    QVector<QString> partMap;
+    QVector<QString> partsAsStrings;
 };
 
 #endif // REDISTRIBUTEDMODEL_H

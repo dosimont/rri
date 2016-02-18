@@ -17,8 +17,8 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout.setf(ios::fixed, ios::floatfield);
-    std::cout.setf(ios::showpoint);
+    //std::cout.setf(ios::fixed, ios::floatfield);
+    //std::cout.setf(ios::showpoint);
     vector<QString> colors;
     colors.push_back("red");
     colors.push_back("blue");
@@ -76,16 +76,20 @@ int main(int argc, char *argv[])
                 std::cerr<<"NaN value detected, stopping the rendering"<<std::endl;
                 return 5;
             }
+            std::cout<<"Adding new parameter p"<<std::endl;
             qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
                            <<core.getMacroscopicModel()->getQualities()[i]->getLoss()
                            <<endl;
+            std::cout<<"Computing corresponding macroscopic model"<<std::endl;
             core.getParameters()->setP(core.getMacroscopicModel()->getPs()[i]);
             core.selectMacroscopicModel();
+            std::cout<<"Computing redistributed model"<<std::endl;
             core.buildRedistributedModel();
+            std::cout<<"Generating parts"<<std::endl;
             QVector<Part*> parts=core.getParts();
             for (int j=0; j< parts.size(); j++){
-                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core.getRedistributedModel()->getParts()[j]<<endl;
+                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core.getRedistributedModel()->getPartsAsStrings()[j]<<endl;
             }
         }
         return 0;
