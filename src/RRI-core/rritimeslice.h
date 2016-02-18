@@ -14,13 +14,13 @@ public:
     void addObject(RRIObject* object, int routine);
     void finalize();
     void finalize(int count);
+    int getSamples();
     QMap<int, RRIRoutineInfo *> getRoutines() const;
     QVector<RRIObject *> getObjects() const;
 
 private:
     QMap<int, RRIRoutineInfo*> routines;
     QVector<RRIObject*> objects;
-    int samples;
 };
 
 #endif // RRITIMESLICE_H

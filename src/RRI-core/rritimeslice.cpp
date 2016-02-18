@@ -1,6 +1,6 @@
 #include "rritimeslice.h"
 
-RRITimeSlice::RRITimeSlice():routines(QMap<int, RRIRoutineInfo*>()), objects(QVector<RRIObject*>()), samples(1)
+RRITimeSlice::RRITimeSlice():routines(QMap<int, RRIRoutineInfo*>()), objects(QVector<RRIObject*>())
 {
 
 }
@@ -15,10 +15,6 @@ RRITimeSlice::~RRITimeSlice()
 void RRITimeSlice::addObject(RRIObject *object, int routine)
 {
     objects.push_back(object);
-    if (objects.size()>1){
-        if (objects[objects.size()-2]->getTsPercentage()<objects[objects.size()-1]->getTsPercentage())
-            samples++;
-    }
     if (!routines.contains(routine)){
         routines.insert(routine, new RRIRoutineInfo());
         routines[routine]->setIndex(routine);
@@ -37,7 +33,7 @@ void RRITimeSlice::finalize()
 {
     for (RRIRoutineInfo* routine:routines.values()){
         routine->normalizeAverageCallStackLevel();
-        routine->normalizePercentageDuration(samples);
+        routine->normalizePercentageDuration(getSamples());
     }
 }
 
@@ -47,6 +43,11 @@ void RRITimeSlice::finalize(int count)
         routine->normalizeAverageCallStackLevel();
         routine->normalizePercentageDuration(count);
     }
+}
+
+int RRITimeSlice::getSamples()
+{
+    return objects.last()->getSample()-objects.first()->getSample()+1;
 }
 
 QMap<int, RRIRoutineInfo *> RRITimeSlice::getRoutines() const

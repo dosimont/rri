@@ -83,10 +83,8 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
         RRIERR("Input file can not be open");
         return;
     }else{
-        QVector<int> objectCount=QVector<int>();
         while (matrix.size()<(unsigned int) timeSliceNumber){
             matrix.push_back(vector< vector<double> >());
-            objectCount.push_back(0);
             timeSlices.push_back(new RRITimeSlice());
         }
         CSV csv(&file);
@@ -104,21 +102,20 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
             addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
             if (tempObject->getTsPercentage()>currentTimeStamp){
                 currentTimeStamp=tempObject->getTsPercentage();
-                objectCount[(int)(tempObject->getTsPercentage()*(double) timeSliceNumber)]+=1;
             }else if(tempObject->getTsPercentage()<currentTimeStamp){
                 RRIERR("Input file is not ordered");
                 return;
             }
-
+        }
+        for (int i=0; i<timeSlices.size(); i++){
+            timeSlices[i]->finalize();
         }
         for (unsigned int i=0; i<matrix.size(); i++){
             for (unsigned int j=0; j<matrix[i].size(); j++){
-                matrix[i][j][0]/=(double) objectCount[i];
+                matrix[i][j][0]/=(double)timeSlices[i]->getSamples();
             }
         }
-        for (int i=0; i<timeSlices.size(); i++){
-            timeSlices[i]->finalize(objectCount[i]);
-        }
+
     }
 }
 

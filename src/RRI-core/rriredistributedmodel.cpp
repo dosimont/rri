@@ -46,7 +46,7 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
             }else{
                 if (currentRoutine->getPercentageDuration()>mainRoutine->getPercentageDuration()){
                     mainRoutine=currentRoutine;
-                }else if(currentRoutine->getPercentageDuration()>=mainRoutine->getPercentageDuration()&&currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
+                }else if(currentRoutine->getPercentageDuration()==mainRoutine->getPercentageDuration()&&currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
                     mainRoutine=currentRoutine;
                 }
             }
