@@ -21,7 +21,7 @@ public:
     void setMicroscopicModel(MicroscopicModel *value);
     void setMacroscopicModel(MacroscopicModel *value);
     QMap<RRIPart*, RRIRoutineInfo*> generateRoutines(double minPercentage);
-    QMap<RRIObject*> generateCodelines();
+    QVector<RRIObject*> generateCodelines();
     QVector<QString> getPartsAsStrings();
 private:
     RRIMicroscopicModel* rRIMicroscopicModel;

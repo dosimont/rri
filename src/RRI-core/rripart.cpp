@@ -1,7 +1,7 @@
 #include "rripart.h"
 
 
-RRIPart::RRIPart(Part *part):Part(part->getTotalTimeSlice()),timeSlices(QVector<RRITimeSlice*>),
+RRIPart::RRIPart(Part *part):Part(part->getTotalTimeSlice()),timeSlices(QVector<RRITimeSlice*>()),
                             routines(QMap<int, RRIRoutineInfo*>())
 {
     setFirstTimeSlice(part->getFirstTimeSlice());
@@ -21,7 +21,7 @@ void RRIPart::setRoutines(QVector<RRITimeSlice *> tS)
         return;
     }
     for (int i=getFirstTimeSlice(); i<=getLastTimeSlice(); i++){
-        timeSlices.push_back(ts[i]);
+        timeSlices.push_back(tS[i]);
         QMap<int, RRIRoutineInfo *>currentRoutines=tS[i]->getRoutines();
         for(int currentRoutine : currentRoutines.keys()){
             if (!routines.contains(currentRoutine)){

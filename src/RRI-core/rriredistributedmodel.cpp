@@ -66,6 +66,7 @@ QVector<RRIObject *> RRIRedistributedModel::generateCodelines()
     for (RRIPart* part:mainRoutineMap.keys()){
         objects+=part->getCompatibleObjects(mainRoutineMap[part]->getId());
     }
+    return objects;
 }
 
 QVector<QString> RRIRedistributedModel::getPartsAsStrings(){

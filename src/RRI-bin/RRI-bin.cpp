@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         }
         QTextStream qualitiesStream(&qualitiesFile);
         QTextStream pStream(&pFile);
-        QTextStream codelinesStream(&codelineFile);
+        QTextStream codelinesStream(&codelinesFile);
         std::cout<<"Initializing the core"<<std::endl;
         RRICore core = RRICore();
         std::cout<<"Setting the parameters"<<std::endl;
@@ -83,9 +83,9 @@ int main(int argc, char *argv[])
             }
             QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core.getRedistributedModel())->generateCodelines();
             for (int j=0; j< codelines.size(); j++){
-                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<codelines[j]->getTsAbsolute()<<","
-                      <<codelines[j]->getTsAbsolute()<<","
-                      <<codelines[j]->getCodeline()<<","
+                codelinesStream<<core.getMacroscopicModel()->getPs()[i]<<","
+                      <<codelines[j]->getTsPercentage()<<","
+                      <<codelines[j]->getCodeline()
                       <<endl;
             }
 

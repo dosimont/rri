@@ -78,6 +78,7 @@ void RRICore::buildRedistributedModel()
         redistributedModel=new RRIRedistributedModel(microscopicModel, macroscopicModel);
         rRIRedistributedModel=dynamic_cast<RRIRedistributedModel*>(redistributedModel);
         rRIRedistributedModel->generateRoutines(DEFAULT_ROUTINE_MIN_DURATION);
+        rRIRedistributedModel->generateCodelines();
         break;
        case rri::DEFAULT:;
     }
