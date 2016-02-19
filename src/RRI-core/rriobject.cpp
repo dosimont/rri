@@ -1,7 +1,7 @@
 #include "rriobject.h"
 
 RRIObject::RRIObject()
-                     :id(0), sample(0), tsPercentage(0),
+                     :id(-1), sample(0), tsPercentage(0),
                      tsAbsolute(0), callstackLvl(0),
                      routineId(0), routineName(""),
                      codelineId(0), fileName(""), codeline(0)

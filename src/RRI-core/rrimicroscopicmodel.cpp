@@ -51,6 +51,16 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
     return rRIObject;
 }
 
+RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields, int line)
+{
+    if (fields.size()!=CSV_RRI_SIZE){
+        RRIERR("Error while parsing the file: line "<<line<< ", expected "<< CSV_RRI_SIZE<< " fields, has found "<< fields.size());
+        return new RRIObject();
+    }else{
+        return buildRRIObject(fields);
+    }
+}
+
 //deprecated
 void RRIMicroscopicModel::buildWithoutPreAggregation()
 {
@@ -90,11 +100,17 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
         CSV csv(&file);
         QStringList stringList;
         int i=0;
+        int line=0;
         double currentTimeStamp=-1;
         //header
         csv.parseLine();
+        line++;
         for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
-            RRIObject* tempObject=buildRRIObject(stringList);
+            line++;
+            RRIObject* tempObject=buildRRIObject(stringList, line);
+            if (tempObject->getId()==-1){
+                return;
+            }
             if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
                 matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
             }

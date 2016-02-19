@@ -16,6 +16,8 @@
 #define CSV_RRI_FILE_NAME 8
 #define CSV_RRI_CODELINE 9
 
+#define CSV_RRI_SIZE 10
+
 //Default lpaggreg parameters
 #define DEFAULT_PARAMETER_NORMALIZE true
 #define DEFAULT_PARAMETER_THRESHOLD 0.0001
