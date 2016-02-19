@@ -14,10 +14,12 @@ class RRIPart : public Part
 public:
     RRIPart(Part* part);
     ~RRIPart();
-    void setRoutines(QVector<RRITimeSlice*> timeSlices);
+    void setRoutines(QVector<RRITimeSlice*> tS);
     QMap<int, RRIRoutineInfo*> getRoutines() const;
+    QVector<RRIObject*> getCompatibleObjects(int routine);
 
 private:
+    QVector<RRITimeSlice*> timeSlices;
     int routineNumber;
     QMap<int, RRIRoutineInfo*> routines;
 

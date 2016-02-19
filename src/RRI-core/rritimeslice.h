@@ -4,6 +4,7 @@
 #include <QVector>
 #include <QMap>
 #include "rriobject.h"
+#include "rritimeslice.h"
 #include "rriroutineinfo.h"
 
 class RRITimeSlice
@@ -17,7 +18,7 @@ public:
     int getSamples();
     QMap<int, RRIRoutineInfo *> getRoutines() const;
     QVector<RRIObject *> getObjects() const;
-
+    QVector<RRIObject *> getCompatibleObjects(int routine) const;
 private:
     QMap<int, RRIRoutineInfo*> routines;
     QVector<RRIObject*> objects;

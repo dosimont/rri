@@ -69,3 +69,14 @@ QVector<RRIObject *> RRITimeSlice::getObjects() const
 {
     return objects;
 }
+
+QVector<RRIObject *> RRITimeSlice::getCompatibleObjects(int routineId) const
+{
+    QVector<RRIObject *> compatibleObjects = QVector<RRIObject *>();
+    for (RRIObject* object:objects){
+        if (object->getRoutineId()==routineId){
+            compatibleObjects.push_back(object);
+        }
+    }
+    return compatibleObjects;
+}

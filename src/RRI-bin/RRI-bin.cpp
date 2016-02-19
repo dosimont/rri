@@ -17,16 +17,6 @@
 
 int main(int argc, char *argv[])
 {
-    //std::cout.setf(ios::fixed, ios::floatfield);
-    //std::cout.setf(ios::showpoint);
-    vector<QString> colors;
-    colors.push_back("red");
-    colors.push_back("blue");
-    colors.push_back("green");
-    colors.push_back("yellow");
-    colors.push_back("black");
-    colors.push_back("orange");
-    colors.push_back("purple");
     if (argc==2){
         QString input = QString(argv[1]);
         std::cout<<"Executing Relevant Routine Identifier"<<std::endl;
@@ -53,8 +43,14 @@ int main(int argc, char *argv[])
         if (!pFile.open(QIODevice::ReadWrite | QIODevice::Text)){
            return 3;
         }
+        QString codelines = path +"/codelines.csv";
+        QFile codelinesFile(codelines);
+        if (!codelinesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
+           return 4;
+        }
         QTextStream qualitiesStream(&qualitiesFile);
         QTextStream pStream(&pFile);
+        QTextStream codelinesStream(&codelineFile);
         std::cout<<"Initializing the core"<<std::endl;
         RRICore core = RRICore();
         std::cout<<"Setting the parameters"<<std::endl;
@@ -85,6 +81,14 @@ int main(int argc, char *argv[])
             for (int j=0; j< parts.size(); j++){
                 pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core.getRedistributedModel()->getPartsAsStrings()[j]<<endl;
             }
+            QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core.getRedistributedModel())->generateCodelines();
+            for (int j=0; j< codelines.size(); j++){
+                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<codelines[j]->getTsAbsolute()<<","
+                      <<codelines[j]->getTsAbsolute()<<","
+                      <<codelines[j]->getCodeline()<<","
+                      <<endl;
+            }
+
         }
         std::cout<<"Exiting"<<std::endl;
         return 0;
