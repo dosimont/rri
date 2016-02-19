@@ -35,6 +35,9 @@ void RRITimeSlice::finalize()
         routine->normalizeAverageCallStackLevel();
         routine->normalizePercentageDuration(getSamples());
     }
+    //if (routines.empty()){
+    //    routines.insert(-1, new RRIRoutineInfo());
+    //}
 }
 
 void RRITimeSlice::finalize(int count)
@@ -43,11 +46,18 @@ void RRITimeSlice::finalize(int count)
         routine->normalizeAverageCallStackLevel();
         routine->normalizePercentageDuration(count);
     }
+    //if (routines.empty()){
+    //    routines.insert(-1, new RRIRoutineInfo());
+    //}
 }
 
 int RRITimeSlice::getSamples()
 {
-    return objects.last()->getSample()-objects.first()->getSample()+1;
+    if (objects.size()>=2){
+        return objects.last()->getSample()-objects.first()->getSample()+1;
+    }else{
+        return objects.size();
+    }
 }
 
 QMap<int, RRIRoutineInfo *> RRITimeSlice::getRoutines() const

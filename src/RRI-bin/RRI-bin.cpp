@@ -41,10 +41,8 @@ int main(int argc, char *argv[])
         {
             dir.remove(dirFile);
         }
-        std::cout<<"Done"<<std::endl;
         std::cout<<"Creating the result directory: "<<path.toStdString()<<std::endl;
         QDir().mkdir(path);
-        std::cout<<"Done"<<std::endl;
         QString qualities = path +"/qualities.csv";
         QFile qualitiesFile(qualities);
         if (!qualitiesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
@@ -88,8 +86,9 @@ int main(int argc, char *argv[])
                 pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core.getRedistributedModel()->getPartsAsStrings()[j]<<endl;
             }
         }
+        std::cout<<"Exiting"<<std::endl;
         return 0;
-        }
+    }
     std::cerr<<"Usage: "<<argv[0]<<" <file.callerdata>"<<std::endl;
     return 1;
 }

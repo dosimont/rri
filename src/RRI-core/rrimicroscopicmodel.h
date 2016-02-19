@@ -29,6 +29,7 @@ public:
 
 private:
     RRIObject* buildRRIObject(QStringList fields);
+    RRIObject* buildRRIObject(QStringList fields, int line);
     void buildWithoutPreAggregation();
     void buildWithPreAggregation(int timeSlices);
     void addToMicroscopicModel(RRIObject* object);

@@ -36,9 +36,11 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
     for (int i=0; i<oMacroscopicModel->getParts().size(); i++){
         rRIParts.push_back(new RRIPart(oMacroscopicModel->getParts().at(i)));
         rRIParts[i]->setRoutines(rRIMicroscopicModel->getTimeSlices());
+        if (rRIParts[i]->getRoutines().size()==0){
+            partsAsStrings.insert(i, "void");
+        }else{
         RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
         for (RRIRoutineInfo* currentRoutine:rRIParts[i]->getRoutines().values()){
-            //RRIERR(currentRoutine->getId()<<" "<<currentRoutine->getName().toStdString()<<" "<<currentRoutine->getPercentageDuration()<<" "<<currentRoutine->getAverageCallStackLevel());
             if (currentRoutine->getPercentageDuration()>=minPercentage){
                 if (currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
                     mainRoutine=currentRoutine;
@@ -52,9 +54,8 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
             }
         }
         mainRoutineMap.insert(rRIParts[i], mainRoutine);
-    }
-    for (int i=0; i<rRIParts.size(); i++){
         partsAsStrings.insert(i, mainRoutineMap[rRIParts[i]]->getFile()+":"+mainRoutineMap[rRIParts[i]]->getName());
+        }
     }
     return mainRoutineMap;
 }

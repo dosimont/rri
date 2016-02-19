@@ -111,27 +111,29 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
             if (tempObject->getId()==-1){
                 return;
             }
-            if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
-                matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
-            }
-            objects.push_back(tempObject);
-            addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
             if (tempObject->getTsPercentage()>currentTimeStamp){
                 currentTimeStamp=tempObject->getTsPercentage();
             }else if(tempObject->getTsPercentage()<currentTimeStamp){
                 RRIERR("Input file is not ordered");
                 return;
             }
+            if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
+                matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
+            }
+            objects.push_back(tempObject);
+            addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
         }
         for (int i=0; i<timeSlices.size(); i++){
             timeSlices[i]->finalize();
         }
         for (unsigned int i=0; i<matrix.size(); i++){
             for (unsigned int j=0; j<matrix[i].size(); j++){
-                matrix[i][j][0]/=(double)timeSlices[i]->getSamples();
+                double samples=(double)timeSlices[i]->getSamples();
+                if (samples!=0.0){
+                    matrix[i][j][0]/=samples;
+                }
             }
         }
-
     }
 }
 

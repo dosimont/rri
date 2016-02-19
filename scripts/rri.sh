@@ -47,6 +47,7 @@ do
 output_dir=${input_file%.callerdata}
 RRI-bin $input_file
 return_code=$?
+echo "R Script"
 if [[ $return_code -eq 0 ]]
 then
 R --slave --vanilla --args $output_dir $output_dir < $rscript
