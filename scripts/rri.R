@@ -57,25 +57,14 @@ print_qualities <- function(data){
 
 print_qualities2 <- function(data){
   dtemp<-data
-  dtemp$SLOPE<-rep(0, nrow(dtemp))
-  dtemp$SLOPESLOPE<-rep(0, nrow(dtemp))
-  for (i in 2:nrow(dtemp)){
-    dtemp[i,"SLOPE"]<-(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
-    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
-  }
-  SLOPE_MAX=max(dtemp$SLOPE, na.rm = TRUE)
-  SLOPESLOPE_MAX=max(dtemp$SLOPESLOPE, na.rm = TRUE)
-  dtemp$SLOPE=dtemp$SLOPE/SLOPE_MAX
-  dtemp$SLOPESLOPE=dtemp$SLOPESLOPE/SLOPESLOPE_MAX
+  p<-best_p(data)
+  dtemp2<-dtemp[(dtemp$P %in% p),]
   xlabel<- "Complexity reduction"
   ylabel<- "Information loss"
-  plot<-ggplot(dtemp, aes(GAIN))
-  plot<-plot+geom_line(aes(y=LOSS, color = "curve"))
-  plot<-plot+geom_point(aes(y=LOSS, color = "curve"))
-  plot<-plot+geom_line(aes(y=SLOPE, color = "slope"))
-  plot<-plot+geom_point(aes(y=SLOPE, color = "slope"))
-  plot<-plot+geom_line(aes(y=SLOPESLOPE, color = "slope2"))
-  plot<-plot+geom_point(aes(y=SLOPESLOPE, color = "slope2"))
+  plot<-ggplot()
+  plot<-plot+geom_line(data=dtemp,aes(x=GAIN,y=LOSS), color="black")
+  plot<-plot+geom_point(data=dtemp,aes(x=GAIN,y=LOSS), color="black")
+  plot<-plot+geom_point(data=dtemp2,aes(x=GAIN,y=LOSS), color="red")
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
   plot
