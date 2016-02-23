@@ -10,8 +10,6 @@ QT       -= gui
 TARGET = rri
 TEMPLATE = lib
 
-CONFIG += c++11
-
 DEFINES += CORE_LIBRARY
 
 SOURCES += biqmap.cpp \
@@ -50,7 +48,7 @@ HEADERS += biqmap.h \
     rriroutineinfo.h
 
 unix:!macx: LIBS += -llpaggreg
-isEmpty($$LPAGGREG_PATH){
+isEmpty( LPAGGREG_PATH ){
 } else {
 unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include

@@ -3,6 +3,7 @@
 ## Dependencies
 
 - [lpaggreg library](https://github.com/bsc-performance-tools/lpaggreg)
+- gcc 5
 - qt, qt-devel (version 5 -- do not compile with version 4)
 - qmake
 - R
