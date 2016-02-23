@@ -7,6 +7,8 @@ include(../../config.pri)
 
 QT       += core gui
 
+CONFIG += c++11
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = RRI-gui
@@ -28,7 +30,7 @@ INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 
 unix:!macx: LIBS += -llpaggreg
-isEmpty($$LPAGGREG_PATH){
+isEmpty(LPAGGREG_PATH){
 } else {
 unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include

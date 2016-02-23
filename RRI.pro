@@ -2,6 +2,13 @@ include(config.pri)
 
 TEMPLATE = subdirs
 
+CONFIG += c++11
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+}else{
+error(You need QT5 to compile this program)
+}
+
 SUBDIRS += \
            RRI-core
 
@@ -19,4 +26,4 @@ RRI-gui.subdir  = src/RRI-gui
 RRI-gui.depends = RRI-core
 }
 
-QMAKE_CLEAN += $$QMAKE_TARGET $$DESTDIR\*
+QMAKE_CLEAN += $$QMAKE_TARGET $$DESTDIR/*
