@@ -29,15 +29,9 @@ make_plist <- function(data){
 
 best_p <- function(data){
   dtemp<-data
-  #dtemp<-dtemp[(dtemp$LOSS<0.25),]
-  dtemp$SLOPE<-rep(0, nrow(dtemp))
-  dtemp$SLOPESLOPE<-rep(0, nrow(dtemp))
-  for (i in 2:nrow(dtemp)){
-    dtemp[i,"SLOPE"]<-(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
-    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
-  }
-  i<-which.max(dtemp[,"SLOPESLOPE"])
-  dtemp[i[1]-1,"P"]
+  dtemp$LOSSCOR<-dtemp$LOSS-dtemp$GAIN
+  i<-which.min(dtemp[,"LOSSCOR"])
+  dtemp[i[1],"P"]
 }
 
 print_qualities <- function(data){
