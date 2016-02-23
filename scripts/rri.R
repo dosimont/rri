@@ -67,7 +67,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+scale_x_continuous(name=xlabel)
   plot<-plot+scale_y_reverse()
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
-  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="white")
+  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black")
   plot<-plot + theme_bw()
   plot
 }
@@ -80,7 +80,7 @@ ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, heig
 parts_input <- paste(args[1],'/',parts_input_file, sep="")
 codelines_input <- paste(args[1],'/',codelines_input_file, sep="")
 parts_data <-read(parts_input, cheader_parts)
-codelines_data <-read(codelines_input, cheader_codeliens)
+codelines_data <-read(codelines_input, cheader_codelines)
 plist<-make_plist(parts_data)
 for (p in plist){
   parts_output <- paste(args[2],'/',parts_output_basename, "_" , p, ".pdf", sep="")
