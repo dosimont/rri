@@ -10,8 +10,6 @@ QT       -= gui
 TARGET = rri
 TEMPLATE = lib
 
-CONFIG += c++11
-
 DEFINES += CORE_LIBRARY
 
 SOURCES += biqmap.cpp \

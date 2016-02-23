@@ -3,8 +3,6 @@ include(../../config.pri)
 QT += core
 QT -= gui
 
-CONFIG += c++11
-
 TARGET = RRI-bin
 CONFIG += console
 CONFIG -= app_bundle
