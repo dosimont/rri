@@ -67,7 +67,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+scale_x_continuous(name=xlabel)
   plot<-plot+scale_y_reverse()
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
-  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black")
+  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
   plot<-plot + theme_bw()
   plot
 }
