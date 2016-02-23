@@ -6,21 +6,17 @@ w <- 12
 
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
-parts_output_file="parts"
+codelines_input_file="codelines.csv"
+parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
 
 cheader_parts<-c("P", "START", "END", "Function")
+cheader_codelines<-c("P", "TS", "Codeline")
 cheader_qualities<-c("P", "GAIN", "LOSS")
 
-read_qualities <- function(file) {
+read <- function(file, cheader) {
   df <- read.csv(file, header=FALSE, sep = ",", strip.white=TRUE)
-  names(df) <- cheader_qualities
-  df
-}
-
-read_parts <- function(file) {
-  df <- read.csv(file, header=FALSE, sep = ",", strip.white=TRUE)
-  names(df) <- cheader_parts
+  names(df) <- cheader
   df
 }
 
@@ -48,7 +44,6 @@ print_qualities <- function(data){
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
   plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
-  #plot<-plot + geom_text(aes(label=LABELX,y=LABELY),hjust=0, vjust=-1)
   plot
 }
 
@@ -59,22 +54,37 @@ print_parts <- function(data, p){
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
   plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=0, ymax=1)
-  plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
+  plot<-plot + theme_bw()
+  plot
+}
+
+print_parts_codelines <- function(parts_data, codelines_data, p){
+  parts_temp<-parts_data[(parts_data$P %in% p),]
+  codelines_temp<-codelines_data[(codelines_data$P %in% p),]
+  xlabel<-paste("Time (relative), p=", p, sep="")
+  legend<-paste("Relevant routines, p=", p, sep="")
+  plot<-ggplot()
+  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+scale_y_reverse()
+  plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
+  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="white")
   plot<-plot + theme_bw()
   plot
 }
 
 args <- commandArgs(trailingOnly = TRUE)
 qualities_input <- paste(args[1],'/',qualities_input_file, sep="")
-qualities_data <-read_qualities(qualities_input)
+qualities_data <-read(qualities_input, cheader_qualities)
 qualities_output <- paste(args[2],'/',qualities_output_file, sep="")
 ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = h)
 parts_input <- paste(args[1],'/',parts_input_file, sep="")
-parts_data <-read_parts(parts_input)
+codelines_input <- paste(args[1],'/',codelines_input_file, sep="")
+parts_data <-read(parts_input, cheader_parts)
+codelines_data <-read(codelines_input, cheader_codeliens)
 plist<-make_plist(parts_data)
 for (p in plist){
-  parts_output <- paste(args[2],'/',parts_output_file, "_" , p, ".pdf", sep="")
-  ggsave(parts_output, plot = print_parts(parts_data, p), width = w, height = h)
+  parts_output <- paste(args[2],'/',parts_output_basename, "_" , p, ".pdf", sep="")
+  ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 }
 warnings()
 
