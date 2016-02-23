@@ -83,6 +83,7 @@ print_parts <- function(data, p){
 
 print_parts_codelines <- function(parts_data, codelines_data, p){
   parts_temp<-parts_data[(parts_data$P %in% p),]
+  parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
   codelines_temp<-codelines_data[(codelines_data$P %in% p),]
   xlabel<-paste("Time (relative), p=", p, sep="")
   legend<-paste("Relevant routines, p=", p, sep="")
