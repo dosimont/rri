@@ -33,8 +33,8 @@ best_p <- function(data){
   dtemp$SLOPE<-rep(0, nrow(dtemp))
   dtemp$SLOPESLOPE<-rep(0, nrow(dtemp))
   for (i in 2:nrow(dtemp)){
-    dtemp[i,"SLOPE"]<-(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])/(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])
-    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])
+    dtemp[i,"SLOPE"]<-(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
+    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
   }
   i<-which.max(dtemp[,"SLOPESLOPE"])
   dtemp[i[1]-1,"P"]
@@ -66,8 +66,8 @@ print_qualities2 <- function(data){
   dtemp$SLOPE<-rep(0, nrow(dtemp))
   dtemp$SLOPESLOPE<-rep(0, nrow(dtemp))
   for (i in 2:nrow(dtemp)){
-    dtemp[i,"SLOPE"]<-(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])/(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])
-    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])
+    dtemp[i,"SLOPE"]<-(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
+    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
   }
   SLOPE_MAX=max(dtemp$SLOPE, na.rm = TRUE)
   SLOPESLOPE_MAX=max(dtemp$SLOPESLOPE, na.rm = TRUE)
@@ -75,9 +75,9 @@ print_qualities2 <- function(data){
   dtemp$SLOPESLOPE=dtemp$SLOPESLOPE/SLOPESLOPE_MAX
   xlabel<- "Complexity reduction"
   ylabel<- "Information loss"
-  plot<-ggplot(dtemp, aes(LOSS))
-  plot<-plot+geom_line(aes(y=GAIN, color = "curve"))
-  plot<-plot+geom_point(aes(y=GAIN, color = "curve"))
+  plot<-ggplot(dtemp, aes(GAIN))
+  plot<-plot+geom_line(aes(y=LOSS, color = "curve"))
+  plot<-plot+geom_point(aes(y=LOSS, color = "curve"))
   plot<-plot+geom_line(aes(y=SLOPE, color = "slope"))
   plot<-plot+geom_point(aes(y=SLOPE, color = "slope"))
   plot<-plot+geom_line(aes(y=SLOPESLOPE, color = "slope2"))
