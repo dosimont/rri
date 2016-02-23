@@ -9,6 +9,7 @@ qualities_input_file="qualities.csv"
 codelines_input_file="codelines.csv"
 parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
+qualities2_output_file="qualities2.pdf"
 
 cheader_parts<-c("P", "START", "END", "Function")
 cheader_codelines<-c("P", "TS", "Codeline")
@@ -24,6 +25,19 @@ make_plist <- function(data){
   plist<-data[["P"]]
   plist<-unique(plist)
   plist
+}
+
+best_p <- function(data){
+  dtemp<-data
+  #dtemp<-dtemp[(dtemp$LOSS<0.25),]
+  dtemp$SLOPE<-rep(0, nrow(dtemp))
+  dtemp$SLOPESLOPE<-rep(0, nrow(dtemp))
+  for (i in 2:nrow(dtemp)){
+    dtemp[i,"SLOPE"]<-(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
+    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
+  }
+  i<-which.max(dtemp[,"SLOPESLOPE"])
+  dtemp[i[1]-1,"P"]
 }
 
 print_qualities <- function(data){
@@ -44,6 +58,32 @@ print_qualities <- function(data){
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
   plot<-plot + scale_colour_manual(name="Quality measures",values = c("green","red"))
+  plot
+}
+
+print_qualities2 <- function(data){
+  dtemp<-data
+  dtemp$SLOPE<-rep(0, nrow(dtemp))
+  dtemp$SLOPESLOPE<-rep(0, nrow(dtemp))
+  for (i in 2:nrow(dtemp)){
+    dtemp[i,"SLOPE"]<-(dtemp[i,"LOSS"]-dtemp[i-1,"LOSS"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
+    dtemp[i,"SLOPESLOPE"]<-(dtemp[i,"SLOPE"]-dtemp[i-1,"SLOPE"])/(dtemp[i,"GAIN"]-dtemp[i-1,"GAIN"])
+  }
+  SLOPE_MAX=max(dtemp$SLOPE, na.rm = TRUE)
+  SLOPESLOPE_MAX=max(dtemp$SLOPESLOPE, na.rm = TRUE)
+  dtemp$SLOPE=dtemp$SLOPE/SLOPE_MAX
+  dtemp$SLOPESLOPE=dtemp$SLOPESLOPE/SLOPESLOPE_MAX
+  xlabel<- "Complexity reduction"
+  ylabel<- "Information loss"
+  plot<-ggplot(dtemp, aes(GAIN))
+  plot<-plot+geom_line(aes(y=LOSS, color = "curve"))
+  plot<-plot+geom_point(aes(y=LOSS, color = "curve"))
+  plot<-plot+geom_line(aes(y=SLOPE, color = "slope"))
+  plot<-plot+geom_point(aes(y=SLOPE, color = "slope"))
+  plot<-plot+geom_line(aes(y=SLOPESLOPE, color = "slope2"))
+  plot<-plot+geom_point(aes(y=SLOPESLOPE, color = "slope2"))
+  plot<-plot + theme_bw()
+  plot<-plot + labs(x=xlabel,y=ylabel)
   plot
 }
 
@@ -77,6 +117,8 @@ qualities_input <- paste(args[1],'/',qualities_input_file, sep="")
 qualities_data <-read(qualities_input, cheader_qualities)
 qualities_output <- paste(args[2],'/',qualities_output_file, sep="")
 ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = h)
+qualities2_output <- paste(args[2],'/',qualities2_output_file, sep="")
+ggsave(qualities2_output, plot = print_qualities2(qualities_data), width = w, height = h)
 parts_input <- paste(args[1],'/',parts_input_file, sep="")
 codelines_input <- paste(args[1],'/',codelines_input_file, sep="")
 parts_data <-read(parts_input, cheader_parts)
@@ -86,5 +128,9 @@ for (p in plist){
   parts_output <- paste(args[2],'/',parts_output_basename, "_" , p, ".pdf", sep="")
   ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 }
+p<-best_p(qualities_data)
+  parts_output <- paste(args[2],'/',parts_output_basename, "_best", ".pdf", sep="")
+  ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+
 warnings()
 
