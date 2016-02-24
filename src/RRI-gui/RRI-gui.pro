@@ -12,7 +12,6 @@ QT += widgets printsupport
 TARGET = RRI-gui
 TEMPLATE = app
 
-
 SOURCES +=\
         mainwindow.cpp \
     qcustomplot.cpp \
@@ -33,6 +32,8 @@ isEmpty(LPAGGREG_PATH){
 unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include
 }
+
+QMAKE_RPATHDIR += $$INCLUDEPATH
 
 unix {
     target.path = $$TARGET_PATH/bin

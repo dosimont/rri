@@ -23,14 +23,13 @@ unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include
 }
 
-
+QMAKE_RPATHDIR += $$INCLUDEPATH
 
 unix {
     target.path = $$TARGET_PATH/bin
     INSTALLS += target
-    target_scripts.files += += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
-    target_scripts.files += += $$PROJECT_ROOT_DIRECTORY/scripts/rri.sh
-    target_scripts.files += += $$PROJECT_ROOT_DIRECTORY/scripts/rri
+    target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
+    target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri
     target_scripts.path = $$TARGET_PATH/bin
     INSTALLS += target_scripts
 }
