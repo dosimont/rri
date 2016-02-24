@@ -16,6 +16,10 @@ unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 
+unix:!macx: LIBS += -L$$DESTDIR -lrri-prv
+INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-prv
+DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-prv
+
 unix:!macx: LIBS += -llpaggreg
 isEmpty( LPAGGREG_PATH ){
 } else {

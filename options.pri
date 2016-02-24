@@ -1,5 +1,3 @@
-#Build PRV library.
-BUILD_PRV=true
 #Build RRI Command Line program.
 BUILD_BIN=true
 #Build RRI Graphical Unit Interface tool. Should not be enabled.

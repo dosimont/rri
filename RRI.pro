@@ -11,20 +11,18 @@ error(You need QT5 to compile this program)
 
 SUBDIRS += \
            RRI-core \
-    src/RRI-prv
 
 RRI-core.subdir = src/RRI-core
 
-equals(BUILD_PRV, true){
 SUBDIRS += RRI-prv
 RRI-prv.subdir  = src/RRI-prv
 RRI-prv.depends = RRI-core
-}
 
 equals(BUILD_BIN, true){
 SUBDIRS += RRI-bin
 RRI-bin.subdir  = src/RRI-bin
 RRI-bin.depends = RRI-core
+RRI-bin.depends += RRI-prv
 }
 
 equals(BUILD_GUI, true){
