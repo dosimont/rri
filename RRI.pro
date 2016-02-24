@@ -10,7 +10,8 @@ error(You need QT5 to compile this program)
 }
 
 SUBDIRS += \
-           RRI-core
+           RRI-core \
+    src/RRI-prv
 
 RRI-core.subdir = src/RRI-core
 
