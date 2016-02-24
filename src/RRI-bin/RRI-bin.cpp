@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
         core.buildRedistributedModel();
         infoStream<<"Overall aggregation score (0: bad, 0.5: average, 1: good)= "<<core.getMacroscopicModel()->getAggregationScore()<<endl;
         infoStream<<"Gain normalized inflection point: p= "<<core.getCurrentP()<<endl;
+        infoStream<<"Time slice number "<<core.getParameters()->getTimesliceNumber()<<endl;
         std::cout<<"Exiting"<<std::endl;
         return 0;
     }
