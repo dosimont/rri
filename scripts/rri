@@ -59,7 +59,7 @@ rm -fr $input_dir/rri/*
 for input_file in $input_dir/*.callerdata
 do
 output_dir=${input_file%.callerdata}
-rribin $input_file
+$rribin $input_file
 return_code=$?
 echo "R Script"
 if [[ $return_code -eq 0 ]]
