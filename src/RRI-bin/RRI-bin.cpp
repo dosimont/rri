@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
            return 4;
         }
         QString info = path +"/info.csv";
-        QFile infoFile(codelines);
+        QFile infoFile(info);
         if (!infoFile.open(QIODevice::ReadWrite | QIODevice::Text)){
            return 5;
         }
@@ -99,8 +99,8 @@ int main(int argc, char *argv[])
         core.setP(rri::NORM_INFLECT);
         core.selectMacroscopicModel();
         core.buildRedistributedModel();
-        infoStream<<"Overall aggregation score (0: bad, 0.5: average, 1: good)= "<<core.getMacroscopicModel()->getAggregationScore()<<std::endl;
-        infoStream<<"Gain normalized inflection point: p= "<<core.getCurrentP()<<std::endl;
+        infoStream<<"Overall aggregation score (0: bad, 0.5: average, 1: good)= "<<core.getMacroscopicModel()->getAggregationScore()<<endl;
+        infoStream<<"Gain normalized inflection point: p= "<<core.getCurrentP()<<endl;
         std::cout<<"Exiting"<<std::endl;
         return 0;
     }
