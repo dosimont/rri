@@ -2,6 +2,7 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri.R
+rribin=$basedir/RRI-bin
 
 usage_fct(){
   echo "Usage : $0 [options] <folding-directory>"
@@ -20,6 +21,19 @@ then
 rscript=${RRI_PATH}/rri.R
 else
 echo "The required R script rri.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+exit 1
+fi
+fi
+if [ -f "RRI-bin" ]
+then
+rribin=RRI-bin
+elif [[ ! -f "$rribin" ]]
+then
+if [[ -f "${RRI_PATH}/RRI-bin" ]]
+then
+rribin=${RRI_PATH}/RRI-bin
+else
+echo "The required binary RRI-bin has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
 exit 1
 fi
 fi
@@ -45,7 +59,7 @@ rm -fr $input_dir/rri/*
 for input_file in $input_dir/*.callerdata
 do
 output_dir=${input_file%.callerdata}
-RRI-bin $input_file
+rribin $input_file
 return_code=$?
 echo "R Script"
 if [[ $return_code -eq 0 ]]
