@@ -185,7 +185,7 @@ QVector<float> RRICore::getPs() const
 
 void RRICore::setNormInflect()
 {
-    double score=getMacroscopicModel()->getQualities()[0]->getLoss()-getQualities()[0]->getGain();
+    double score=getMacroscopicModel()->getQualities()[0]->getLoss()-getMacroscopicModel()->getQualities()[0]->getGain();
     int index=0;
     for (int i=1; i<getPs().size();i++){
         double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()-getMacroscopicModel()->getQualities()[i]->getGain();
