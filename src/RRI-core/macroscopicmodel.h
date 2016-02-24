@@ -19,6 +19,7 @@ public:
     void setMicroscopicModel(MicroscopicModel *value);
     QVector<Quality *> getQualities() const;
     QVector<float> getPs() const;
+    double getAggregationScore();
 
 protected:
     QVector<Quality*> qualities;

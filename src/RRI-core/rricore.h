@@ -43,6 +43,8 @@ public:
     QVector<float> getPs() const;
 
 private:
+    void setNormInflect();
+
     Parameters* parameters;
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;

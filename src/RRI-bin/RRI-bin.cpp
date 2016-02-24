@@ -48,9 +48,15 @@ int main(int argc, char *argv[])
         if (!codelinesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
            return 4;
         }
+        QString info = path +"/info.csv";
+        QFile infoFile(codelines);
+        if (!infoFile.open(QIODevice::ReadWrite | QIODevice::Text)){
+           return 5;
+        }
         QTextStream qualitiesStream(&qualitiesFile);
         QTextStream pStream(&pFile);
         QTextStream codelinesStream(&codelinesFile);
+        QTextStream infoStream(&infoFile);
         std::cout<<"Initializing the core"<<std::endl;
         RRICore core = RRICore();
         std::cout<<"Setting the parameters"<<std::endl;
@@ -90,6 +96,11 @@ int main(int argc, char *argv[])
             }
 
         }
+        core.setP(rri::NORM_INFLECT);
+        core.selectMacroscopicModel();
+        core.buildRedistributedModel();
+        infoStream<<"Overall aggregation score (0: bad, 0.5: average, 1: good)= "<<core.getMacroscopicModel()->getAggregationScore()<<std::endl;
+        infoStream<<"Gain normalized inflection point: p= "<<core.getCurrentP()<<std::endl;
         std::cout<<"Exiting"<<std::endl;
         return 0;
     }

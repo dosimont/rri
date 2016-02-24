@@ -33,7 +33,7 @@ namespace rri {
     enum InputFileType { RRI, DEFAULT };
 
 //P default value
-    enum PDefaultValue { MAX, MIN };
+    enum PDefaultValue { MAX, MIN, NORM_INFLECT };
 }
 
 

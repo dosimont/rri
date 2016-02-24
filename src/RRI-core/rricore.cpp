@@ -159,6 +159,8 @@ void RRICore::setP(rri::PDefaultValue defaultValue)
         break;
     case rri::MIN:setP(0.0);
         break;
+    case rri::NORM_INFLECT:setNormInflect();
+        break;
     default:setP(1.0);
         break;
     }
@@ -179,6 +181,20 @@ void RRICore::setP(float value)
 QVector<float> RRICore::getPs() const
 {
     return macroscopicModel->getPs();
+}
+
+void RRICore::setNormInflect()
+{
+    double score=getMacroscopicModel()->getQualities()[0]->getLoss()-getQualities()[0]->getGain();
+    int index=0;
+    for (int i=1; i<getPS.size();i++){
+        double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()-getQualities()[i]->getGain();
+        if (currentScore<score){
+            score=currentScore;
+            index=i;
+        }
+    }
+    parameters->setP(getPs[index]);
 }
 
 RedistributedModel *RRICore::getRedistributedModel() const
