@@ -54,6 +54,8 @@ unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include
 }
 
+QMAKE_RPATHDIR += $$INCLUDEPATH
+
 unix {
     target.path = $$TARGET_PATH/lib
     header_files.files = $$HEADERS
