@@ -25,7 +25,7 @@
 #define DEFAULT_PARAMETER_TIMESLICENUMBER -1
 
 //Default rendering parameters
-#define DEFAULT_ROUTINE_MIN_DURATION 1
+#define DEFAULT_ROUTINE_MIN_DURATION 0.8
 
 namespace rri {
 
