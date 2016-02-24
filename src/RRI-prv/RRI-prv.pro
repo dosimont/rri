@@ -3,6 +3,8 @@
 # Project created by QtCreator 2016-02-24T17:31:35
 #
 #-------------------------------------------------
+include(../../config.pri)
+
 
 QT       -= gui
 
