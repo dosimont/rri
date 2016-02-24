@@ -42,5 +42,5 @@ double MacroscopicModel::getAggregationScore()
     for (int i=0; i<getPs().size()-1; i++){
         score+=(getQualities().at(i+1)->getGain()-getQualities().at(i)->getGain())*(getQualities().at(i+1)->getLoss()+getQualities().at(i)->getLoss())/2;
     }
-    return 1.0-score;
+    return (0.5-score)*2*100;
 }
