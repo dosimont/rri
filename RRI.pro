@@ -14,6 +14,12 @@ SUBDIRS += \
 
 RRI-core.subdir = src/RRI-core
 
+equals(BUILD_PRV, true){
+SUBDIRS += RRI-prv
+RRI-prv.subdir  = src/RRI-prv
+RRI-prv.depends = RRI-core
+}
+
 equals(BUILD_BIN, true){
 SUBDIRS += RRI-bin
 RRI-bin.subdir  = src/RRI-bin
