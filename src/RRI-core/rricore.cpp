@@ -187,14 +187,14 @@ void RRICore::setNormInflect()
 {
     double score=getMacroscopicModel()->getQualities()[0]->getLoss()-getQualities()[0]->getGain();
     int index=0;
-    for (int i=1; i<getPS.size();i++){
-        double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()-getQualities()[i]->getGain();
+    for (int i=1; i<getPs().size();i++){
+        double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()-getMacroscopicModel()->getQualities()[i]->getGain();
         if (currentScore<score){
             score=currentScore;
             index=i;
         }
     }
-    parameters->setP(getPs[index]);
+    parameters->setP(getPs()[index]);
 }
 
 RedistributedModel *RRICore::getRedistributedModel() const
