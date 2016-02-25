@@ -1,6 +1,6 @@
 #include "rristreamreader.h"
 
-RRIStreamReader::RRIStreamReader(QTextStream* stream):stream(stream), line("")
+RRIStreamReader::RRIStreamReader(QTextStream* stream):stream(stream), separator(CSV_RRI_SEPARATOR), line("")
 {
 
 }
