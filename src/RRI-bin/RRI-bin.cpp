@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         RRICore core = RRICore();
         std::cout<<"Setting the parameters"<<std::endl;
         core.getParameters()->setAnalysisType(rri::RRI);
-        core.getParameters()->setStream(inputStream);
+        core.getParameters()->setStream(&inputStream);
         core.getParameters()->setTimesliceNumber(TS_NUMBER);
         std::cout<<"Parsing the input file and generating the microscopic model"<<std::endl;
         if (!core.buildMicroscopicModel()){

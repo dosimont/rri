@@ -1,6 +1,6 @@
 #include "rriprv.h"
 
 
-RRIprv::RRIPrv()
+RRIPrv::RRIPrv()
 {
 }

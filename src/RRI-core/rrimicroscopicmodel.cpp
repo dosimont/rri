@@ -28,10 +28,10 @@ RRIMicroscopicModel::~RRIMicroscopicModel()
     }
 }
 
-void RRIMicroscopicModel::generate(QString stream, int timeSlices)
+void RRIMicroscopicModel::generate(QTextStream *textStream, int timeSlices)
 {
-    this->stream=stream;
-    buildWithPreAggregation(timeSlices);
+    stream=textStream;
+    build(timeSlices);
 
 }
 
@@ -61,7 +61,7 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields, int line)
     }
 }
 
-void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
+void RRIMicroscopicModel::build(int timeSliceNumber)
 {
     while (matrix.size()<(unsigned int) timeSliceNumber){
         matrix.push_back(vector< vector<double> >());
@@ -91,7 +91,7 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
             matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
         }
         objects.push_back(tempObject);
-        addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
+        addToMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
     }
     for (int i=0; i<timeSlices.size(); i++){
         timeSlices[i]->finalize();
@@ -108,7 +108,7 @@ void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
 
 
 
-void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
+void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object, int timeSlice)
 {
     for (unsigned int i=0; i<matrix.size();i++){
         while (matrix[i].size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineId())+1){

@@ -32,12 +32,12 @@ bool RRICore::buildMicroscopicModel()
             }
             microscopicModel=new RRIMicroscopicModel();
             microscopicModelAllocated=true;
-            *castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
+            castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
             castModel->generate(parameters->getStream(), parameters->getTimesliceNumber());
             return true;
-        case rri::DEFAULT:
-            return false;
+        case rri::DEFAULT:;
     }
+    return false;
 }
 
 void RRICore::initMacroscopicModels()

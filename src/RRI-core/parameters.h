@@ -27,11 +27,11 @@ public:
     float getP() const;
     void setP(float value);
 
-    QTextStream getStream() const;
-    void setStream(const QTextStream &value);
+    QTextStream *getStream() const;
+    void setStream(QTextStream *value);
 
 private:
-    QTextStream stream;
+    QTextStream *stream;
     InputFileType analysisType;
     bool normalize;
     float threshold;

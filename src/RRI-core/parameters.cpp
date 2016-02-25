@@ -59,12 +59,12 @@ void Parameters::setP(float value)
     p = value;
 }
 
-QTextStream Parameters::getStream() const
+QTextStream *Parameters::getStream() const
 {
     return stream;
 }
 
-void Parameters::setStream(const QTextStream &value)
+void Parameters::setStream(QTextStream *value)
 {
     stream = value;
 }

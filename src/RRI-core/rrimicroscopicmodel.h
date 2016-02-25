@@ -24,7 +24,7 @@ public:
     RRIMicroscopicModel();
     RRIMicroscopicModel(MicroscopicModel);
     ~RRIMicroscopicModel();
-    void generate(QTextStream stream, int timeSlices);
+    void generate(QTextStream *stream, int timeSlices);
     BiQMap<int, int> getMatrixIndexToRoutineId() const;
     QVector<RRITimeSlice*> getTimeSlices() const;
 
