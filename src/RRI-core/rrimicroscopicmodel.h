@@ -6,10 +6,11 @@
 #include <QVector>
 #include <QString>
 #include <QStringList>
+#include <QTextStream>
 #include <vector>
 #include "microscopicmodel.h"
 #include "rriobject.h"
-#include "csv.h"
+#include "rristreamreader.h"
 #include "biqmap.h"
 #include "constants.h"
 #include "debug.h"
@@ -23,17 +24,15 @@ public:
     RRIMicroscopicModel();
     RRIMicroscopicModel(MicroscopicModel);
     ~RRIMicroscopicModel();
-    void parseFile(QString fileName, int timeSlices);
+    void generate(QTextStream stream, int timeSlices);
     BiQMap<int, int> getMatrixIndexToRoutineId() const;
     QVector<RRITimeSlice*> getTimeSlices() const;
 
 private:
     RRIObject* buildRRIObject(QStringList fields);
     RRIObject* buildRRIObject(QStringList fields, int line);
-    void buildWithoutPreAggregation();
-    void buildWithPreAggregation(int timeSlices);
-    void addToMicroscopicModel(RRIObject* object);
-    void addToPreAggregateMicroscopicModel(RRIObject* object, int timeslice);
+    void build(int timeSlices);
+    void addToMicroscopicModel(RRIObject* object, int timeSlice);
     QVector<RRIObject*> objects;
     QVector<RRITimeSlice*> timeSlices;
     BiQMap<int, int> matrixIndexToRoutineId;

@@ -1,7 +1,7 @@
 #ifndef MICROSCOPICMODEL_H
 #define MICROSCOPICMODEL_H
 
-#include <QObject>
+#include <QTextStream>
 #include <vector>
 
 using std::vector;
@@ -16,7 +16,7 @@ public:
     void setMatrix(const vector<vector<vector<double> > > &value);
 
 protected:
-    QString currentFileName;
+    QTextStream stream;
     vector< vector< vector<double> > > matrix;
 };
 

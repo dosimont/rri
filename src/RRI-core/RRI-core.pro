@@ -13,7 +13,6 @@ TEMPLATE = lib
 DEFINES += CORE_LIBRARY
 
 SOURCES += biqmap.cpp \
-    csv.cpp \
     microscopicmodel.cpp \
     rriobject.cpp \
     rricore.cpp \
@@ -26,10 +25,10 @@ SOURCES += biqmap.cpp \
     rrimicroscopicmodel.cpp \
     rripart.cpp \
     rritimeslice.cpp \
-    rriroutineinfo.cpp
+    rriroutineinfo.cpp \
+    rristreamreader.cpp
 
 HEADERS += biqmap.h \
-    csv.h \
     microscopicmodel.h \
     rriobject.h \
     rricore.h \
@@ -45,7 +44,8 @@ HEADERS += biqmap.h \
     rriredistributedmodel.h \
     rripart.h \
     rritimeslice.h \
-    rriroutineinfo.h
+    rriroutineinfo.h \
+    rristreamreader.h
 
 unix:!macx: LIBS += -llpaggreg
 isEmpty( LPAGGREG_PATH ){

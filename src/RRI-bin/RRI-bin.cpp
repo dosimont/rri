@@ -21,6 +21,10 @@ int main(int argc, char *argv[])
         QString input = QString(argv[1]);
         std::cout<<"Executing Relevant Routine Identifier"<<std::endl;
         std::cout<<"Input file: "<<input.toStdString()<<std::endl;
+        QFile inputFile(input);
+        if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+           return 2;
+        }
         QFileInfo fileInfo(input);
         QString path=fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
         QDir dir(path);
@@ -36,7 +40,7 @@ int main(int argc, char *argv[])
         QString qualities = path +"/qualities.csv";
         QFile qualitiesFile(qualities);
         if (!qualitiesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 2;
+           return 3;
         }
         QString p = path +"/partitions.csv";
         QFile pFile(p);
@@ -46,13 +50,14 @@ int main(int argc, char *argv[])
         QString codelines = path +"/codelines.csv";
         QFile codelinesFile(codelines);
         if (!codelinesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 4;
+           return 3;
         }
         QString info = path +"/info.csv";
         QFile infoFile(info);
         if (!infoFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 5;
+           return 3;
         }
+        QTextStream inputStream(&inputFile);
         QTextStream qualitiesStream(&qualitiesFile);
         QTextStream pStream(&pFile);
         QTextStream codelinesStream(&codelinesFile);
@@ -60,7 +65,8 @@ int main(int argc, char *argv[])
         std::cout<<"Initializing the core"<<std::endl;
         RRICore core = RRICore();
         std::cout<<"Setting the parameters"<<std::endl;
-        core.getParameters()->setCurrentFileName(input);
+        core.getParameters()->setAnalysisType(rri::RRI);
+        core.getParameters()->setStream(inputStream);
         core.getParameters()->setTimesliceNumber(TS_NUMBER);
         std::cout<<"Parsing the input file and generating the microscopic model"<<std::endl;
         if (!core.buildMicroscopicModel()){

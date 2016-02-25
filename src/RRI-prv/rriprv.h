@@ -3,11 +3,11 @@
 
 #include "rri-prv_global.h"
 
-class RRIPRVSHARED_EXPORT RRIprv
+class RRIPRVSHARED_EXPORT RRIPrv
 {
 
 public:
-    RRIprv();
+    RRIPrv();
 };
 
 #endif // RRIPRV_H

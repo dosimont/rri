@@ -1,5 +1,7 @@
 include(options.pri)
 
+#Should not be modified
+
 VERSION = 0.0.3
 
 PROJECT_ROOT_DIRECTORY=$$PWD

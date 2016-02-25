@@ -2,22 +2,11 @@
 
 Parameters::Parameters()
 {
-    currentFileName="";
     analysisType=rri::DEFAULT;
     normalize=DEFAULT_PARAMETER_NORMALIZE;
     threshold=DEFAULT_PARAMETER_THRESHOLD;
     p=DEFAULT_PARAMETER_PARAMETER;
     timesliceNumber=DEFAULT_PARAMETER_TIMESLICENUMBER;
-}
-
-QString Parameters::getCurrentFileName() const
-{
-    return currentFileName;
-}
-
-void Parameters::setCurrentFileName(const QString &value)
-{
-    currentFileName = value;
 }
 
 InputFileType Parameters::getAnalysisType() const
@@ -68,4 +57,14 @@ float Parameters::getP() const
 void Parameters::setP(float value)
 {
     p = value;
+}
+
+QTextStream Parameters::getStream() const
+{
+    return stream;
+}
+
+void Parameters::setStream(const QTextStream &value)
+{
+    stream = value;
 }

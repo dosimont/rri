@@ -28,9 +28,9 @@ RRIMicroscopicModel::~RRIMicroscopicModel()
     }
 }
 
-void RRIMicroscopicModel::parseFile(QString fileName, int timeSlices)
+void RRIMicroscopicModel::generate(QString stream, int timeSlices)
 {
-    currentFileName=fileName;
+    this->stream=stream;
     buildWithPreAggregation(timeSlices);
 
 }
@@ -61,97 +61,52 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields, int line)
     }
 }
 
-//deprecated
-void RRIMicroscopicModel::buildWithoutPreAggregation()
-{
-    QFile file(currentFileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        RRIERR("Input file can not be open");
-        return;
-    }else{
-        CSV csv(&file);
-        RRILOG("CSV object has been initalized");
-        QStringList stringList;
-        int i=0;
-        //header
-        csv.parseLine();
-        for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
-            RRIObject* tempObject=buildRRIObject(stringList);
-            if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
-                matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
-            }
-            objects.push_back(tempObject);
-            addToMicroscopicModel(tempObject);
-        }
-    }
-}
-
 void RRIMicroscopicModel::buildWithPreAggregation(int timeSliceNumber)
 {
-    QFile file(currentFileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        RRIERR("Input file can not be open");
-        return;
-    }else{
-        while (matrix.size()<(unsigned int) timeSliceNumber){
-            matrix.push_back(vector< vector<double> >());
-            timeSlices.push_back(new RRITimeSlice());
-        }
-        CSV csv(&file);
-        QStringList stringList;
-        int i=0;
-        int line=0;
-        double currentTimeStamp=-1;
-        //header
-        csv.parseLine();
-        line++;
-        for (stringList=csv.parseLine();stringList.size()>1;stringList=csv.parseLine()){
-            line++;
-            RRIObject* tempObject=buildRRIObject(stringList, line);
-            if (tempObject->getId()==-1){
-                return;
-            }
-            if (tempObject->getTsPercentage()>currentTimeStamp){
-                currentTimeStamp=tempObject->getTsPercentage();
-            }else if(tempObject->getTsPercentage()<currentTimeStamp){
-                RRIERR("Input file is not ordered");
-                return;
-            }
-            if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
-                matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
-            }
-            objects.push_back(tempObject);
-            addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
-        }
-        for (int i=0; i<timeSlices.size(); i++){
-            timeSlices[i]->finalize();
-        }
-        for (unsigned int i=0; i<matrix.size(); i++){
-            for (unsigned int j=0; j<matrix[i].size(); j++){
-                double samples=(double)timeSlices[i]->getSamples();
-                if (samples!=0.0){
-                    matrix[i][j][0]/=samples;
-                }
-            }
-        }
-    }
-}
-
-
-//deprecated
-void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object)
-{
-    while (matrix.size()<(unsigned int) object->getSample()+1){
+    while (matrix.size()<(unsigned int) timeSliceNumber){
         matrix.push_back(vector< vector<double> >());
+        timeSlices.push_back(new RRITimeSlice());
     }
-    for (unsigned int i=0; i<matrix.size();i++){
-        while (matrix[i].size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineId())+1){
-            matrix[i].push_back(vector<double>());
-            matrix[i][matrix[i].size()-1].push_back(0.0);
+    RRIStreamReader streamReader(stream);
+    QStringList stringList;
+    int i=0;
+    int line=0;
+    double currentTimeStamp=-1;
+    //header
+    line++;
+    streamReader.readline();
+    for (stringList=streamReader.readline();!streamReader.isEnd();stringList=streamReader.readline()){
+        line++;
+        RRIObject* tempObject=buildRRIObject(stringList, line);
+        if (tempObject->getId()==-1){
+            return;
+        }
+        if (tempObject->getTsPercentage()>currentTimeStamp){
+            currentTimeStamp=tempObject->getTsPercentage();
+        }else if(tempObject->getTsPercentage()<currentTimeStamp){
+            RRIERR("Input file is not ordered");
+            return;
+        }
+        if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
+            matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
+        }
+        objects.push_back(tempObject);
+        addToPreAggregateMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
+    }
+    for (int i=0; i<timeSlices.size(); i++){
+        timeSlices[i]->finalize();
+    }
+    for (unsigned int i=0; i<matrix.size(); i++){
+        for (unsigned int j=0; j<matrix[i].size(); j++){
+            double samples=(double)timeSlices[i]->getSamples();
+            if (samples!=0.0){
+                matrix[i][j][0]/=samples;
+            }
         }
     }
-    matrix[object->getSample()][matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
 }
+
+
 
 void RRIMicroscopicModel::addToPreAggregateMicroscopicModel(RRIObject *object, int timeSlice)
 {

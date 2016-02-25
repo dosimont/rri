@@ -24,34 +24,34 @@ RRICore::~RRICore()
 
 bool RRICore::buildMicroscopicModel()
 {
-    QFileInfo fileInfo(parameters->getCurrentFileName());
-    if (fileInfo.suffix().compare(FILE_EXT_RRI)==0){
-        parameters->setAnalysisType(rri::RRI);
-        if (microscopicModelAllocated){
-            delete microscopicModel;
-        }
-        microscopicModel=new RRIMicroscopicModel();
-        microscopicModelAllocated=true;
-        RRIMicroscopicModel *castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
-        castModel->parseFile(parameters->getCurrentFileName(), parameters->getTimesliceNumber());
-        return true;
-    }else{
-        return false;
+    RRIMicroscopicModel *castModel;
+    switch (parameters->getAnalysisType()){
+        case rri::RRI:
+            if (microscopicModelAllocated){
+                delete microscopicModel;
+            }
+            microscopicModel=new RRIMicroscopicModel();
+            microscopicModelAllocated=true;
+            *castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
+            castModel->generate(parameters->getStream(), parameters->getTimesliceNumber());
+            return true;
+        case rri::DEFAULT:
+            return false;
     }
 }
 
 void RRICore::initMacroscopicModels()
 {
     switch (parameters->getAnalysisType()){
-       case rri::RRI:
-        if (macroscopicModelAllocated){
-            delete macroscopicModel;
-        }
-        macroscopicModelAllocated=true;
-        macroscopicModel=new OMacroscopicModel(microscopicModel);
-        macroscopicModel->initializeAggregator();
-        break;
-       case rri::DEFAULT:;
+        case rri::RRI:
+            if (macroscopicModelAllocated){
+                delete macroscopicModel;
+            }
+            macroscopicModelAllocated=true;
+            macroscopicModel=new OMacroscopicModel(microscopicModel);
+            macroscopicModel->initializeAggregator();
+            break;
+        case rri::DEFAULT:;
     }
 }
 
@@ -70,17 +70,17 @@ void RRICore::buildRedistributedModel()
 {
     RRIRedistributedModel *rRIRedistributedModel;
     switch (parameters->getAnalysisType()){
-       case rri::RRI:
-        if (redistributedModelAllocated){
-            delete redistributedModel;
-        }
-        redistributedModelAllocated=true;
-        redistributedModel=new RRIRedistributedModel(microscopicModel, macroscopicModel);
-        rRIRedistributedModel=dynamic_cast<RRIRedistributedModel*>(redistributedModel);
-        rRIRedistributedModel->generateRoutines(DEFAULT_ROUTINE_MIN_DURATION);
-        rRIRedistributedModel->generateCodelines();
-        break;
-       case rri::DEFAULT:;
+        case rri::RRI:
+            if (redistributedModelAllocated){
+                delete redistributedModel;
+            }
+            redistributedModelAllocated=true;
+            redistributedModel=new RRIRedistributedModel(microscopicModel, macroscopicModel);
+            rRIRedistributedModel=dynamic_cast<RRIRedistributedModel*>(redistributedModel);
+            rRIRedistributedModel->generateRoutines(DEFAULT_ROUTINE_MIN_DURATION);
+            rRIRedistributedModel->generateCodelines();
+            break;
+        case rri::DEFAULT:;
     }
 }
 
