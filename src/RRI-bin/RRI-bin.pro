@@ -3,6 +3,8 @@ include(../../config.pri)
 QT += core
 QT -= gui
 
+QMAKE_STRIP = echo
+
 TARGET = RRI-bin
 CONFIG += console
 CONFIG -= app_bundle
@@ -20,14 +22,15 @@ unix:!macx: LIBS += -L$$DESTDIR -lrri-prv
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-prv
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-prv
 
+QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../lib\''
+
 unix:!macx: LIBS += -llpaggreg
 isEmpty( LPAGGREG_PATH ){
 } else {
 unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include
+QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
 }
-
-QMAKE_RPATHDIR += $$INCLUDEPATH
 
 unix {
     target.path = $$TARGET_PATH/bin
