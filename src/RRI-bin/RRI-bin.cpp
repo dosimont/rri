@@ -10,13 +10,21 @@
 
 #include <rricore.h>
 #include <part.h>
+#include <argumentmanager.h>
 
+#define RETURN_OK 0
+#define RETURN_ERR_CMD 1
 
-#define TS_NUMBER 200
-#define THRESHOLD_FACTOR 1000
 
 int main(int argc, char *argv[])
 {
+    ArgumentManager argumentManager(argc, argv);
+    if (!argumentManager.getConform()||argumentManager.getHelp()){
+        argumentManager.printUsage();
+        return RETURN_ERR_CMD;
+    }
+    FileManager fileManager(argumentManager);
+
     if (argc==2){
         QString input = QString(argv[1]);
         std::cout<<"Executing Relevant Routine Identifier"<<std::endl;

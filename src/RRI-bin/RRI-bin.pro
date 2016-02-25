@@ -12,7 +12,10 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += \
-    RRI-bin.cpp
+    RRI-bin.cpp \
+    argumentmanager.cpp \
+    filemanager.cpp \
+    streamset.cpp
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
@@ -40,4 +43,9 @@ unix {
     target_scripts.path = $$TARGET_PATH/bin
     INSTALLS += target_scripts
 }
+
+HEADERS += \
+    argumentmanager.h \
+    filemanager.h \
+    streamset.h
 

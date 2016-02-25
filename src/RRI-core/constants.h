@@ -1,9 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-//File extensions
-#define FILE_EXT_RRI "callerdata"
-
 //RRI file csv fields
 #define CSV_RRI_ID 0
 #define CSV_RRI_SAMPLE 1
