@@ -33,9 +33,8 @@ isEmpty(LPAGGREG_PATH){
 } else {
 unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
 INCLUDEPATH += $$LPAGGREG_PATH/include
+QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
 }
-
-QMAKE_LFLAGS += -Wl,-rpath,$$LIBS
 
 unix {
     target.path = $$TARGET_PATH/bin
