@@ -52,7 +52,7 @@ int FileManager::mkoutputs()
             QStringList iterationNameList=file.split('.');
             QString iterationName=iterationNameList.last();
             iterationNames.push_back(iterationName);
-            QString outputSubDir=outputDir+"/"+;
+            QString outputSubDir=outputDir+"/"+iterationName;
             (QDir().mkdir(outputSubDir);
             streamSets.append(StreamSet());
             streamSets.last().setStreams(outputSubDir);
