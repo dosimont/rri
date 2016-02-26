@@ -2,21 +2,28 @@
 #define FILEMANAGER_H
 
 #include <QVector>
-#include "argumentmanager.h"
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 
-#define FOLDING_DIR_PATTERN ".folding"
-#define FOLDING_FILES_PATTERN ".codeblocks.fused."
-#define FOLDING_CALLERDATA_EXT ".callerdata"
+#include "argumentmanager.h"
+#include "streamset.h"
+#include "bin_constants.h"
 
 class FileManager
 {
 public:
-    FileManager(ArgumentManager argumentManager);
+    FileManager(ArgumentManager* argumentManager);
 protected:
+    int init();
+    int mkoutputDir();
+    int mkoutputs();
     QString inputDir;
-    QString inputBasePattern;
+    QString outputDir;
     QVector<QString> callerDataFileNames;
     QVector<QString> iterationNames;
+    QVector<StreamSet> streamSets;
+    ArgumentManager* argumentManager;
 };
 
 #endif // FILEMANAGER_H

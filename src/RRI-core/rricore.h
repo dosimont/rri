@@ -5,7 +5,7 @@
 #include <QFileInfo>
 #include <QVector>
 #include "rricore_global.h"
-#include "constants.h"
+#include "core_constants.h"
 #include "rrimicroscopicmodel.h"
 #include "omacroscopicmodel.h"
 #include "redistributedmodel.h"

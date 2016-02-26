@@ -4,13 +4,13 @@
 #include <QString>
 #include <QStringList>
 
+#include "bin_constants.h"
+
 //MACRO
 
 #define OPT(X) arguments[i].compare(X)==0
 #define ARG arguments[i]
 #define VAL arguments[i+1]
-
-#define TS_NUMBER 200
 
 class ArgumentManager
 {

@@ -47,5 +47,6 @@ unix {
 HEADERS += \
     argumentmanager.h \
     filemanager.h \
-    streamset.h
+    streamset.h \
+    bin_constants.h
 

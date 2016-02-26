@@ -9,6 +9,8 @@ ArgumentManager::ArgumentManager(int argc, char *argv[])
     }
     conform=true;
     timeSliceNumber=TS_NUMBER;
+    output="";
+    uniqueFile=false;
     processArguments();
 }
 

@@ -12,7 +12,7 @@
 #include "rriobject.h"
 #include "rristreamreader.h"
 #include "biqmap.h"
-#include "constants.h"
+#include "core_constants.h"
 #include "debug.h"
 #include "rritimeslice.h"
 

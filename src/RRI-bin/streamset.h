@@ -4,16 +4,19 @@
 #include <QTextStream>
 #include <QFile>
 
+#include "bin_constants.h"
+
 class StreamSet
 {
 public:
     StreamSet();
+    ~StreamSet();
 
     close();
 
     int setStreams(QString path);
 
-    int setStream(QString path);
+    int setStream(QTextStream *stream, QFile file, QString path);
 
     QTextStream *getInfoStream() const;
 

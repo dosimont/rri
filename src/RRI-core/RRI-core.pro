@@ -32,7 +32,6 @@ HEADERS += biqmap.h \
     microscopicmodel.h \
     rriobject.h \
     rricore.h \
-    constants.h \
     rricore_global.h \
     macroscopicmodel.h \
     omacroscopicmodel.h \
@@ -45,7 +44,8 @@ HEADERS += biqmap.h \
     rripart.h \
     rritimeslice.h \
     rriroutineinfo.h \
-    rristreamreader.h
+    rristreamreader.h \
+    core_constants.h
 
 unix:!macx: LIBS += -llpaggreg
 isEmpty( LPAGGREG_PATH ){

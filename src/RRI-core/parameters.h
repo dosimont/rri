@@ -1,7 +1,7 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include "constants.h"
+#include "core_constants.h"
 #include <QString>
 #include <QTextStream>
 

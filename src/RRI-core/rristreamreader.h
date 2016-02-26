@@ -3,7 +3,7 @@
 
 #include <QTextStream>
 #include <QChar>
-#include "constants.h"
+#include "core_constants.h"
 
 class RRIStreamReader
 {

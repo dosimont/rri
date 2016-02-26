@@ -1,18 +1,32 @@
 #include "streamset.h"
 
-StreamSet::StreamSet()
+StreamSet::StreamSet(): infoStream(new QTextStream()),
+                        qualityStream(new QTextStream()),
+                        partitionStream(new QTextStream()),
+                        routineStream(new QTextStream())
 {
 
+}
+
+StreamSet::~StreamSet()
+{
+    delete infoStream;
+    delete qualityStream;
+    delete partitionStream;
+    delete routineStream;
 }
 
 StreamSet::close()
 {
-    infoStream->
+    infoFile.close();
+    qualityFile.close();
+    partitionFile.close();
+    routineFile.close();
 }
 
-int StreamSet::setStream(QTextStream *stream, QString path)
+int StreamSet::setStream(QTextStream *stream, QFile file, QString path)
 {
-    QFile file(path);
+    file(path);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text)){
        return 1;
     }
@@ -20,34 +34,13 @@ int StreamSet::setStream(QTextStream *stream, QString path)
     return 0;
 }
 
-int StreamSet::setStreams(QString input, QString path)
+int StreamSet::setStreams(QString path)
 {
-    QString qualityString = path +"/quality.csv";
-    QFile qualityFile(qualityString);
-    if (!qualityFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-       return 3;
-    }
-    qualityFile.close();
-    QString p = path +"/partitions.csv";
-    QFile pFile(p);
-    if (!pFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-       return 3;
-    }
-    QString codelines = path +"/codelines.csv";
-    QFile codelinesFile(codelines);
-    if (!codelinesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-       return 3;
-    }
-    QString info = path +"/info.csv";
-    QFile infoFile(info);
-    if (!infoFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-       return 3;
-    }
-    QTextStream inputStream(&inputFile);
-    QTextStream qualityStream(&qualityFile);
-    QTextStream pStream(&pFile);
-    QTextStream codelinesStream(&codelinesFile);
-    QTextStream infoStream(&infoFile);
+    setStream(infoStream, infoFile, path+"/"+INFO_FILE);
+    setStream(qualityStream, qualityFile, path+"/"+QUALITY_FILE);
+    setStream(partitionStream, partitionFile, path+"/"+PARTITION_FILE);
+    setStream(routineStream, routineFile, path+"/"+ROUTINE_FILE);
+
 }
 
 QTextStream *StreamSet::getInfoStream() const
@@ -66,31 +59,6 @@ QTextStream *StreamSet::getPartitionStream() const
 }
 
 QTextStream *StreamSet::getRoutineStream() const
-{
-    return routineStream;
-}
-
-QTextStream StreamSet::getInputStream() const
-{
-    return inputStream;
-}
-
-QTextStream StreamSet::getInfoStream() const
-{
-    return infoStream;
-}
-
-QTextStream StreamSet::getQualityStream() const
-{
-    return qualityStream;
-}
-
-QTextStream StreamSet::getPartitionStream() const
-{
-    return partitionStream;
-}
-
-QTextStream StreamSet::getRoutineStream() const
 {
     return routineStream;
 }
