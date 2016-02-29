@@ -1,5 +1,5 @@
 library(ggplot2)
-Sys.setlocale("LC_MESSAGES", 'en_US')
+#Sys.setlocale("LC_MESSAGES", 'en_US')
 
 h <- 6
 w <- 12
