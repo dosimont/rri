@@ -1,9 +1,6 @@
 #include "streamset.h"
 
-StreamSet::StreamSet(): infoStream(new QTextStream()),
-                        qualityStream(new QTextStream()),
-                        partitionStream(new QTextStream()),
-                        routineStream(new QTextStream())
+StreamSet::StreamSet()
 {
 
 }
@@ -14,6 +11,7 @@ StreamSet::~StreamSet()
     delete qualityStream;
     delete partitionStream;
     delete routineStream;
+    delete inputStream;
 }
 
 StreamSet::close()
@@ -22,24 +20,35 @@ StreamSet::close()
     qualityFile.close();
     partitionFile.close();
     routineFile.close();
+    inputFile.close();
 }
 
-int StreamSet::setStream(QTextStream *stream, QFile file, QString path)
+int StreamSet::setOutputStream(QTextStream *stream, QFile file, QString path)
 {
     file(path);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text)){
        return 1;
     }
-    stream(&file);
+    stream=new QTextStream(&file);
     return 0;
 }
 
-int StreamSet::setStreams(QString path)
+int StreamSet::setInputStream(QString path)
 {
-    setStream(infoStream, infoFile, path+"/"+INFO_FILE);
-    setStream(qualityStream, qualityFile, path+"/"+QUALITY_FILE);
-    setStream(partitionStream, partitionFile, path+"/"+PARTITION_FILE);
-    setStream(routineStream, routineFile, path+"/"+ROUTINE_FILE);
+    inputFile(path);
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+       return 1;
+    }
+    inputStream=new QTextStream(&inputFile);
+    return 0;
+}
+
+int StreamSet::setOuputStreams(QString path)
+{
+    setOutputStream(infoStream, infoFile, path+"/"+INFO_FILE);
+    setOutputStream(qualityStream, qualityFile, path+"/"+QUALITY_FILE);
+    setOutputStream(partitionStream, partitionFile, path+"/"+PARTITION_FILE);
+    setOutputStream(routineStream, routineFile, path+"/"+ROUTINE_FILE);
 
 }
 
@@ -61,4 +70,9 @@ QTextStream *StreamSet::getPartitionStream() const
 QTextStream *StreamSet::getRoutineStream() const
 {
     return routineStream;
+}
+
+QTextStream *StreamSet::getInputStream() const
+{
+    return inputStream;
 }

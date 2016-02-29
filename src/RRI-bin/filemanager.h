@@ -22,7 +22,7 @@ protected:
     QString outputDir;
     QVector<QString> callerDataFileNames;
     QVector<QString> iterationNames;
-    QVector<StreamSet> streamSets;
+    QVector<StreamSet> ouputStreamSets;
     ArgumentManager* argumentManager;
 };
 

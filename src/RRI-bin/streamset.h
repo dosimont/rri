@@ -14,9 +14,11 @@ public:
 
     close();
 
-    int setStreams(QString path);
+    int setOuputStreams(QString path);
 
-    int setStream(QTextStream *stream, QFile file, QString path);
+    int setOutputStream(QTextStream *stream, QFile file, QString path);
+
+    int setInputStream(QString path);
 
     QTextStream *getInfoStream() const;
 
@@ -26,11 +28,15 @@ public:
 
     QTextStream *getRoutineStream() const;
 
+    QTextStream *getInputStream() const;
+
 private:
+    QTextStream* inputStream;
     QTextStream* infoStream;
     QTextStream* qualityStream;
     QTextStream* partitionStream;
     QTextStream* routineStream;
+    QTextStream inputFile;
     QTextStream infoFile;
     QTextStream qualityFile;
     QTextStream partitionFile;

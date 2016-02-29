@@ -11,6 +11,7 @@
 #include <rricore.h>
 #include <part.h>
 #include <argumentmanager.h>
+#include <filemanager.h>
 
 #define RETURN_OK 0
 #define RETURN_ERR_CMD 1
@@ -24,101 +25,53 @@ int main(int argc, char *argv[])
         return RETURN_ERR_CMD;
     }
     FileManager fileManager(argumentManager);
-
-    if (argc==2){
-        QString input = QString(argv[1]);
-        std::cout<<"Executing Relevant Routine Identifier"<<std::endl;
-        std::cout<<"Input file: "<<input.toStdString()<<std::endl;
-        QFile inputFile(input);
-        if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-           return 2;
-        }
-        QFileInfo fileInfo(input);
-        QString path=fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
-        QDir dir(path);
-        dir.setNameFilters(QStringList() << "*.*");
-        dir.setFilter(QDir::Files);
-        std::cout<<"Removing previously generated files"<<std::endl;
-        foreach(QString dirFile, dir.entryList())
-        {
-            dir.remove(dirFile);
-        }
-        std::cout<<"Creating the result directory: "<<path.toStdString()<<std::endl;
-        QDir().mkdir(path);
-        QString qualities = path +"/qualities.csv";
-        QFile qualitiesFile(qualities);
-        if (!qualitiesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 3;
-        }
-        QString p = path +"/partitions.csv";
-        QFile pFile(p);
-        if (!pFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 3;
-        }
-        QString codelines = path +"/codelines.csv";
-        QFile codelinesFile(codelines);
-        if (!codelinesFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 3;
-        }
-        QString info = path +"/info.csv";
-        QFile infoFile(info);
-        if (!infoFile.open(QIODevice::ReadWrite | QIODevice::Text)){
-           return 3;
-        }
-        QTextStream inputStream(&inputFile);
-        QTextStream qualitiesStream(&qualitiesFile);
-        QTextStream pStream(&pFile);
-        QTextStream codelinesStream(&codelinesFile);
-        QTextStream infoStream(&infoFile);
-        std::cout<<"Initializing the core"<<std::endl;
-        RRICore core = RRICore();
-        std::cout<<"Setting the parameters"<<std::endl;
+    fileManager.init();
+    RRICore core;
+    for (int i=0; i<fileManager.iterationNames.size(); i++){
+        core = RRICore();
         core.getParameters()->setAnalysisType(rri::RRI);
-        core.getParameters()->setStream(&inputStream);
-        core.getParameters()->setTimesliceNumber(TS_NUMBER);
-        std::cout<<"Parsing the input file and generating the microscopic model"<<std::endl;
-        if (!core.buildMicroscopicModel()){
-            return 4;
+        core.getParameters()->setStream(fileManager.streamSets[i].getInputStream());
+        core.getParameters()->setTimesliceNumber(argumentManager.getTimeSliceNumber());
+    }
+    if (!core.buildMicroscopicModel()){
+        return 4;
+    }
+    core.initMacroscopicModels();
+    core.buildMacroscopicModels();
+    QTextStream* qualityStream=fileManager.streamSets[i].getQualityStream();
+    QTextStream* partitionStream=fileManager.streamSets[i].getPartitionStream();
+    QTextStream* routineStream=fileManager.streamSets[i].getRoutineStream();
+    QTextStream* infoStream=fileManager.streamSets[i].getInfoStream();
+    for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
+        if (std::isnan(core.getMacroscopicModel()->getQualities()[i]->getGain())||std::isnan(core.getMacroscopicModel()->getQualities()[i]->getLoss())){
+            std::cerr<<"NaN value detected, stopping the rendering"<<std::endl;
+            return 5;
         }
-        std::cout<<"Initializing the macroscopic model"<<std::endl;
-        core.initMacroscopicModels();
-        std::cout<<"Generating the parameter p list"<<std::endl;
-        core.buildMacroscopicModels();
-        std::cout<<"Generating the macroscopic models"<<std::endl;
-        for (int i=0; i<core.getMacroscopicModel()->getPs().size(); i++){
-            if (std::isnan(core.getMacroscopicModel()->getQualities()[i]->getGain())||std::isnan(core.getMacroscopicModel()->getQualities()[i]->getLoss())){
-                std::cerr<<"NaN value detected, stopping the rendering"<<std::endl;
-                return 5;
-            }
-            qualitiesStream<<core.getMacroscopicModel()->getPs()[i]<<","
-                           <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
-                           <<core.getMacroscopicModel()->getQualities()[i]->getLoss()
-                           <<endl;
-            core.getParameters()->setP(core.getMacroscopicModel()->getPs()[i]);
-            core.selectMacroscopicModel();
-            core.buildRedistributedModel();
-            QVector<Part*> parts=core.getParts();
-            for (int j=0; j< parts.size(); j++){
-                pStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core.getRedistributedModel()->getPartsAsStrings()[j]<<endl;
-            }
-            QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core.getRedistributedModel())->generateCodelines();
-            for (int j=0; j< codelines.size(); j++){
-                codelinesStream<<core.getMacroscopicModel()->getPs()[i]<<","
-                      <<codelines[j]->getTsPercentage()<<","
-                      <<codelines[j]->getCodeline()
-                      <<endl;
-            }
-
-        }
-        core.setP(rri::NORM_INFLECT);
+        qualityStream<<core.getMacroscopicModel()->getPs()[i]<<","
+                       <<core.getMacroscopicModel()->getQualities()[i]->getGain()<<","
+                       <<core.getMacroscopicModel()->getQualities()[i]->getLoss()
+                       <<endl;
+        core.getParameters()->setP(core.getMacroscopicModel()->getPs()[i]);
         core.selectMacroscopicModel();
         core.buildRedistributedModel();
-        infoStream<<"Overall aggregation score (negative: possible issue, 0: bad, 100: good) = "<<core.getMacroscopicModel()->getAggregationScore()<<endl;
-        infoStream<<"Gain normalized inflection point: p = "<<core.getCurrentP()<<endl;
-        infoStream<<"Time slice number = "<<core.getParameters()->getTimesliceNumber()<<endl;
-        std::cout<<"Exiting"<<std::endl;
-        return 0;
+        QVector<Part*> parts=core.getParts();
+        for (int j=0; j< parts.size(); j++){
+            partitionStream<<core.getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core.getRedistributedModel()->getPartsAsStrings()[j]<<endl;
+        }
+        QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core.getRedistributedModel())->generateCodelines();
+        for (int j=0; j< codelines.size(); j++){
+            routineStream<<core.getMacroscopicModel()->getPs()[i]<<","
+                  <<codelines[j]->getTsPercentage()<<","
+                  <<codelines[j]->getCodeline()
+                  <<endl;
+        }
+
     }
-    std::cerr<<"Usage: "<<argv[0]<<" <file.callerdata>"<<std::endl;
-    return 1;
+    core.setP(rri::NORM_INFLECT);
+    core.selectMacroscopicModel();
+    core.buildRedistributedModel();
+    infoStream<<"Overall aggregation score (negative: possible issue, 0: bad, 100: good) = "<<core.getMacroscopicModel()->getAggregationScore()<<endl;
+    infoStream<<"Gain normalized inflection point: p = "<<core.getCurrentP()<<endl;
+    infoStream<<"Time slice number = "<<core.getParameters()->getTimesliceNumber()<<endl;
+    return RETURN_OK;
 }

@@ -8,7 +8,7 @@ FileManager::FileManager(ArgumentManager *argumentManager)
 int FileManager::init()
 {
     mkoutputDir();
-    setCallerDataFileNames();
+    mkoutputs();
 }
 
 int FileManager::mkoutputDir()
@@ -48,14 +48,15 @@ int FileManager::mkoutputs()
         {
             QString file=fileInfo.absoluteFilePath();
             callerDataFileNames.push_back(file);
-            file=fileInfo.completeBaseName();
-            QStringList iterationNameList=file.split('.');
+            QString basename=fileInfo.completeBaseName();
+            QStringList iterationNameList=basename.split('.');
             QString iterationName=iterationNameList.last();
             iterationNames.push_back(iterationName);
             QString outputSubDir=outputDir+"/"+iterationName;
             (QDir().mkdir(outputSubDir);
             streamSets.append(StreamSet());
-            streamSets.last().setStreams(outputSubDir);
+            streamSets.last().setOuputStreams(outputSubDir);
+            streamSets.last().setInputStream(callerDataFileNames.last());
         }
     }
     return 0;
