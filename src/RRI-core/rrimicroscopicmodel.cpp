@@ -32,7 +32,6 @@ void RRIMicroscopicModel::generate(QTextStream *textStream, int timeSlices)
 {
     stream=textStream;
     build(timeSlices);
-
 }
 
 RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)

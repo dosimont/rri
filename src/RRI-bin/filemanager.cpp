@@ -50,7 +50,7 @@ int FileManager::mkoutputs()
         streamSets.last()->setInputStream(callerDataFileNames.last());
     }else{
         QDir dir(inputDir);
-        dir.setNameFilters(QStringList() << "*.callerdata");
+        dir.setNameFilters(QStringList() << CALLERDATA_FILES);
         dir.setFilter(QDir::Files);
         foreach(QFileInfo fileInfo, dir.entryInfoList())
         {

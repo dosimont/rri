@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QFileInfo>
 #include <QVector>
+#include <QDebug>
+
 #include "rricore_global.h"
 #include "core_constants.h"
 #include "rrimicroscopicmodel.h"

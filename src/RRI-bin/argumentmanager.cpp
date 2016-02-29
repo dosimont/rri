@@ -17,15 +17,15 @@ ArgumentManager::ArgumentManager(int argc, char *argv[])
 void ArgumentManager::printUsage()
 {
     if (!conform){
-        qDebug()<<"Error: incorrect command"<<endl<<endl;
+        qDebug()<<"Error: incorrect command";
     }
-    qDebug()<<"Usage: "<<command<<" [options] <input>"<<endl<<endl;
-    qDebug()<<"\t<input>:\t\tfolding directory, or callerdata file if --inputfile option is enabled"<<endl;
-    qDebug()<<"\tOptions"<<endl;
-    qDebug()<<"\t\t\t"<<"-i --inputfile <file>: "<<"apply the process on a single callerdata file"<<endl;
-    qDebug()<<"\t\t\t"<<"-h --help: "<<"print usage"<<endl;
-    qDebug()<<"\t\t\t"<<"-o --output <directory>: "<<"output directory (rri by default)"<<endl;
-    qDebug()<<"\t\t\t"<<"-t --timeslices [number]: "<<"timeslice number used to discretize the time period (200 by default)"<<endl;
+    qDebug().nospace()<<"Usage: "<<command<<" [options] <input>";
+    qDebug().nospace()<<"\t<input>:\tfolding directory, or callerdata file if --inputfile option is enabled";
+    qDebug().nospace()<<"\tOptions:";
+    qDebug().nospace()<<"\t\t\t"<<"-i --inputfile <file>: "<<"apply the process on a single callerdata file";
+    qDebug().nospace()<<"\t\t\t"<<"-h --help: "<<"print usage";
+    qDebug().nospace()<<"\t\t\t"<<"-o --output <directory>: "<<"output directory (rri by default)";
+    qDebug().nospace()<<"\t\t\t"<<"-t --timeslices [number]: "<<"timeslice number used to discretize the time period (200 by default)";
 }
 
 QStringList ArgumentManager::getArguments() const

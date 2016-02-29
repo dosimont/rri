@@ -21,11 +21,11 @@ StreamSet::~StreamSet()
 
 void StreamSet::close()
 {
-    infoFile->close();
+    /*infoFile->close();
     qualityFile->close();
     partitionFile->close();
     routineFile->close();
-    inputFile->close();
+    inputFile->close();*/
 }
 
 QTextStream * StreamSet::setOutputStream(QFile *file, QString path)

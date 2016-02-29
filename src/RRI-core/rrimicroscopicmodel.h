@@ -7,6 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
+#include <QDebug>
 #include <vector>
 #include "microscopicmodel.h"
 #include "rriobject.h"
