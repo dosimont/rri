@@ -26,12 +26,16 @@ public:
 
     QVector<StreamSet *> getStreamSets() const;
 
+    QTextStream getRegionStream() const;
+
 protected:
     int init();
     int mkoutputDir();
-    int mkoutputs();
+    int set();
     QString inputDir;
     QString outputDir;
+    QString region;
+    QTextStream regionStream;
     QVector<QString> callerDataFileNames;
     QVector<QString> iterationNames;
     QVector<StreamSet*> streamSets;

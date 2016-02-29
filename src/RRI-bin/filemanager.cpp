@@ -9,7 +9,7 @@ FileManager::FileManager(ArgumentManager *argumentManager)
 int FileManager::init()
 {
     mkoutputDir();
-    mkoutputs();
+    set();
     return 0;
 }
 
@@ -34,7 +34,7 @@ int FileManager::mkoutputDir()
     }
 }
 
-int FileManager::mkoutputs()
+int FileManager::set()
 {
     if (argumentManager->getUniqueFile()){
         callerDataFileNames.push_back(argumentManager->getInput());
@@ -49,6 +49,10 @@ int FileManager::mkoutputs()
         streamSets.last()->setOuputStreams(outputSubDir);
         streamSets.last()->setInputStream(callerDataFileNames.last());
     }else{
+        //QString=
+
+
+
         QDir dir(inputDir);
         dir.setNameFilters(QStringList() << CALLERDATA_FILES);
         dir.setFilter(QDir::Files);
@@ -68,6 +72,11 @@ int FileManager::mkoutputs()
         }
     }
     return 0;
+}
+
+QTextStream FileManager::getRegionStream() const
+{
+    return regionStream;
 }
 
 QVector<StreamSet *> FileManager::getStreamSets() const

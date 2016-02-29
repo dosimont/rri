@@ -11,3 +11,5 @@ public:
 };
 
 #endif // RRIPRV_H
+
+//row is always the same

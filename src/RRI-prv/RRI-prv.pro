@@ -13,10 +13,19 @@ TEMPLATE = lib
 
 DEFINES += RRIPRV_LIBRARY
 
-SOURCES += rriprv.cpp
+SOURCES += rriprv.cpp \
+    prvfilemanager.cpp \
+    eventtypeblock.cpp \
+    eventtypeitem.cpp \
+    eventtypevalue.cpp
 
 HEADERS += rriprv.h\
-        rri-prv_global.h
+        rri-prv_global.h \
+    prvfilemanager.h \
+    prv_constants.h \
+    eventtypeblock.h \
+    eventtypeitem.h \
+    eventtypevalue.h
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core

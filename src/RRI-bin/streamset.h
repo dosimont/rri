@@ -3,6 +3,7 @@
 
 #include <QTextStream>
 #include <QFile>
+#include <QFileInfo>
 
 #include "bin_constants.h"
 
@@ -13,31 +14,18 @@ public:
     ~StreamSet();
 
     void close();
-
     int setOuputStreams(QString path);
-
     QTextStream* setOutputStream(QFile *file, QString path);
-
     int setInputStream(QString path);
-
     QTextStream *getInfoStream() const;
-
     QTextStream *getQualityStream() const;
-
     QTextStream *getPartitionStream() const;
-
     QTextStream *getRoutineStream() const;
-
     QTextStream *getInputStream() const;
-
     QFile *getInputFile() const;
-
     QFile *getInfoFile() const;
-
     QFile *getQualityFile() const;
-
     QFile *getPartitionFile() const;
-
     QFile *getRoutineFile() const;
 
 private:
