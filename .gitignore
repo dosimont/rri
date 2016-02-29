@@ -43,3 +43,7 @@ Makefile*
 
 # Vi
 *.swp
+
+#Perso
+
+*.bak
