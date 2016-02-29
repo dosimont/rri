@@ -2,10 +2,9 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri.R
-rribin=$basedir/RRI-bin
 
 usage_fct(){
-  echo "Usage : $0 [options] <folding-directory>"
+  echo "Usage : $0 [options] <rri-directory>"
   echo "Options:"
   echo "-h --help: Print help"
   exit 2
@@ -24,19 +23,6 @@ echo "The required R script rri.R has not been found. Set the environment variab
 exit 1
 fi
 fi
-if [ -f "RRI-bin" ]
-then
-rribin=RRI-bin
-elif [[ ! -f "$rribin" ]]
-then
-if [[ -f "${RRI_PATH}/RRI-bin" ]]
-then
-rribin=${RRI_PATH}/RRI-bin
-else
-echo "The required binary RRI-bin has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
-exit 1
-fi
-fi
 #No arguments
 if [ $# -eq 0 ]
 then
@@ -47,28 +33,18 @@ if [ $1 = "-h" ] || [ $1 = "--help" ]
 then
 usage_fct
 shift
+exit 0
 fi
 if [ ! -d $1 ]
 then
 echo "$1 is not a valid directory"
 usage_fct
+exit 1
 fi
 input_dir=$1
-mkdir -p $input_dir/rri
-rm -fr $input_dir/rri/*
-for input_file in $input_dir/*.callerdata
+for sub_dir in $input_dir/*
 do
-output_dir=${input_file%.callerdata}
-$rribin $input_file
-return_code=$?
-echo "R Script"
-if [[ $return_code -eq 0 ]]
-then
-R --slave --vanilla --args $output_dir $output_dir < $rscript
-else
-echo "Error detected, skipping this iteration"
-fi
-mv $output_dir $input_dir/rri/
+R --slave --vanilla --args $sub_dir $sub_dir < $rscript
 done
 
 
