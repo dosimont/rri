@@ -14,6 +14,18 @@ class FileManager
 {
 public:
     FileManager(ArgumentManager* argumentManager);
+    QVector<QString> getIterationNames() const;
+
+    ArgumentManager *getArgumentManager() const;
+
+    QVector<QString> getCallerDataFileNames() const;
+
+    QString getInputDir() const;
+
+    QString getOutputDir() const;
+
+    QVector<StreamSet *> getStreamSets() const;
+
 protected:
     int init();
     int mkoutputDir();
@@ -22,7 +34,7 @@ protected:
     QString outputDir;
     QVector<QString> callerDataFileNames;
     QVector<QString> iterationNames;
-    QVector<StreamSet> ouputStreamSets;
+    QVector<StreamSet*> streamSets;
     ArgumentManager* argumentManager;
 };
 

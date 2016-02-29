@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QDebug>
 
 #include "bin_constants.h"
 
@@ -15,7 +16,7 @@
 class ArgumentManager
 {
 public:
-    ArgumentManager(int argc, char *argv);
+    ArgumentManager(int argc, char *argv[]);
 
     void printUsage();
 

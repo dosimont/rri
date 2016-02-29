@@ -3,31 +3,29 @@
 FileManager::FileManager(ArgumentManager *argumentManager)
 {
     this->argumentManager=argumentManager;
+    init();
 }
 
 int FileManager::init()
 {
     mkoutputDir();
     mkoutputs();
+    return 0;
 }
 
 int FileManager::mkoutputDir()
 {
     if (!argumentManager->getUniqueFile()){
-        inputDir=argumentManager->getInput();
-        if (argumentManager->getOutput().isEmpty()){
-            outputDir=inputDir+RRI_DIR_PATTERN;
-        }else{
-            outputDir=argumentManager->getOutput();
-        }
+        QDir dir(argumentManager->getInput());
+        inputDir=dir.absolutePath();
     }else{
         QFileInfo fileInfo(argumentManager->getInput());
         inputDir=fileInfo.absolutePath();
-        if (argumentManager->getOutput().isEmpty()){
-            outputDir=inputDir+RRI_DIR_PATTERN;
-        }else{
-            outputDir=argumentManager->getOutput();
-        }
+    }
+    if (argumentManager->getOutput().isEmpty()){
+        outputDir=inputDir+RRI_DIR_PATTERN;
+    }else{
+        outputDir=argumentManager->getOutput();
     }
     if (QDir().mkdir(outputDir)){
         return 0;
@@ -40,6 +38,16 @@ int FileManager::mkoutputs()
 {
     if (argumentManager->getUniqueFile()){
         callerDataFileNames.push_back(argumentManager->getInput());
+        QFileInfo fileInfo(callerDataFileNames.last());
+        QString basename=fileInfo.completeBaseName();
+        QStringList iterationNameList=basename.split('.');
+        QString iterationName=iterationNameList.last();
+        iterationNames.push_back(iterationName);
+        QString outputSubDir=outputDir+"/"+iterationName;
+        QDir().mkdir(outputSubDir);
+        streamSets.push_back(new StreamSet());
+        streamSets.last()->setOuputStreams(outputSubDir);
+        streamSets.last()->setInputStream(callerDataFileNames.last());
     }else{
         QDir dir(inputDir);
         dir.setNameFilters(QStringList() << "*.callerdata");
@@ -53,13 +61,43 @@ int FileManager::mkoutputs()
             QString iterationName=iterationNameList.last();
             iterationNames.push_back(iterationName);
             QString outputSubDir=outputDir+"/"+iterationName;
-            (QDir().mkdir(outputSubDir);
-            streamSets.append(StreamSet());
-            streamSets.last().setOuputStreams(outputSubDir);
-            streamSets.last().setInputStream(callerDataFileNames.last());
+            QDir().mkdir(outputSubDir);
+            streamSets.push_back(new StreamSet());
+            streamSets.last()->setOuputStreams(outputSubDir);
+            streamSets.last()->setInputStream(file);
         }
     }
     return 0;
+}
+
+QVector<StreamSet *> FileManager::getStreamSets() const
+{
+    return streamSets;
+}
+
+QString FileManager::getOutputDir() const
+{
+    return outputDir;
+}
+
+QString FileManager::getInputDir() const
+{
+    return inputDir;
+}
+
+QVector<QString> FileManager::getCallerDataFileNames() const
+{
+    return callerDataFileNames;
+}
+
+ArgumentManager *FileManager::getArgumentManager() const
+{
+    return argumentManager;
+}
+
+QVector<QString> FileManager::getIterationNames() const
+{
+    return iterationNames;
 }
 
 

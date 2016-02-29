@@ -12,44 +12,48 @@ StreamSet::~StreamSet()
     delete partitionStream;
     delete routineStream;
     delete inputStream;
+    delete infoFile;
+    delete qualityFile;
+    delete partitionFile;
+    delete routineFile;
+    delete inputFile;
 }
 
-StreamSet::close()
+void StreamSet::close()
 {
-    infoFile.close();
-    qualityFile.close();
-    partitionFile.close();
-    routineFile.close();
-    inputFile.close();
+    infoFile->close();
+    qualityFile->close();
+    partitionFile->close();
+    routineFile->close();
+    inputFile->close();
 }
 
-int StreamSet::setOutputStream(QTextStream *stream, QFile file, QString path)
+QTextStream * StreamSet::setOutputStream(QFile *file, QString path)
 {
-    file(path);
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)){
-       return 1;
+    file = new QFile(path);
+    if (!file->open(QIODevice::ReadWrite | QIODevice::Text)){
+       return new QTextStream();
     }
-    stream=new QTextStream(&file);
-    return 0;
+    return new QTextStream(file);
 }
 
 int StreamSet::setInputStream(QString path)
 {
-    inputFile(path);
-    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+    inputFile = new QFile(path);
+    if (!inputFile->open(QIODevice::ReadOnly | QIODevice::Text)){
        return 1;
     }
-    inputStream=new QTextStream(&inputFile);
+    inputStream=new QTextStream(inputFile);
     return 0;
 }
 
 int StreamSet::setOuputStreams(QString path)
 {
-    setOutputStream(infoStream, infoFile, path+"/"+INFO_FILE);
-    setOutputStream(qualityStream, qualityFile, path+"/"+QUALITY_FILE);
-    setOutputStream(partitionStream, partitionFile, path+"/"+PARTITION_FILE);
-    setOutputStream(routineStream, routineFile, path+"/"+ROUTINE_FILE);
-
+    infoStream=setOutputStream(infoFile, path+"/"+INFO_FILE);
+    qualityStream=setOutputStream(qualityFile, path+"/"+QUALITY_FILE);
+    partitionStream=setOutputStream(partitionFile, path+"/"+PARTITION_FILE);
+    routineStream=setOutputStream(routineFile, path+"/"+ROUTINE_FILE);
+    return 0;
 }
 
 QTextStream *StreamSet::getInfoStream() const
@@ -75,4 +79,29 @@ QTextStream *StreamSet::getRoutineStream() const
 QTextStream *StreamSet::getInputStream() const
 {
     return inputStream;
+}
+
+QFile *StreamSet::getInputFile() const
+{
+    return inputFile;
+}
+
+QFile *StreamSet::getInfoFile() const
+{
+    return infoFile;
+}
+
+QFile *StreamSet::getQualityFile() const
+{
+    return qualityFile;
+}
+
+QFile *StreamSet::getPartitionFile() const
+{
+    return partitionFile;
+}
+
+QFile *StreamSet::getRoutineFile() const
+{
+    return routineFile;
 }

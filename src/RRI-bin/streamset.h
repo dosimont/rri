@@ -12,11 +12,11 @@ public:
     StreamSet();
     ~StreamSet();
 
-    close();
+    void close();
 
     int setOuputStreams(QString path);
 
-    int setOutputStream(QTextStream *stream, QFile file, QString path);
+    QTextStream* setOutputStream(QFile *file, QString path);
 
     int setInputStream(QString path);
 
@@ -30,17 +30,27 @@ public:
 
     QTextStream *getInputStream() const;
 
+    QFile *getInputFile() const;
+
+    QFile *getInfoFile() const;
+
+    QFile *getQualityFile() const;
+
+    QFile *getPartitionFile() const;
+
+    QFile *getRoutineFile() const;
+
 private:
     QTextStream* inputStream;
     QTextStream* infoStream;
     QTextStream* qualityStream;
     QTextStream* partitionStream;
     QTextStream* routineStream;
-    QTextStream inputFile;
-    QTextStream infoFile;
-    QTextStream qualityFile;
-    QTextStream partitionFile;
-    QTextStream routineFile;
+    QFile* inputFile;
+    QFile* infoFile;
+    QFile* qualityFile;
+    QFile* partitionFile;
+    QFile* routineFile;
 };
 
 #endif // STREAMSET_H
