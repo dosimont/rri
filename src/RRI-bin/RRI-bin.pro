@@ -5,7 +5,7 @@ QT -= gui
 
 QMAKE_STRIP = echo
 
-TARGET = RRI-bin
+TARGET = rri
 CONFIG += console
 CONFIG -= app_bundle
 
@@ -39,7 +39,7 @@ unix {
     target.path = $$TARGET_PATH/bin
     INSTALLS += target
     target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
-    target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri
+    target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-pdf
     target_scripts.path = $$TARGET_PATH/bin
     INSTALLS += target_scripts
 }

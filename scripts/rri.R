@@ -6,7 +6,7 @@ w <- 12
 
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
-codelines_input_file="codelines.csv"
+codelines_input_file="routines.csv"
 parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
 qualities2_output_file="qualities2.pdf"
