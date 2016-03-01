@@ -13,7 +13,8 @@ class PrvFileManager
 {
 public:
     PrvFileManager();
-    int initStreams(QString prvName, QIODevice::OpenMode mode);
+    ~PrvFileManager();
+    int initStreams(QString prvPath, QIODevice::OpenMode mode);
     QString getPrv() const;
     QString getPcf() const;
     QString getRow() const;
@@ -23,6 +24,7 @@ public:
     QTextStream *getPrvStream() const;
     QTextStream *getPcfStream() const;
     QTextStream *getRowStream() const;
+    static void copyFiles(QString prvInputPath, QString prvOutputPath);
 
 protected:
     QString prv;

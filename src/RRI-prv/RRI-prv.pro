@@ -17,7 +17,10 @@ SOURCES += rriprv.cpp \
     prvfilemanager.cpp \
     eventtypeblock.cpp \
     eventtypeitem.cpp \
-    eventtypevalue.cpp
+    eventtypevalue.cpp \
+    regionparser.cpp \
+    region.cpp \
+    prvregionwriter.cpp
 
 HEADERS += rriprv.h\
         rri-prv_global.h \
@@ -25,7 +28,10 @@ HEADERS += rriprv.h\
     prv_constants.h \
     eventtypeblock.h \
     eventtypeitem.h \
-    eventtypevalue.h
+    eventtypevalue.h \
+    regionparser.h \
+    region.h \
+    prvregionwriter.h
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core

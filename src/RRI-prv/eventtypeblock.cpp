@@ -5,30 +5,54 @@ EventTypeBlock::EventTypeBlock()
 
 }
 
-vector<EventTypeItem *> EventTypeBlock::getItems() const
+EventTypeBlock::~EventTypeBlock()
 {
-    return items;
+    for (EventTypeItem item:itemMap.values()){
+        delete item;
+    }
+    for (EventTypeValue value:valueMap.values()){
+        delete value;
+    }
 }
 
-void EventTypeBlock::setItems(const vector<EventTypeItem *> &value)
+QString EventTypeBlock::getComment() const
 {
-    items = value;
+    return comment;
 }
 
-vector<EventTypeValue *> EventTypeBlock::getValues() const
+void EventTypeBlock::setComment(const QString &value)
 {
-    return values;
+    comment = value;
 }
 
-void EventTypeBlock::setValues(const vector<EventTypeValue *> &value)
+void EventTypeBlock::addItem(int gradient, int value, QString label)
 {
-    values = value;
+    EventTypeItem* item = new EventTypeItem(gradient, value, label);
+    itemMap.insert(label, item);
 }
 
+void EventTypeBlock::addValue(int val, int label)
+{
+    EventTypeValue* value = new EventTypeValue(val, label);
+    valueMap.insert(label, value);
+}
+
+QMap<QString, EventTypeValue *> EventTypeBlock::getValueMap() const
+{
+    return valueMap;
+}
+
+QMap<QString, EventTypeItem *> EventTypeBlock::getItemMap() const
+{
+    return itemMap;
+}
 
 QTextStream& operator<<(QTextStream& out, EventTypeBlock block)
 {
     out<<endl;
+    if (!block.getComment().isEmpty()){
+        out<<"#"<<block.getComment()<<endl<<endl;
+    }
     out<<"EVENT_TYPE"<<endl;
     for(EventTypeItem* item:block.getItems()){
         out<<item<<endl;

@@ -11,7 +11,7 @@
 #include <vector>
 #include "microscopicmodel.h"
 #include "rriobject.h"
-#include "rristreamreader.h"
+#include "dummystreamreader.h"
 #include "biqmap.h"
 #include "core_constants.h"
 #include "debug.h"

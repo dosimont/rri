@@ -66,7 +66,7 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
         matrix.push_back(vector< vector<double> >());
         timeSlices.push_back(new RRITimeSlice());
     }
-    RRIStreamReader streamReader(stream);
+    DummyStreamReader streamReader(stream);
     QStringList stringList;
     int i=0;
     int line=0;

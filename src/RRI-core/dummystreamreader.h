@@ -1,17 +1,17 @@
-#ifndef RRISTREAMREADER_H
-#define RRISTREAMREADER_H
+#ifndef DUMMYSTREAMREADER_H
+#define DUMMYSTREAMREADER_H
 
 #include <QTextStream>
 #include <QChar>
 #include "core_constants.h"
 
-class RRIStreamReader
+class DummyStreamReader
 {
 public:
-    RRIStreamReader(QTextStream *stream);
-    RRIStreamReader();
-    RRIStreamReader(QTextStream *stream, QChar separator);
-    RRIStreamReader(QChar separator);
+    DummyStreamReader(QTextStream *stream);
+    DummyStreamReader();
+    DummyStreamReader(QTextStream *stream, QChar separator);
+    DummyStreamReader(QChar separator);
 
     QChar getSeparator() const;
     void setSeparator(const QChar &value);
@@ -28,4 +28,4 @@ private:
     QString line;
 };
 
-#endif // RRISTREAMREADER_H
+#endif // DUMMYSTREAMREADER_H

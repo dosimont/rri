@@ -4,9 +4,19 @@ PrvFileManager::PrvFileManager()
 {
 }
 
-int PrvFileManager::initStreams(QString prvName, QIODevice::OpenMode mode)
+PrvFileManager::~PrvFileManager()
 {
-    prv=prvName;
+    delete prvFile;
+    delete pcfFile;
+    delete rowFile;
+    delete prvStream;
+    delete pcfStream;
+    delete rowStream;
+}
+
+int PrvFileManager::initStreams(QString prvPath, QIODevice::OpenMode mode)
+{
+    prv=prvPath;
     QFileInfo fileInfo=QFileInfo(prv);
     QString baseName=fileInfo.completeBaseName();
     QString path=fileInfo.absolutePath();
@@ -24,9 +34,10 @@ int PrvFileManager::initStreams(QString prvName, QIODevice::OpenMode mode)
     }
     if (rowFile->open(mode)){
         rowStream=new QTextStream(rowFile);
-        rowStreamFound=true;
+        //rowStreamFound=true;
     }else{
-        rowStreamFound=false;
+        //rowStreamFound=false;
+        rowStream=new QTextStream();
     }
     prvStream=new QTextStream(prvFile);
     pcfStream=new QTextStream(pcfFile);
@@ -76,4 +87,23 @@ QTextStream *PrvFileManager::getPcfStream() const
 QTextStream *PrvFileManager::getRowStream() const
 {
     return rowStream;
+}
+
+void PrvFileManager::copyTrace(QString prvInputPath, QString prvOutputPath)
+{
+    prv1=prvInputPath;
+    QFileInfo fileInfo1=QFileInfo(prv1);
+    QString baseName1=fileInfo1.completeBaseName();
+    QString path1=fileInfo1.absolutePath();
+    pcf1=path1+"/"+baseName1+EXT_PCF;
+    row1=path1+"/"+baseName1+EXT_ROW;
+    prv2=prvOutputPath;
+    QFileInfo fileInfo2=QFileInfo(prv2);
+    QString baseName2=fileInfo2.completeBaseName();
+    QString path2=fileInfo2.absolutePath();
+    pcf2=path2+"/"+baseName2+EXT_PCF;
+    row2=path2+"/"+baseName2+EXT_ROW;
+    QFile::copy(prv1, prv2);
+    QFile::copy(pcf1, pcf2);
+    QFile::copy(row1, row2);
 }

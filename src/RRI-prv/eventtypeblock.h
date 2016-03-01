@@ -1,7 +1,8 @@
 #ifndef EVENTTYPEBLOCK_H
 #define EVENTTYPEBLOCK_H
 
-#include <vector>
+#include <QVector>
+#include <QString>
 
 #include "eventtypeitem.h"
 #include "eventtypevalue.h"
@@ -10,17 +11,28 @@ class EventTypeBlock
 {
 public:
     EventTypeBlock();
+    ~EventTypeBlock();
     friend QTextStream& operator<<(QTextStream& out, EventTypeBlock block);
 
-    vector<EventTypeItem *> getItems() const;
-    void setItems(const vector<EventTypeItem *> &value);
+    QVector<EventTypeItem *> getItems() const;
+    void setItems(const QVector<EventTypeItem *> &value);
 
-    vector<EventTypeValue *> getValues() const;
-    void setValues(const vector<EventTypeValue *> &value);
+    QVector<EventTypeValue *> getValues() const;
+    void setValues(const QVector<EventTypeValue *> &value);
+
+    QString getComment() const;
+    void setComment(const QString &value);
+
+    void addItem(int gradient, int value, QString label);
+    void addValue(int val, int label);
+
+    QMap<QString, EventTypeValue *> getValueMap() const;
+    QMap<QString, EventTypeItem *> getItemMap() const;
 
 protected:
-    vector<EventTypeItem*> items;
-    vector<EventTypeValue*> values;
+    QString comment;
+    QMap<QString,EventTypeItem*> itemMap;
+    QMap<QString,EventTypeValue*> valueMap;
 };
 
 #endif // EVENTTYPEBLOCK_H

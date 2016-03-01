@@ -26,7 +26,7 @@ SOURCES += biqmap.cpp \
     rripart.cpp \
     rritimeslice.cpp \
     rriroutineinfo.cpp \
-    rristreamreader.cpp
+    dummystreamreader.cpp
 
 HEADERS += biqmap.h \
     microscopicmodel.h \
@@ -44,8 +44,8 @@ HEADERS += biqmap.h \
     rripart.h \
     rritimeslice.h \
     rriroutineinfo.h \
-    rristreamreader.h \
-    core_constants.h
+    core_constants.h \
+    dummystreamreader.h
 
 unix:!macx: LIBS += -llpaggreg
 isEmpty( LPAGGREG_PATH ){

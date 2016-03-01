@@ -6,6 +6,17 @@ FileManager::FileManager(ArgumentManager *argumentManager)
     init();
 }
 
+FileManager::~FileManager()
+{
+    for(StreamSet stream:streamSets){
+        delete stream;
+    }
+    delete regionFile;
+    delete regionStream;
+    delete inputPrvFiles;
+    delete outputPrvFiles;
+}
+
 int FileManager::init()
 {
     mkoutputDir();
@@ -48,11 +59,7 @@ int FileManager::set()
         streamSets.push_back(new StreamSet());
         streamSets.last()->setOuputStreams(outputSubDir);
         streamSets.last()->setInputStream(callerDataFileNames.last());
-    }else{
-        //QString=
-
-
-
+    }else{     
         QDir dir(inputDir);
         dir.setNameFilters(QStringList() << CALLERDATA_FILES);
         dir.setFilter(QDir::Files);
@@ -70,8 +77,47 @@ int FileManager::set()
             streamSets.last()->setOuputStreams(outputSubDir);
             streamSets.last()->setInputStream(file);
         }
+        dir.setNameFilters(QStringList() << CALLERDATA_REGIONS_FILE);
+        dir.setFilter(QDir::Files);
+        regions=dir.entryList().first();
+        regionFile=new QFile(regions);
+        if (!regionFile->open(QIODevice::ReadWrite | QIODevice::Text)){
+           return 1;
+        }
+        regionStream=new QTextStream(regionFile);
+        dir.setNameFilters(QStringList() << PRV_INPUT_FILE);
+        dir.setFilter(QDir::Files);
+        inputPrvFiles=new PrvFileManager();
+        inputPrvFiles->initStreams(dir.entryList().first(), QIODevice::ReadOnly | QIODevice::Text);
+        QString inputPrvBaseName=inputPrvFiles->getPrv();
+        QFileInfo fileInfo=QFileInfo(inputPrvBaseName);
+        inputPrvBaseName=fileInfo.completeBaseName();
+        QString outputPrv=outputDir+"/"+inputPrvBaseName+RRI_PRV_PATTERN;
+        PrvFileManager::copyFiles(inputPrvFiles->getPrv(), outputPrv);
+        outputPrvFiles=new PrvFileManager();
+        outputPrvFiles->initStreams(outputPrv, QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);
     }
     return 0;
+}
+
+PrvFileManager *FileManager::getOutputPrvFiles() const
+{
+    return outputPrvFiles;
+}
+
+PrvFileManager *FileManager::getInputPrvFiles() const
+{
+    return inputPrvFiles;
+}
+
+PrvFileManager FileManager::getOutputPrvFiles() const
+{
+    return outputPrvFiles;
+}
+
+PrvFileManager FileManager::getInputPrvFiles() const
+{
+    return inputPrvFiles;
 }
 
 QTextStream FileManager::getRegionStream() const

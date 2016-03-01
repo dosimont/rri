@@ -41,6 +41,6 @@ void EventTypeItem::setLabel(const QString &value)
 
 QTextStream& operator<<(QTextStream& out, EventTypeItem item)
 {
-    out << item.getGradientColor() << " " << item.getType() << " " << item.getLabel() << endl;
+    out << item.getGradientColor() << "   " << item.getType() << "    " << item.getLabel() << endl;
     return out;
 }
