@@ -1,54 +1,54 @@
-#include "rristreamreader.h"
+#include "dummystreamreader.h"
 
-RRIStreamReader::RRIStreamReader(QTextStream* stream):stream(stream), separator(CSV_RRI_SEPARATOR), line("")
+DummyStreamReader::DummyStreamReader(QTextStream* stream):stream(stream), separator(CSV_DEFAULT_SEPARATOR), line("")
 {
 
 }
 
-RRIStreamReader::RRIStreamReader():separator(CSV_RRI_SEPARATOR), line("")
+DummyStreamReader::DummyStreamReader():separator(CSV_DEFAULT_SEPARATOR), line("")
 {
 
 }
 
-RRIStreamReader::RRIStreamReader(QTextStream* stream, QChar separator):
+DummyStreamReader::DummyStreamReader(QTextStream* stream, QChar separator):
     stream(stream), separator(separator), line("")
 {
 
 }
 
-RRIStreamReader::RRIStreamReader(QChar separator):separator(separator), line("")
+DummyStreamReader::DummyStreamReader(QChar separator):separator(separator), line("")
 {
 
 }
 
-QChar RRIStreamReader::getSeparator() const
+QChar DummyStreamReader::getSeparator() const
 {
     return separator;
 }
 
-void RRIStreamReader::setSeparator(const QChar &value)
+void DummyStreamReader::setSeparator(const QChar &value)
 {
     separator = value;
 }
 
-QStringList RRIStreamReader::readline()
+QStringList DummyStreamReader::readline()
 {
     line=stream->readLine();
     line=line.simplified();
     return line.split(separator);
 }
 
-bool RRIStreamReader::isEnd()
+bool DummyStreamReader::isEnd()
 {
     return (line.compare("")==0);
 }
 
-QTextStream *RRIStreamReader::getStream() const
+QTextStream *DummyStreamReader::getStream() const
 {
     return stream;
 }
 
-void RRIStreamReader::setStream(QTextStream *value)
+void DummyStreamReader::setStream(QTextStream *value)
 {
     stream = value;
 }

@@ -8,7 +8,7 @@ class EventTypeItem
 {
 public:
     EventTypeItem();
-    EventTypeItem(int gradientColor, int Type, QString label);
+    EventTypeItem(int gradientColor, int type, QString label);
     int getGradientColor() const;
     void setGradientColor(int value);
 

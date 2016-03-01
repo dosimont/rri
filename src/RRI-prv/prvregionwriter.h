@@ -18,6 +18,7 @@ public:
     PrvRegionWriter();
     void setEventTypeBlockItems();
     void pushRRIRegion(QString region, RRICore* core);
+    void pushRRIEventTypeBlock();
     void parseRegions(QTextStream regionStream);
     PrvFileManager *getInputPrvFile() const;
     void setInputPrvFile(PrvFileManager *value);

@@ -15,7 +15,7 @@
 
 #define CSV_RRI_SIZE 10
 
-#define CSV_RRI_SEPARATOR ';'
+#define CSV_DEFAULT_SEPARATOR ';'
 
 //Default lpaggreg parameters
 #define DEFAULT_PARAMETER_NORMALIZE true

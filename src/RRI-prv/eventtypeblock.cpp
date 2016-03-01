@@ -25,15 +25,15 @@ void EventTypeBlock::setComment(const QString &value)
     comment = value;
 }
 
-void EventTypeBlock::addItem(int gradient, int value, QString label)
+void EventTypeBlock::addItem(int gradient, int type, QString label)
 {
-    EventTypeItem* item = new EventTypeItem(gradient, value, label);
+    EventTypeItem* item = new EventTypeItem(gradient, type, label);
     itemMap.insert(label, item);
 }
 
-void EventTypeBlock::addValue(int val, int label)
+void EventTypeBlock::addValue(QString label)
 {
-    EventTypeValue* value = new EventTypeValue(val, label);
+    EventTypeValue* value = new EventTypeValue(valueMap.size(),label);
     valueMap.insert(label, value);
 }
 

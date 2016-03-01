@@ -23,8 +23,8 @@ public:
     QString getComment() const;
     void setComment(const QString &value);
 
-    void addItem(int gradient, int value, QString label);
-    void addValue(int val, int label);
+    void addItem(int gradient, int type, QString label);
+    void addValue(QString label);
 
     QMap<QString, EventTypeValue *> getValueMap() const;
     QMap<QString, EventTypeItem *> getItemMap() const;

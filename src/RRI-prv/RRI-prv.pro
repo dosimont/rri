@@ -13,7 +13,7 @@ TEMPLATE = lib
 
 DEFINES += RRIPRV_LIBRARY
 
-SOURCES += rriprv.cpp \
+SOURCES += \
     prvfilemanager.cpp \
     eventtypeblock.cpp \
     eventtypeitem.cpp \
@@ -22,7 +22,7 @@ SOURCES += rriprv.cpp \
     region.cpp \
     prvregionwriter.cpp
 
-HEADERS += rriprv.h\
+HEADERS +=\
         rri-prv_global.h \
     prvfilemanager.h \
     prv_constants.h \

@@ -22,7 +22,6 @@ void RegionParser::buildRegions(QTextStream stream)
         Region* region=buildRegion(stringList);
         regionMap.insert(region->getName(), region);
     }
-
 }
 
 Region *RegionParser::buildRegion(QStringList stringList)
@@ -35,4 +34,9 @@ Region *RegionParser::buildRegion(QStringList stringList)
     region->setStart(stringList[CSV_REGION_START]);
     region->setEnd(stringList[CSV_REGION_END]);
     return region;
+}
+
+QMap<QString, Region *> RegionParser::getRegionMap() const
+{
+    return regionMap;
 }

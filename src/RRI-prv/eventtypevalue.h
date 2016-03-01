@@ -2,6 +2,7 @@
 #define EVENTTYPEVALUE_H
 
 #include <QString>
+#include <QTextStream>
 
 class EventTypeValue
 {
