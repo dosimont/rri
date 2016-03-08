@@ -6,7 +6,6 @@ EventTypeItem::EventTypeItem()
 
 EventTypeItem::~EventTypeItem()
 {
-    qDebug()<<"delete EventTypeItem";
 }
 
 EventTypeItem::EventTypeItem(int gradientColor, int type, QString label):gradientColor(gradientColor), type(type), label(label)

@@ -7,7 +7,6 @@ EventTypeBlock::EventTypeBlock()
 
 EventTypeBlock::~EventTypeBlock()
 {
-    qDebug()<<"delete EventTypeBlock";
     for (QString key:itemMap.keys()){
         delete itemMap[key];
     }

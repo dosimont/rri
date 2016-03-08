@@ -8,11 +8,9 @@ FileManager::FileManager(ArgumentManager *argumentManager)
 
 FileManager::~FileManager()
 {
-    qDebug().nospace()<<"Delete FileManager";
     for(StreamSet* stream:streamSets){
         delete stream;
     }
-    qDebug().nospace()<<"Delete File and Streams";
     delete regionFile;
     delete regionStream;
     delete inputPrvFiles;

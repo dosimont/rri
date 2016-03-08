@@ -7,7 +7,6 @@ PrvRegionWriter::PrvRegionWriter():parser(new RegionParser()), block(new EventTy
 
 PrvRegionWriter::~PrvRegionWriter()
 {
-    qDebug()<<"delete PrvRegionWriter";
     delete block;
     delete parser;
 }

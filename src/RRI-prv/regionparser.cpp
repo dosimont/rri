@@ -7,11 +7,9 @@ RegionParser::RegionParser()
 
 RegionParser::~RegionParser()
 {
-    qDebug()<<"delete parser";
     for (Region* region:regionMap.values()){
         delete region;
     }
-    qDebug()<<"delete parser OK";
 }
 
 void RegionParser::buildRegions(QTextStream* stream)
