@@ -1,9 +1,9 @@
 #include "rricore.h"
 
 RRICore::RRICore():parameters(new Parameters()),
-    microscopicModelAllocated(false),
-    macroscopicModelAllocated(false),
-    redistributedModelAllocated(false)
+    microscopicModel(new MicroscopicModel()),
+    macroscopicModel(new MacroscopicModel()),
+    redistributedModel(new RRIRedistributedModel())
 {
 
 }
@@ -11,15 +11,9 @@ RRICore::RRICore():parameters(new Parameters()),
 RRICore::~RRICore()
 {
     delete parameters;
-    if (microscopicModelAllocated){
-        delete microscopicModel;
-    }
-    if (macroscopicModelAllocated){
-        delete macroscopicModel;
-    }
-    if (redistributedModelAllocated){
-        delete redistributedModel;
-    }
+    delete microscopicModel;
+    delete macroscopicModel;
+    delete redistributedModel;
 }
 
 bool RRICore::buildMicroscopicModel()
@@ -27,9 +21,7 @@ bool RRICore::buildMicroscopicModel()
     RRIMicroscopicModel *castModel;
     switch (parameters->getAnalysisType()){
         case rri::RRI:
-            if (microscopicModelAllocated){
-                delete microscopicModel;
-            }
+            delete microscopicModel;
             microscopicModel=new RRIMicroscopicModel();
             microscopicModelAllocated=true;
             castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
@@ -44,9 +36,7 @@ void RRICore::initMacroscopicModels()
 {
     switch (parameters->getAnalysisType()){
         case rri::RRI:
-            if (macroscopicModelAllocated){
-                delete macroscopicModel;
-            }
+            delete macroscopicModel;
             macroscopicModelAllocated=true;
             macroscopicModel=new OMacroscopicModel(microscopicModel);
             macroscopicModel->initializeAggregator();
@@ -71,9 +61,7 @@ void RRICore::buildRedistributedModel()
     RRIRedistributedModel *rRIRedistributedModel;
     switch (parameters->getAnalysisType()){
         case rri::RRI:
-            if (redistributedModelAllocated){
-                delete redistributedModel;
-            }
+            delete redistributedModel;
             redistributedModelAllocated=true;
             redistributedModel=new RRIRedistributedModel(microscopicModel, macroscopicModel);
             rRIRedistributedModel=dynamic_cast<RRIRedistributedModel*>(redistributedModel);

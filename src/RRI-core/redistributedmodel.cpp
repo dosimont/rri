@@ -1,11 +1,11 @@
 #include "redistributedmodel.h"
 
-RedistributedModel::RedistributedModel():partsAsStrings(QVector<QString>())
+RedistributedModel::RedistributedModel():
 {
 
 }
 
-RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel), partsAsStrings(QVector<QString>())
+RedistributedModel::RedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):microscopicModel(microscopicModel), macroscopicModel(macroscopicModel)
 {
 
 }

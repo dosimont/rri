@@ -6,9 +6,7 @@ RRIRedistributedModel::RRIRedistributedModel():RedistributedModel()
 }
 
 RRIRedistributedModel::RRIRedistributedModel(MicroscopicModel *microscopicModel, MacroscopicModel *macroscopicModel):
-    RedistributedModel(microscopicModel, macroscopicModel),
-    rRIParts(QVector<RRIPart*>()),
-    mainRoutineMap(QMap<RRIPart*, RRIRoutineInfo*>())
+    RedistributedModel(microscopicModel, macroscopicModel)
 {
     rRIMicroscopicModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
     oMacroscopicModel=dynamic_cast<OMacroscopicModel*>(macroscopicModel);

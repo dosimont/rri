@@ -1,7 +1,7 @@
 #include "biqmap.h"
 
 template<typename Key, typename Value>
-BiQMap<Key,Value>::BiQMap() : map1(QMap<Key,Value>()),map2(QMap<Value,Key>())
+BiQMap<Key,Value>::BiQMap()
 {
 
 }

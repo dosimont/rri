@@ -1,6 +1,6 @@
 #include "rritimeslice.h"
 
-RRITimeSlice::RRITimeSlice():routines(QMap<int, RRIRoutineInfo*>()), objects(QVector<RRIObject*>())
+RRITimeSlice::RRITimeSlice()
 {
 
 }

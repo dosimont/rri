@@ -10,10 +10,7 @@ RRIMicroscopicModel::RRIMicroscopicModel():
 }
 
 RRIMicroscopicModel::RRIMicroscopicModel(MicroscopicModel microscopicModel):
-                            MicroscopicModel(microscopicModel),
-                            objects(QVector<RRIObject*>()),
-                            timeSlices(QVector<RRITimeSlice*>()),
-                            matrixIndexToRoutineId(BiQMap<int, int>())
+                            MicroscopicModel(microscopicModel)
 {
 
 }

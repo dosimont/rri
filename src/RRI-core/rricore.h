@@ -51,9 +51,6 @@ private:
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;
     RedistributedModel* redistributedModel;
-    bool microscopicModelAllocated;
-    bool macroscopicModelAllocated;
-    bool redistributedModelAllocated;
     int currentPIndex;
 };
 

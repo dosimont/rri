@@ -1,8 +1,7 @@
 #include "rripart.h"
 
 
-RRIPart::RRIPart(Part *part):Part(part->getTotalTimeSlice()),timeSlices(QVector<RRITimeSlice*>()),
-                            routines(QMap<int, RRIRoutineInfo*>())
+RRIPart::RRIPart(Part *part):Part(part->getTotalTimeSlice())
 {
     setFirstTimeSlice(part->getFirstTimeSlice());
     setLastTimeSlice(part->getLastTimeSlice());
