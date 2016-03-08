@@ -25,7 +25,7 @@ void PrvRegionWriter::setEventTypeBlockItems()
 void PrvRegionWriter::pushRRIRegionHeader()
 {
     QTextStream* output=outputPrvFile->getPrvStream();
-    *output<<"RRI"<<endl;
+    *output<<"#RRI"<<endl;
 }
 
 void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
@@ -37,15 +37,15 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
             if (!block->getValueMap().contains(core->getRedistributedModel()->getPartsAsStrings()[i])){
                 block->addValue((core->getRedistributedModel()->getPartsAsStrings()[i]));
             }
-            *output<<parser->getRegionMap()[region]->getApplication()<<
-                ":"<<parser->getRegionMap()[region]->getTask()<<
+            *output<<"2:"<<parser->getRegionMap()[region]->getTask()<<
+                ":"<<parser->getRegionMap()[region]->getApplication()<<
                 ":"<<parser->getRegionMap()[region]->getProcess()<<
                 ":"<<parser->getRegionMap()[region]->getThread()<<
                 ":"<<parser->getRegionMap()[region]->getStart()+(long)(parser->getRegionMap()[region]->getDuration()*parts[i]->getFirstRelative())<<
                 ":"<<mapBaseName[region]<<
                 ":"<<block->getValueMap()[core->getRedistributedModel()->getPartsAsStrings()[i]]->getValue()<<endl;
-            *output<<parser->getRegionMap()[region]->getApplication()<<
-                ":"<<parser->getRegionMap()[region]->getTask()<<
+            *output<<"2:"<<parser->getRegionMap()[region]->getTask()<<
+                ":"<<parser->getRegionMap()[region]->getApplication()<<
                 ":"<<parser->getRegionMap()[region]->getProcess()<<
                 ":"<<parser->getRegionMap()[region]->getThread()<<
                 ":"<<parser->getRegionMap()[region]->getStart()+(long)(parser->getRegionMap()[region]->getDuration()*parts[i]->getLastRelative())<<

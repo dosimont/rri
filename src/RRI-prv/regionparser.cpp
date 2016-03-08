@@ -30,6 +30,7 @@ Region *RegionParser::buildRegion(QStringList stringList)
     region->setName(stringList[CSV_REGION_NAME]);
     region->setApplication(stringList[CSV_REGION_APPL]);
     region->setTask(stringList[CSV_REGION_TASK]);
+    region->setProcess(stringList[CSV_REGION_TASK]);
     region->setThread(stringList[CSV_REGION_THREAD]);
     region->setStart(stringList[CSV_REGION_START]);
     region->setEnd(stringList[CSV_REGION_END]);
