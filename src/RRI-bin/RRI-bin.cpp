@@ -94,9 +94,9 @@ int main(int argc, char *argv[])
     if (!argumentManager->getUniqueFile()){
         regionWriter->pushRRIEventTypeBlock();
     }
-    delete argumentManager;
-    delete regionWriter;
     delete fileManager;
+    delete regionWriter;
+    delete argumentManager;
     qDebug().nospace()<<"Exiting";
     return RETURN_OK;
 }

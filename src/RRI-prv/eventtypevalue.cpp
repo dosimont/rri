@@ -5,6 +5,12 @@ EventTypeValue::EventTypeValue()
 
 }
 
+EventTypeValue::EventTypeValue(const EventTypeValue &object)
+{
+    value=object.getValue();
+    label=object.getLabel();
+}
+
 EventTypeValue::~EventTypeValue()
 {
 }
@@ -37,5 +43,11 @@ void EventTypeValue::setLabel(const QString &value)
 QTextStream& operator<<(QTextStream &out, EventTypeValue value)
 {
     out << value.getValue() << "\t" << value.getLabel() << endl;
+    return out;
+}
+
+QTextStream& operator<<(QTextStream &out, EventTypeValue* value)
+{
+    out << value->getValue() << "\t" << value->getLabel() << endl;
     return out;
 }

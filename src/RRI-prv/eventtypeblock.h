@@ -13,8 +13,10 @@ class EventTypeBlock
 {
 public:
     EventTypeBlock();
+    EventTypeBlock(const EventTypeBlock& object);
     ~EventTypeBlock();
     friend QTextStream& operator<<(QTextStream& out, EventTypeBlock block);
+    friend QTextStream& operator<<(QTextStream& out, EventTypeBlock* block);
 
     QString getComment() const;
     void setComment(const QString &value);

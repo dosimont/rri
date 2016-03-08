@@ -5,6 +5,17 @@ EventTypeBlock::EventTypeBlock()
 
 }
 
+EventTypeBlock::EventTypeBlock(const EventTypeBlock& object)
+{
+    for (EventTypeItem* item:object.getItemMap().values()){
+        itemMap.insert(item->getLabel(), new EventTypeItem(*item));
+    }
+    for (EventTypeValue* value:object.getValueMap().values()){
+        valueMap.insert(value->getLabel(), new EventTypeValue(*value));
+    }
+    comment=object.getComment();
+}
+
 EventTypeBlock::~EventTypeBlock()
 {
     for (QString key:itemMap.keys()){
@@ -55,11 +66,29 @@ QTextStream& operator<<(QTextStream& out, EventTypeBlock block)
     }
     out<<"EVENT_TYPE"<<endl;
     for(EventTypeItem* item:block.getItemMap().values()){
-        out<<*item;
+        out<<item;
     }
     out<<"VALUES"<<endl;
     for(QString key:block.getValueMap().keys()){
-        out<<*(block.getValueMap()[key]);
+        out<<block.getValueMap()[key];
+    }
+    out<<endl;
+    return out;
+}
+
+QTextStream& operator<<(QTextStream& out, EventTypeBlock* block)
+{
+    out<<endl;
+    if (!block->getComment().isEmpty()){
+        out<<"#"<<block->getComment()<<endl<<endl;
+    }
+    out<<"EVENT_TYPE"<<endl;
+    for(EventTypeItem* item:block->getItemMap().values()){
+        out<<item;
+    }
+    out<<"VALUES"<<endl;
+    for(QString key:block->getValueMap().keys()){
+        out<<block->getValueMap()[key];
     }
     out<<endl;
     return out;

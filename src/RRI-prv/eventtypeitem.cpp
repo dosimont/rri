@@ -4,6 +4,13 @@ EventTypeItem::EventTypeItem()
 {
 }
 
+EventTypeItem::EventTypeItem(const EventTypeItem &object)
+{
+    gradientColor=object.getGradientColor();
+    type=object.getType();
+    label=object.getLabel();
+}
+
 EventTypeItem::~EventTypeItem()
 {
 }
@@ -46,5 +53,11 @@ void EventTypeItem::setLabel(const QString &value)
 QTextStream& operator<<(QTextStream& out, EventTypeItem item)
 {
     out << item.getGradientColor() << "\t" << item.getType() << "\t" << item.getLabel() << endl;
+    return out;
+}
+
+QTextStream& operator<<(QTextStream& out, EventTypeItem* item)
+{
+    out << item->getGradientColor() << "\t" << item->getType() << "\t" << item->getLabel() << endl;
     return out;
 }

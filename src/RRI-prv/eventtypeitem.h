@@ -9,6 +9,7 @@ class EventTypeItem
 {
 public:
     EventTypeItem();
+    EventTypeItem(const EventTypeItem& object);
     ~EventTypeItem();
     EventTypeItem(int gradientColor, int type, QString label);
     int getGradientColor() const;
@@ -21,6 +22,7 @@ public:
     void setLabel(const QString &value);
 
     friend QTextStream& operator<<(QTextStream& out, EventTypeItem item);
+    friend QTextStream& operator<<(QTextStream& out, EventTypeItem* item);
 
 protected:
     int gradientColor;

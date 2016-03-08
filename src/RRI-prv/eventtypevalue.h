@@ -9,6 +9,7 @@ class EventTypeValue
 {
 public:
     EventTypeValue();
+    EventTypeValue(const EventTypeValue& object);
     ~EventTypeValue();
     EventTypeValue(int value, QString label);
     int getValue() const;
@@ -17,6 +18,7 @@ public:
     void setLabel(const QString &value);
 
     friend QTextStream& operator<<(QTextStream& out, EventTypeValue value);
+    friend QTextStream& operator<<(QTextStream& out, EventTypeValue* value);
 
 protected:
     int value;
