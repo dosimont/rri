@@ -44,7 +44,10 @@ fi
 input_dir=$1
 for sub_dir in $input_dir/*
 do
+if [ -d $sub_dir ]
+then
 R --slave --vanilla --args $sub_dir $sub_dir < $rscript
+fi
 done
 
 
