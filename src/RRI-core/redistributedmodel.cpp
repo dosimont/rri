@@ -1,6 +1,6 @@
 #include "redistributedmodel.h"
 
-RedistributedModel::RedistributedModel():
+RedistributedModel::RedistributedModel()
 {
 
 }
