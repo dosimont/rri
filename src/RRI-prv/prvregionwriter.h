@@ -19,6 +19,7 @@ public:
     PrvRegionWriter();
     ~PrvRegionWriter();
     void setEventTypeBlockItems();
+    void pushRRIRegionHeader();
     void pushRRIRegion(QString region, RRICore* core);
     void pushRRIEventTypeBlock();
     void parseRegions(QTextStream* regionStream);
