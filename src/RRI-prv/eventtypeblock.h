@@ -3,6 +3,7 @@
 
 #include <QVector>
 #include <QString>
+#include <QtAlgorithms>
 
 #include "eventtypeitem.h"
 #include "eventtypevalue.h"

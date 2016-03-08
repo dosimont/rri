@@ -7,12 +7,12 @@ EventTypeBlock::EventTypeBlock()
 
 EventTypeBlock::~EventTypeBlock()
 {
-    for (EventTypeItem* item:itemMap.values()){
-        delete item;
+    /*for (QString key:itemMap.keys()){
+        delete itemMap[key];
     }
-    for (EventTypeValue* value:valueMap.values()){
-        delete value;
-    }
+    for (QString key:valueMap.keys()){
+        delete valueMap[key];
+    }*/
 }
 
 QString EventTypeBlock::getComment() const
@@ -55,11 +55,11 @@ QTextStream& operator<<(QTextStream& out, EventTypeBlock block)
     }
     out<<"EVENT_TYPE"<<endl;
     for(EventTypeItem* item:block.getItemMap().values()){
-        out<<item<<endl;
+        out<<*item;
     }
     out<<"VALUES"<<endl;
-    for(EventTypeValue* value:block.getValueMap().values()){
-        out<<value<<endl;
+    for(QString key:block.getValueMap().keys()){
+        out<<*(block.getValueMap()[key]);
     }
     out<<endl;
     return out;

@@ -71,37 +71,37 @@ void Region::setThread(QString value)
     thread = value.toInt();
 }
 
-int Region::getStart() const
+long Region::getStart() const
 {
     return start;
 }
 
-void Region::setStart(int value)
+void Region::setStart(long value)
 {
     start = value;
 }
 
 void Region::setStart(QString value)
 {
-    start = value.toInt();
+    start = value.toLong();
 }
 
-int Region::getEnd() const
+long Region::getEnd() const
 {
     return end;
 }
 
-void Region::setEnd(int value)
+void Region::setEnd(long value)
 {
     end = value;
 }
 
 void Region::setEnd(QString value)
 {
-    end = value.toInt();
+    end = value.toLong();
 }
 
-int Region::getDuration()
+long Region::getDuration()
 {
     return end-start;
 }

@@ -33,14 +33,14 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
             ":"<<parser->getRegionMap()[region]->getTask()<<
             ":"<<parser->getRegionMap()[region]->getProcess()<<
             ":"<<parser->getRegionMap()[region]->getThread()<<
-            ":"<<parser->getRegionMap()[region]->getStart()*+(int)(parser->getRegionMap()[region]->getDuration()*parts[i]->getFirstRelative())<<
+            ":"<<parser->getRegionMap()[region]->getStart()+(long)(parser->getRegionMap()[region]->getDuration()*parts[i]->getFirstRelative())<<
             ":"<<mapBaseName[region]<<
             ":"<<block.getValueMap()[core->getRedistributedModel()->getPartsAsStrings()[i]]->getValue()<<endl;
         *output<<parser->getRegionMap()[region]->getApplication()<<
             ":"<<parser->getRegionMap()[region]->getTask()<<
             ":"<<parser->getRegionMap()[region]->getProcess()<<
             ":"<<parser->getRegionMap()[region]->getThread()<<
-            ":"<<parser->getRegionMap()[region]->getStart()*+(int)(parser->getRegionMap()[region]->getDuration()*parts[i]->getLastRelative())<<
+            ":"<<parser->getRegionMap()[region]->getStart()+(long)(parser->getRegionMap()[region]->getDuration()*parts[i]->getLastRelative())<<
             ":"<<mapBaseName[region]<<
             ":"<<0<<endl;
     }

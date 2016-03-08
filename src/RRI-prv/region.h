@@ -23,15 +23,15 @@ public:
     void setThread(int value);
     void setThread(QString value);
 
-    int getStart() const;
-    void setStart(int value);
+    long getStart() const;
+    void setStart(long value);
     void setStart(QString value);
 
-    int getEnd() const;
-    void setEnd(int value);
+    long getEnd() const;
+    void setEnd(long value);
     void setEnd(QString value);
 
-    int getDuration();
+    long getDuration();
 
     QString getName() const;
     void setName(const QString &value);
@@ -42,8 +42,8 @@ protected:
     int task;
     int process;
     int thread;
-    int start;
-    int end;
+    long start;
+    long end;
 };
 
 #endif // REGION_H

@@ -80,19 +80,19 @@ int FileManager::set()
         dir.setNameFilters(QStringList() << CALLERDATA_REGIONS_FILE);
         dir.setFilter(QDir::Files);
         regions=dir.entryList().first();
-        regionFile=new QFile(regions);
-        if (!regionFile->open(QIODevice::ReadWrite | QIODevice::Text)){
+        regionFile=new QFile(dir.path()+"/"+regions);
+        if (!regionFile->open(QIODevice::ReadOnly | QIODevice::Text)){
            return 1;
         }
         regionStream=new QTextStream(regionFile);
         dir.setNameFilters(QStringList() << PRV_INPUT_FILE);
         dir.setFilter(QDir::Files);
         inputPrvFiles=new PrvFileManager();
-        inputPrvFiles->initStreams(dir.entryList().first(), QIODevice::ReadOnly | QIODevice::Text);
+        inputPrvFiles->initStreams(dir.path()+"/"+dir.entryList().first(), QIODevice::ReadOnly | QIODevice::Text);
         QString inputPrvBaseName=inputPrvFiles->getPrv();
         QFileInfo fileInfo=QFileInfo(inputPrvBaseName);
         inputPrvBaseName=fileInfo.completeBaseName();
-        QString outputPrv=outputDir+"/"+inputPrvBaseName+RRI_PRV_PATTERN;
+        QString outputPrv=outputDir+"/"+inputPrvBaseName+RRI_DIR_PATTERN+RRI_PRV_PATTERN;
         PrvFileManager::copyTrace(inputPrvFiles->getPrv(), outputPrv);
         outputPrvFiles=new PrvFileManager();
         outputPrvFiles->initStreams(outputPrv, QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);

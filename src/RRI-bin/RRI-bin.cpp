@@ -30,11 +30,13 @@ int main(int argc, char *argv[])
     FileManager fileManager(argumentManager);
     qDebug()<<"File manager initialized";
     RRICore* core;
-    PrvRegionWriter* regionWriter=new PrvRegionWriter();
-    regionWriter->setInputPrvFile(fileManager.getInputPrvFiles());
-    regionWriter->setOutputPrvFile(fileManager.getOutputPrvFiles());
-    regionWriter->parseRegions(fileManager.getRegionStream());
-    regionWriter->setEventTypeBlockItems();
+    PrvRegionWriter regionWriter=PrvRegionWriter();
+    if (!argumentManager->getUniqueFile()){
+        regionWriter.setInputPrvFile(fileManager.getInputPrvFiles());
+        regionWriter.setOutputPrvFile(fileManager.getOutputPrvFiles());
+        regionWriter.parseRegions(fileManager.getRegionStream());
+        regionWriter.setEventTypeBlockItems();
+    }
     for (int i=0; i<fileManager.getIterationNames().size(); i++){
         qDebug().nospace()<<"Iteration "<<i+1<<", session: "<<fileManager.getIterationNames()[i];
         qDebug().nospace()<<"Input file: "<<fileManager.getStreamSets()[i]->getInputFile()->fileName();
@@ -83,12 +85,16 @@ int main(int argc, char *argv[])
         *infoStream<<"Overall aggregation score (negative: possible issue, 0: bad, 100: good) = "<<core->getMacroscopicModel()->getAggregationScore()<<endl;
         *infoStream<<"Gain normalized inflection point: p = "<<core->getCurrentP()<<endl;
         *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
-        regionWriter->pushRRIRegion(fileManager.getIterationNames()[i], core);
+        if (!argumentManager->getUniqueFile()){
+            regionWriter.pushRRIRegion(fileManager.getIterationNames()[i], core);
+        }
         fileManager.getStreamSets()[i]->close();
         delete core;
     }
-    regionWriter->pushRRIEventTypeBlock();
+    if (!argumentManager->getUniqueFile()){
+        regionWriter.pushRRIEventTypeBlock();
+    }
     delete argumentManager;
-    delete regionWriter;
+    qDebug().nospace()<<"Exiting";
     return RETURN_OK;
 }
