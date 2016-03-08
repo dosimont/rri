@@ -26,7 +26,6 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
 {
     QTextStream* output=outputPrvFile->getPrvStream();
     QVector<Part*> parts=core->getParts();
-    *output<<"#RRI"<<endl;
     for (int i=0; i< parts.size(); i++){
         if (!block->getValueMap().contains(core->getRedistributedModel()->getPartsAsStrings()[i])){
             block->addValue((core->getRedistributedModel()->getPartsAsStrings()[i]));
@@ -51,7 +50,7 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
 void PrvRegionWriter::pushRRIEventTypeBlock()
 {
     QTextStream* output=outputPrvFile->getPcfStream();
-    *output<<block;
+    *output<<*block;
 }
 
 void PrvRegionWriter::parseRegions(QTextStream* regionStream)

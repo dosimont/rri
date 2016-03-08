@@ -102,6 +102,9 @@ void PrvFileManager::copyTrace(QString prvInputPath, QString prvOutputPath)
     QString path2=fileInfo2.absolutePath();
     QString pcf2=path2+"/"+baseName2+EXT_PCF;
     QString row2=path2+"/"+baseName2+EXT_ROW;
+    QFile::remove(prv2);
+    QFile::remove(pcf2);
+    QFile::remove(row2);
     QFile::copy(prv1, prv2);
     QFile::copy(pcf1, pcf2);
     QFile::copy(row1, row2);
