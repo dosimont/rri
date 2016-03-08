@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
         regionWriter->setOutputPrvFile(fileManager->getOutputPrvFiles());
         regionWriter->parseRegions(fileManager->getRegionStream());
         regionWriter->setEventTypeBlockItems();
+        regionWriter->pushRRIRegionHeader();
     }
     RRICore* core;
     for (int i=0; i<fileManager->getIterationNames().size(); i++){
@@ -68,7 +69,9 @@ int main(int argc, char *argv[])
             core->buildRedistributedModel();
             QVector<Part*> parts=core->getParts();
             for (int j=0; j< parts.size(); j++){
+                if (!core->getRedistributedModel()->getPartsAsStrings()[j].compare("void")==0){
                 *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core->getRedistributedModel()->getPartsAsStrings()[j]<<endl;
+                }
             }
             QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->generateCodelines();
             for (int j=0; j< codelines.size(); j++){
