@@ -96,7 +96,6 @@ int main(int argc, char *argv[])
     }
     delete argumentManager;
     delete regionWriter;
-    qDebug().nospace()<<"Reached";
     delete fileManager;
     qDebug().nospace()<<"Exiting";
     return RETURN_OK;
