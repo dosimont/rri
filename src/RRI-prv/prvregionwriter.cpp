@@ -5,6 +5,11 @@ PrvRegionWriter::PrvRegionWriter():parser(new RegionParser())
 
 }
 
+PrvRegionWriter::~PrvRegionWriter()
+{
+    delete parser;
+}
+
 void PrvRegionWriter::setEventTypeBlockItems()
 {
     int i=0;
@@ -47,7 +52,7 @@ void PrvRegionWriter::pushRRIEventTypeBlock()
     output<<block;
 }
 
-void PrvRegionWriter::parseRegions(QTextStream regionStream)
+void PrvRegionWriter::parseRegions(QTextStream* regionStream)
 {
     parser->buildRegions(regionStream);
 }

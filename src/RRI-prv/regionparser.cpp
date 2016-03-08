@@ -12,7 +12,7 @@ RegionParser::~RegionParser()
     }
 }
 
-void RegionParser::buildRegions(QTextStream stream)
+void RegionParser::buildRegions(QTextStream* stream)
 {
     DummyStreamReader streamReader=new DummyStreamReader(stream);
     QStringList stringList;
