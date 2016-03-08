@@ -21,6 +21,11 @@ void Region::setApplication(int value)
     application = value;
 }
 
+void Region::setApplication(QString value)
+{
+    application = value.toInt();
+}
+
 int Region::getTask() const
 {
     return task;
@@ -109,9 +114,4 @@ QString Region::getName() const
 void Region::setName(const QString &value)
 {
     name = value;
-}
-
-int Region::getEnd() const
-{
-    return end;
 }

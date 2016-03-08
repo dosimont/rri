@@ -13,10 +13,10 @@ PrvRegionWriter::~PrvRegionWriter()
 void PrvRegionWriter::setEventTypeBlockItems()
 {
     int i=0;
-    for (Region region:parser->getRegionMap().values){
-        QString basename=BASENAME_RRI+i++;
-        block.addItem(0, basename, region.getName());
-        mapBaseName.insert(region.getName(), basename);
+    for (Region* region : parser->getRegionMap().values()){
+        int basename=BASENAME_RRI+i++;
+        block.addItem(0, basename, region->getName());
+        mapBaseName.insert(region->getName(), basename);
     }
     block.addValue("End");
 }
@@ -29,14 +29,14 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
         if (!block.getValueMap().contains(core->getRedistributedModel()->getPartsAsStrings()[i])){
             block.addValue((core->getRedistributedModel()->getPartsAsStrings()[i]));
         }
-        output<<parser->getRegionMap()[region]->getApplication()<<
+        *output<<parser->getRegionMap()[region]->getApplication()<<
             ":"<<parser->getRegionMap()[region]->getTask()<<
             ":"<<parser->getRegionMap()[region]->getProcess()<<
             ":"<<parser->getRegionMap()[region]->getThread()<<
             ":"<<parser->getRegionMap()[region]->getStart()*+(int)(parser->getRegionMap()[region]->getDuration()*parts[i]->getFirstRelative())<<
             ":"<<mapBaseName[region]<<
             ":"<<block.getValueMap()[core->getRedistributedModel()->getPartsAsStrings()[i]]->getValue()<<endl;
-        output<<parser->getRegionMap()[region]->getApplication()<<
+        *output<<parser->getRegionMap()[region]->getApplication()<<
             ":"<<parser->getRegionMap()[region]->getTask()<<
             ":"<<parser->getRegionMap()[region]->getProcess()<<
             ":"<<parser->getRegionMap()[region]->getThread()<<
@@ -49,7 +49,7 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
 void PrvRegionWriter::pushRRIEventTypeBlock()
 {
     QTextStream* output=outputPrvFile->getPcfStream();
-    output<<block;
+    *output<<block;
 }
 
 void PrvRegionWriter::parseRegions(QTextStream* regionStream)

@@ -23,7 +23,7 @@ public:
 protected:
     int gradientColor;
     int type;
-    QString Label;
+    QString label;
 };
 
 #endif // EVENTTYPEITEM_H

@@ -21,22 +21,22 @@ void EventTypeItem::setGradientColor(int value)
 
 int EventTypeItem::getType() const
 {
-    return Type;
+    return type;
 }
 
 void EventTypeItem::setType(int value)
 {
-    Type = value;
+    type = value;
 }
 
 QString EventTypeItem::getLabel() const
 {
-    return Label;
+    return label;
 }
 
 void EventTypeItem::setLabel(const QString &value)
 {
-    Label = value;
+    label = value;
 }
 
 QTextStream& operator<<(QTextStream& out, EventTypeItem item)

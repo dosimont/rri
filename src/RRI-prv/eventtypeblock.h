@@ -14,12 +14,6 @@ public:
     ~EventTypeBlock();
     friend QTextStream& operator<<(QTextStream& out, EventTypeBlock block);
 
-    QVector<EventTypeItem *> getItems() const;
-    void setItems(const QVector<EventTypeItem *> &value);
-
-    QVector<EventTypeValue *> getValues() const;
-    void setValues(const QVector<EventTypeValue *> &value);
-
     QString getComment() const;
     void setComment(const QString &value);
 

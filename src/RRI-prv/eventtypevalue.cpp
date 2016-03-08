@@ -35,13 +35,3 @@ QTextStream& operator<<(QTextStream &out, EventTypeValue value)
     out << value.getValue() << "    " << value.getLabel() << endl;
     return out;
 }
-
-int EventTypeValue::getValue() const
-{
-    return value;
-}
-
-QString EventTypeValue::getLabel() const
-{
-    return label;
-}

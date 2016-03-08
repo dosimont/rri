@@ -24,7 +24,7 @@ public:
     QTextStream *getPrvStream() const;
     QTextStream *getPcfStream() const;
     QTextStream *getRowStream() const;
-    static void copyFiles(QString prvInputPath, QString prvOutputPath);
+    static void copyTrace(QString prvInputPath, QString prvOutputPath);
 
 protected:
     QString prv;

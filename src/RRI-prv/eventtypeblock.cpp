@@ -7,10 +7,10 @@ EventTypeBlock::EventTypeBlock()
 
 EventTypeBlock::~EventTypeBlock()
 {
-    for (EventTypeItem item:itemMap.values()){
+    for (EventTypeItem* item:itemMap.values()){
         delete item;
     }
-    for (EventTypeValue value:valueMap.values()){
+    for (EventTypeValue* value:valueMap.values()){
         delete value;
     }
 }
@@ -54,12 +54,13 @@ QTextStream& operator<<(QTextStream& out, EventTypeBlock block)
         out<<"#"<<block.getComment()<<endl<<endl;
     }
     out<<"EVENT_TYPE"<<endl;
-    for(EventTypeItem* item:block.getItems()){
+    for(EventTypeItem* item:block.getItemMap().values()){
         out<<item<<endl;
     }
     out<<"VALUES"<<endl;
-    for(EventTypeValue* value:block.getValues()){
+    for(EventTypeValue* value:block.getValueMap().values()){
         out<<value<<endl;
     }
     out<<endl;
+    return out;
 }

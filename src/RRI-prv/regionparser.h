@@ -15,7 +15,7 @@ class RegionParser
 public:
     RegionParser();
     ~RegionParser();
-    void buildRegions(QTextStream stream);
+    void buildRegions(QTextStream* stream);
     QMap<QString, Region *> getRegionMap() const;
 
 protected:

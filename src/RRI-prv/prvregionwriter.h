@@ -10,6 +10,7 @@
 #include "eventtypeblock.h"
 #include "prv_constants.h"
 #include "rriroutineinfo.h"
+#include "rricore.h"
 
 class PrvRegionWriter
 {

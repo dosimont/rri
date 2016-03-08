@@ -8,7 +8,7 @@ FileManager::FileManager(ArgumentManager *argumentManager)
 
 FileManager::~FileManager()
 {
-    for(StreamSet stream:streamSets){
+    for(StreamSet* stream:streamSets){
         delete stream;
     }
     delete regionFile;
@@ -93,11 +93,16 @@ int FileManager::set()
         QFileInfo fileInfo=QFileInfo(inputPrvBaseName);
         inputPrvBaseName=fileInfo.completeBaseName();
         QString outputPrv=outputDir+"/"+inputPrvBaseName+RRI_PRV_PATTERN;
-        PrvFileManager::copyFiles(inputPrvFiles->getPrv(), outputPrv);
+        PrvFileManager::copyTrace(inputPrvFiles->getPrv(), outputPrv);
         outputPrvFiles=new PrvFileManager();
         outputPrvFiles->initStreams(outputPrv, QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);
     }
     return 0;
+}
+
+QTextStream *FileManager::getRegionStream() const
+{
+    return regionStream;
 }
 
 PrvFileManager *FileManager::getOutputPrvFiles() const
@@ -110,20 +115,6 @@ PrvFileManager *FileManager::getInputPrvFiles() const
     return inputPrvFiles;
 }
 
-PrvFileManager FileManager::getOutputPrvFiles() const
-{
-    return outputPrvFiles;
-}
-
-PrvFileManager FileManager::getInputPrvFiles() const
-{
-    return inputPrvFiles;
-}
-
-QTextStream FileManager::getRegionStream() const
-{
-    return regionStream;
-}
 
 QVector<StreamSet *> FileManager::getStreamSets() const
 {

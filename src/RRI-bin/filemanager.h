@@ -28,11 +28,11 @@ public:
 
     QVector<StreamSet *> getStreamSets() const;
 
-    QTextStream getRegionStream() const;
-
     PrvFileManager *getInputPrvFiles() const;
 
     PrvFileManager *getOutputPrvFiles() const;
+
+    QTextStream *getRegionStream() const;
 
 protected:
     int init();

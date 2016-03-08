@@ -9,6 +9,7 @@ public:
     Region();
     int getApplication() const;
     void setApplication(int value);
+    void setApplication(QString value);
 
     int getTask() const;
     void setTask(int value);

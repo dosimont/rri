@@ -14,7 +14,7 @@ RegionParser::~RegionParser()
 
 void RegionParser::buildRegions(QTextStream* stream)
 {
-    DummyStreamReader streamReader=new DummyStreamReader(stream);
+    DummyStreamReader streamReader=DummyStreamReader(stream);
     QStringList stringList;
     //header
     streamReader.readline();
@@ -29,7 +29,7 @@ Region *RegionParser::buildRegion(QStringList stringList)
     Region* region=new Region();
     region->setName(stringList[CSV_REGION_NAME]);
     region->setApplication(stringList[CSV_REGION_APPL]);
-    region->setTask(stringList[CSV_REGION_TASK);
+    region->setTask(stringList[CSV_REGION_TASK]);
     region->setThread(stringList[CSV_REGION_THREAD]);
     region->setStart(stringList[CSV_REGION_START]);
     region->setEnd(stringList[CSV_REGION_END]);
