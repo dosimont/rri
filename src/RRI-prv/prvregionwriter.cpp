@@ -1,12 +1,14 @@
 #include "prvregionwriter.h"
 
-PrvRegionWriter::PrvRegionWriter():parser(new RegionParser())
+PrvRegionWriter::PrvRegionWriter():parser(new RegionParser()), block(new EventTypeBlock())
 {
 
 }
 
 PrvRegionWriter::~PrvRegionWriter()
 {
+    qDebug()<<"delete PrvRegionWriter";
+    delete block;
     delete parser;
 }
 
@@ -15,19 +17,20 @@ void PrvRegionWriter::setEventTypeBlockItems()
     int i=0;
     for (Region* region : parser->getRegionMap().values()){
         int basename=BASENAME_RRI+i++;
-        block.addItem(0, basename, region->getName());
+        block->addItem(0, basename, region->getName());
         mapBaseName.insert(region->getName(), basename);
     }
-    block.addValue("End");
+    block->addValue("End");
 }
 
 void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
 {
     QTextStream* output=outputPrvFile->getPrvStream();
     QVector<Part*> parts=core->getParts();
+    *output<<"#RRI"<<endl;
     for (int i=0; i< parts.size(); i++){
-        if (!block.getValueMap().contains(core->getRedistributedModel()->getPartsAsStrings()[i])){
-            block.addValue((core->getRedistributedModel()->getPartsAsStrings()[i]));
+        if (!block->getValueMap().contains(core->getRedistributedModel()->getPartsAsStrings()[i])){
+            block->addValue((core->getRedistributedModel()->getPartsAsStrings()[i]));
         }
         *output<<parser->getRegionMap()[region]->getApplication()<<
             ":"<<parser->getRegionMap()[region]->getTask()<<
@@ -35,7 +38,7 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
             ":"<<parser->getRegionMap()[region]->getThread()<<
             ":"<<parser->getRegionMap()[region]->getStart()+(long)(parser->getRegionMap()[region]->getDuration()*parts[i]->getFirstRelative())<<
             ":"<<mapBaseName[region]<<
-            ":"<<block.getValueMap()[core->getRedistributedModel()->getPartsAsStrings()[i]]->getValue()<<endl;
+            ":"<<block->getValueMap()[core->getRedistributedModel()->getPartsAsStrings()[i]]->getValue()<<endl;
         *output<<parser->getRegionMap()[region]->getApplication()<<
             ":"<<parser->getRegionMap()[region]->getTask()<<
             ":"<<parser->getRegionMap()[region]->getProcess()<<

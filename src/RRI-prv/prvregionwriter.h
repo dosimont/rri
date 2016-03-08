@@ -4,6 +4,7 @@
 #include <QString>
 #include <QTextStream>
 #include <QMap>
+#include <QDebug>
 
 #include "prvfilemanager.h"
 #include "regionparser.h"
@@ -31,8 +32,8 @@ protected:
     PrvFileManager* outputPrvFile;
     RegionParser* parser;
     QMap<QString, int> mapBaseName;
-    EventTypeBlock block;
-    QMap<int,QString>routineValues;
+    EventTypeBlock* block;
+    QMap<int,QString> routineValues;
     int routineValueCounter;
 
 

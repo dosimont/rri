@@ -7,12 +7,13 @@ EventTypeBlock::EventTypeBlock()
 
 EventTypeBlock::~EventTypeBlock()
 {
-    /*for (QString key:itemMap.keys()){
+    qDebug()<<"delete EventTypeBlock";
+    for (QString key:itemMap.keys()){
         delete itemMap[key];
     }
     for (QString key:valueMap.keys()){
         delete valueMap[key];
-    }*/
+    }
 }
 
 QString EventTypeBlock::getComment() const

@@ -3,11 +3,13 @@
 
 #include <QString>
 #include <QTextStream>
+#include <QDebug>
 
 class EventTypeValue
 {
 public:
     EventTypeValue();
+    ~EventTypeValue();
     EventTypeValue(int value, QString label);
     int getValue() const;
     void setValue(int value);

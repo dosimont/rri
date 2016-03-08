@@ -4,6 +4,7 @@
 #include <QVector>
 #include <QString>
 #include <QtAlgorithms>
+#include <QDebug>
 
 #include "eventtypeitem.h"
 #include "eventtypevalue.h"

@@ -2,6 +2,7 @@
 #define REGION_H
 
 #include <QString>
+#include <QDebug>
 
 class Region
 {

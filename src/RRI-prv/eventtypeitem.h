@@ -3,11 +3,13 @@
 
 #include <QString>
 #include <QTextStream>
+#include <QDebug>
 
 class EventTypeItem
 {
 public:
     EventTypeItem();
+    ~EventTypeItem();
     EventTypeItem(int gradientColor, int type, QString label);
     int getGradientColor() const;
     void setGradientColor(int value);

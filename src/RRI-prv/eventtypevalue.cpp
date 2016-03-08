@@ -5,6 +5,11 @@ EventTypeValue::EventTypeValue()
 
 }
 
+EventTypeValue::~EventTypeValue()
+{
+    qDebug()<<"delete EventTypeValue";
+}
+
 EventTypeValue::EventTypeValue(int value, QString label):value(value), label(label)
 {
 

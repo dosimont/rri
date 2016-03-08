@@ -27,22 +27,22 @@ int main(int argc, char *argv[])
         return RETURN_ERR_CMD;
     }
     qDebug()<<"Arguments conform";
-    FileManager fileManager(argumentManager);
+    FileManager* fileManager = new FileManager(argumentManager);
     qDebug()<<"File manager initialized";
-    RRICore* core;
-    PrvRegionWriter regionWriter=PrvRegionWriter();
+    PrvRegionWriter* regionWriter=new PrvRegionWriter();
     if (!argumentManager->getUniqueFile()){
-        regionWriter.setInputPrvFile(fileManager.getInputPrvFiles());
-        regionWriter.setOutputPrvFile(fileManager.getOutputPrvFiles());
-        regionWriter.parseRegions(fileManager.getRegionStream());
-        regionWriter.setEventTypeBlockItems();
+        regionWriter->setInputPrvFile(fileManager->getInputPrvFiles());
+        regionWriter->setOutputPrvFile(fileManager->getOutputPrvFiles());
+        regionWriter->parseRegions(fileManager->getRegionStream());
+        regionWriter->setEventTypeBlockItems();
     }
-    for (int i=0; i<fileManager.getIterationNames().size(); i++){
-        qDebug().nospace()<<"Iteration "<<i+1<<", session: "<<fileManager.getIterationNames()[i];
-        qDebug().nospace()<<"Input file: "<<fileManager.getStreamSets()[i]->getInputFile()->fileName();
+    RRICore* core;
+    for (int i=0; i<fileManager->getIterationNames().size(); i++){
+        qDebug().nospace()<<"Iteration "<<i+1<<", session: "<<fileManager->getIterationNames()[i];
+        qDebug().nospace()<<"Input file: "<<fileManager->getStreamSets()[i]->getInputFile()->fileName();
         core = new RRICore();
         core->getParameters()->setAnalysisType(rri::RRI);
-        core->getParameters()->setStream(fileManager.getStreamSets()[i]->getInputStream());
+        core->getParameters()->setStream(fileManager->getStreamSets()[i]->getInputStream());
         core->getParameters()->setTimesliceNumber(argumentManager->getTimeSliceNumber());
         qDebug().nospace()<<"Time slice number: "<<core->getParameters()->getTimesliceNumber();
         if (!core->buildMicroscopicModel()){
@@ -50,10 +50,10 @@ int main(int argc, char *argv[])
         }
         core->initMacroscopicModels();
         core->buildMacroscopicModels();
-        QTextStream* qualityStream=fileManager.getStreamSets()[i]->getQualityStream();
-        QTextStream* partitionStream=fileManager.getStreamSets()[i]->getPartitionStream();
-        QTextStream* routineStream=fileManager.getStreamSets()[i]->getRoutineStream();
-        QTextStream* infoStream=fileManager.getStreamSets()[i]->getInfoStream();
+        QTextStream* qualityStream=fileManager->getStreamSets()[i]->getQualityStream();
+        QTextStream* partitionStream=fileManager->getStreamSets()[i]->getPartitionStream();
+        QTextStream* routineStream=fileManager->getStreamSets()[i]->getRoutineStream();
+        QTextStream* infoStream=fileManager->getStreamSets()[i]->getInfoStream();
         for (int i=0; i<core->getMacroscopicModel()->getPs().size(); i++){
             if (std::isnan(core->getMacroscopicModel()->getQualities()[i]->getGain())||std::isnan(core->getMacroscopicModel()->getQualities()[i]->getLoss())){
                 std::cerr<<"NaN value detected, stopping the rendering"<<std::endl;
@@ -86,15 +86,18 @@ int main(int argc, char *argv[])
         *infoStream<<"Gain normalized inflection point: p = "<<core->getCurrentP()<<endl;
         *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
-            regionWriter.pushRRIRegion(fileManager.getIterationNames()[i], core);
+            regionWriter->pushRRIRegion(fileManager->getIterationNames()[i], core);
         }
-        fileManager.getStreamSets()[i]->close();
+        fileManager->getStreamSets()[i]->close();
         delete core;
     }
     if (!argumentManager->getUniqueFile()){
-        regionWriter.pushRRIEventTypeBlock();
+        regionWriter->pushRRIEventTypeBlock();
     }
     delete argumentManager;
+    delete regionWriter;
+    qDebug().nospace()<<"Reached";
+    delete fileManager;
     qDebug().nospace()<<"Exiting";
     return RETURN_OK;
 }

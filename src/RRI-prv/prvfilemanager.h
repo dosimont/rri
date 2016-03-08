@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QTextStream>
 #include <QIODevice>
+#include <QDebug>
 
 #include "prv_constants.h"
 

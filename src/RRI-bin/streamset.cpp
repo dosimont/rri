@@ -7,16 +7,18 @@ StreamSet::StreamSet()
 
 StreamSet::~StreamSet()
 {
+    qDebug().nospace()<<"Delete StreamSet";
+    /*delete infoFile;
+    delete qualityFile;
+    delete partitionFile;
+    delete routineFile;
+    delete inputFile;*/
     delete infoStream;
     delete qualityStream;
     delete partitionStream;
     delete routineStream;
     delete inputStream;
-    delete infoFile;
-    delete qualityFile;
-    delete partitionFile;
-    delete routineFile;
-    delete inputFile;
+    qDebug().nospace()<<"Done";
 }
 
 void StreamSet::close()

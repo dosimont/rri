@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <QFileInfo>
+#include <QDebug>
 
 #include "bin_constants.h"
 

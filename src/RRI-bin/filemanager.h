@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QDebug>
 
 #include "argumentmanager.h"
 #include "streamset.h"

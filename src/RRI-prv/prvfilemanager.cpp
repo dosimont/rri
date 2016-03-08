@@ -6,6 +6,7 @@ PrvFileManager::PrvFileManager()
 
 PrvFileManager::~PrvFileManager()
 {
+    qDebug()<<"delete PrvFileManager";
     delete prvFile;
     delete pcfFile;
     delete rowFile;
