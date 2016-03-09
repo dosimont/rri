@@ -27,12 +27,29 @@ make_plist <- function(data){
   plist
 }
 
-best_p <- function(data){
+inflex_p <- function(data){
   dtemp<-data
   dtemp$LOSSCOR<-dtemp$LOSS-dtemp$GAIN
   i<-which.min(dtemp[,"LOSSCOR"])
   dtemp[i[1],"P"]
 }
+
+inflex2_p <- function(data){
+  dtemp1<-data
+  dtemp2<-data
+  p<-inflex_p(data)
+  dtemp1<-dtemp1[(dtemp1$P %in% p),]
+  xfactor<-dtemp1[1,"GAIN"]
+  yfactor<-dtemp1[1,"LOSS"]
+  dtemp2$GAIN<-dtemp2$GAIN/xfactor
+  dtemp2$LOSS<-dtemp2$LOSS/yfactor
+  dtemp2<-dtemp2[(dtemp2$GAIN <1),]
+  dtemp2<-dtemp2[(dtemp2$LOSS <1),]
+  dtemp2$LOSSCOR<-dtemp2$LOSS-dtemp2$GAIN
+  i<-which.min(dtemp2[,"LOSSCOR"])
+  dtemp2[i[1],"P"]
+}
+
 
 print_qualities <- function(data){
   dtemp<-data
@@ -57,14 +74,17 @@ print_qualities <- function(data){
 
 print_qualities2 <- function(data){
   dtemp<-data
-  p<-best_p(data)
+  p<-inflex_p(data)
+  p2<-inflex2_p(data)
   dtemp2<-dtemp[(dtemp$P %in% p),]
+  dtemp3<-dtemp[(dtemp$P %in% p2),]
   xlabel<- "Complexity reduction"
   ylabel<- "Information loss"
   plot<-ggplot()
   plot<-plot+geom_line(data=dtemp,aes(x=GAIN,y=LOSS), color="black")
   plot<-plot+geom_point(data=dtemp,aes(x=GAIN,y=LOSS), color="black")
   plot<-plot+geom_point(data=dtemp2,aes(x=GAIN,y=LOSS), color="red")
+  plot<-plot+geom_point(data=dtemp3,aes(x=GAIN,y=LOSS), color="green")
   plot<-plot + theme_bw()
   plot<-plot + labs(x=xlabel,y=ylabel)
   plot
@@ -112,9 +132,11 @@ for (p in plist){
   parts_output <- paste(args[2],'/',parts_output_basename, "_" , p, ".pdf", sep="")
   ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 }
-p<-best_p(qualities_data)
-  parts_output <- paste(args[2],'/',parts_output_basename, "_best", ".pdf", sep="")
-  ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
-
-warnings()
+p<-inflex_p(qualities_data)
+parts_output <- paste(args[2],'/',parts_output_basename, "_inflex", ".pdf", sep="")
+ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+p<-inflex2_p(qualities_data)
+parts_output <- paste(args[2],'/',parts_output_basename, "_inflex2", ".pdf", sep="")
+ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+#warnings()
 
