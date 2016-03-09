@@ -23,7 +23,7 @@ void StreamSet::close()
 {
 }
 
-QTextStream * StreamSet::setOutputStream(QFile *file, QString path, QTextStream *stream)
+int StreamSet::setOutputStream(QFile *file, QString path, QTextStream *stream)
 {
     file = new QFile(path);
     if (!file->open(QIODevice::ReadWrite | QIODevice::Text)){
@@ -47,8 +47,17 @@ int StreamSet::setOuputStreams(QString path)
 {
     int error;
     error=setOutputStream(infoFile, path+"/"+INFO_FILE, infoStream);
+    if (error!=RETURN_OK){
+        return error;
+    }
     error=setOutputStream(qualityFile, path+"/"+QUALITY_FILE, qualityStream);
+    if (error!=RETURN_OK){
+        return error;
+    }
     error=setOutputStream(partitionFile, path+"/"+PARTITION_FILE, partitionStream);
+    if (error!=RETURN_OK){
+        return error;
+    }
     error=setOutputStream(routineFile, path+"/"+ROUTINE_FILE, routineStream);
     return error;
 }

@@ -28,7 +28,9 @@ int main(int argc, char *argv[])
     FileManager* fileManager = new FileManager(argumentManager);
     error=fileManager->init();
     if (error!=RETURN_OK){
-        qFatal()<<"Exiting";
+        delete fileManager;
+        delete argumentManager;
+        qCritical()<<"Exiting";
     }
     PrvRegionWriter* regionWriter=new PrvRegionWriter();
     if (!argumentManager->getUniqueFile()){
@@ -67,7 +69,7 @@ int main(int argc, char *argv[])
                            <<endl;
             core->getParameters()->setP(core->getMacroscopicModel()->getPs()[i]);
             core->selectMacroscopicModel();
-            core->buildRedistributedModel();
+            core->buildRedistributedModel();           
             QVector<Part*> parts=core->getParts();
             for (int j=0; j< parts.size(); j++){
                 //if (!core->getRedistributedModel()->getPartsAsStrings()[j].compare("void")==0){
