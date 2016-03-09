@@ -32,6 +32,15 @@ int StreamSet::openFile(QFile *file, QString path)
     return RETURN_OK;
 }
 
+QTextStream* StreamSet::openStream(QFile *file, QString path)
+{
+    file = new QFile(path);
+    if (!file->open(QIODevice::ReadWrite | QIODevice::Text)){
+       return new QTextStream();
+    }
+    return new QTextStream(file);
+}
+
 int StreamSet::setInputStream(QString path)
 {
     inputFile = new QFile(path);
@@ -44,25 +53,12 @@ int StreamSet::setInputStream(QString path)
 
 int StreamSet::setOuputStreams(QString path)
 {
-    int error;
-    error=openFile(infoFile, path+"/"+INFO_FILE);
-    if (error!=RETURN_OK){
-        return error;
-    }
-    infoStream= new QTextStream(infoFile);
-    error=openFile(qualityFile, path+"/"+QUALITY_FILE);
-    if (error!=RETURN_OK){
-        return error;
-    }
-    qualityStream= new QTextStream(qualityFile);
-    error=openFile(partitionFile, path+"/"+PARTITION_FILE);
-    if (error!=RETURN_OK){
-        return error;
-    }
-    partitionStream= new QTextStream(partitionFile);
-    error=openFile(routineFile, path+"/"+ROUTINE_FILE);
-    routineStream= new QTextStream(routineFile);
-    return error;
+    infoStream=openStream(infoFile, path+"/"+INFO_FILE);
+    qualityStream=openStream(qualityFile, path+"/"+QUALITY_FILE);
+    partitionStream=openStream(partitionFile, path+"/"+PARTITION_FILE);
+    routineStream=openStream(routineFile, path+"/"+ROUTINE_FILE);
+    return RETURN_OK;
+    //TODO error management
 }
 
 QTextStream *StreamSet::getInfoStream() const
