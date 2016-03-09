@@ -146,6 +146,8 @@ void RRICore::setP(rri::PDefaultValue defaultValue)
         break;
     case rri::NORM_INFLECT:setNormInflect();
         break;
+    case rri::NORM_INFLECT2:setNormInflect2();
+        break;
     default:setP(1.0);
         break;
     }
@@ -170,6 +172,24 @@ QVector<float> RRICore::getPs() const
 
 void RRICore::setNormInflect()
 {
+    double score=getMacroscopicModel()->getQualities()[0]->getLoss()-getMacroscopicModel()->getQualities()[0]->getGain();
+    int index=0;
+    for (int i=1; i<getPs().size();i++){
+        double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()-getMacroscopicModel()->getQualities()[i]->getGain();
+        if (currentScore<score){
+            score=currentScore;
+            index=i;
+        }
+    }
+    parameters->setP(getPs()[index]);
+}
+
+void RRICore::setNormInflect2()
+{
+    setNormInflect();
+    float pInflex=getCurrentP();
+    //double gainInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()];
+    //CONTINUE HERE
     double score=getMacroscopicModel()->getQualities()[0]->getLoss()-getMacroscopicModel()->getQualities()[0]->getGain();
     int index=0;
     for (int i=1; i<getPs().size();i++){
