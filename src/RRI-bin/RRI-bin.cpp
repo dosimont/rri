@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
             QVector<Part*> parts=core->getParts();
             for (int j=0; j< parts.size(); j++){
                 //if (!core->getRedistributedModel()->getPartsAsStrings()[j].compare("void")==0){
-                *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core->getRedistributedModel()->getPartsAsStrings()[j]<<endl;
+                *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<","<<parts[j]->getFirstRelative()<<","<<parts[j]->getLastRelative()<<","<<core->getRedistributedModel()->getPartsAsString()[j]<<endl;
                 //}
             }
             QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->generateCodelines();

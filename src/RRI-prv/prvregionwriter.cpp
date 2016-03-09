@@ -33,9 +33,9 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
     QTextStream* output=outputPrvFile->getPrvStream();
     QVector<Part*> parts=core->getParts();
     for (int i=0; i< parts.size(); i++){
-        if (core->getRedistributedModel()->getPartsAsStrings()[i].compare("void")!=0){
-            if (!block->getValueMap().contains(core->getRedistributedModel()->getPartsAsStrings()[i])){
-                block->addValue((core->getRedistributedModel()->getPartsAsStrings()[i]));
+        if (core->getRedistributedModel()->getPartsAsString()[i].compare("void")!=0){
+            if (!block->getValueMap().contains(core->getRedistributedModel()->getPartsAsString()[i])){
+                block->addValue(core->getRedistributedModel()->getPartsAsInteger()[i],core->getRedistributedModel()->getPartsAsString()[i]);
             }
             *output<<"2:"<<parser->getRegionMap()[region]->getTask()<<
                 ":"<<parser->getRegionMap()[region]->getApplication()<<
@@ -43,7 +43,7 @@ void PrvRegionWriter::pushRRIRegion(QString region, RRICore *core)
                 ":"<<parser->getRegionMap()[region]->getThread()<<
                 ":"<<parser->getRegionMap()[region]->getStart()+(long)(parser->getRegionMap()[region]->getDuration()*parts[i]->getFirstRelative())<<
                 ":"<<mapBaseName[region]<<
-                ":"<<block->getValueMap()[core->getRedistributedModel()->getPartsAsStrings()[i]]->getValue()<<endl;
+                ":"<<block->getValueMap()[core->getRedistributedModel()->getPartsAsString()[i]]->getValue()<<endl;
             *output<<"2:"<<parser->getRegionMap()[region]->getTask()<<
                 ":"<<parser->getRegionMap()[region]->getApplication()<<
                 ":"<<parser->getRegionMap()[region]->getProcess()<<

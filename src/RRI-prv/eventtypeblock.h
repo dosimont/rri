@@ -23,7 +23,7 @@ public:
 
     void addItem(int gradient, int type, QString label);
     void addValue(QString label);
-
+    void addValue(int val, QString label);
     QMap<QString, EventTypeValue *> getValueMap() const;
     QMap<QString, EventTypeItem *> getItemMap() const;
 

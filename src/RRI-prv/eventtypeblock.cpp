@@ -48,6 +48,12 @@ void EventTypeBlock::addValue(QString label)
     valueMap.insert(label, value);
 }
 
+void EventTypeBlock::addValue(int val, QString label)
+{
+    EventTypeValue* value = new EventTypeValue(val,label);
+    valueMap.insert(label, value);
+}
+
 QMap<QString, EventTypeValue *> EventTypeBlock::getValueMap() const
 {
     return valueMap;

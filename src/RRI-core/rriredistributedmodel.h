@@ -22,12 +22,15 @@ public:
     void setMacroscopicModel(MacroscopicModel *value);
     QMap<RRIPart*, RRIRoutineInfo*> generateRoutines(double minPercentage);
     QVector<RRIObject*> generateCodelines();
-    QVector<QString> getPartsAsStrings();
+    QVector<QString> getPartsAsString();
+    QVector<int> getPartsAsInteger();
 private:
     RRIMicroscopicModel* rRIMicroscopicModel;
     OMacroscopicModel* oMacroscopicModel;
     QVector<RRIPart*> rRIParts;
     QMap<RRIPart*, RRIRoutineInfo*> mainRoutineMap;
+    QVector<QString> partsAsString;
+    QVector<int> partsAsInteger;
 };
 
 #endif // RRIREDISTRIBUTEDMODEL_H

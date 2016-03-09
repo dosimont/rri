@@ -35,24 +35,26 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
         rRIParts.push_back(new RRIPart(oMacroscopicModel->getParts().at(i)));
         rRIParts[i]->setRoutines(rRIMicroscopicModel->getTimeSlices());
         if (rRIParts[i]->getRoutines().size()==0){
-            partsAsStrings.insert(i, "void");
+            partsAsString.push_back("void");
+            partsAsInteger.push_back(-1);
         }else{
-        RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
-        for (RRIRoutineInfo* currentRoutine:rRIParts[i]->getRoutines().values()){
-            if (currentRoutine->getPercentageDuration()>=minPercentage){
-                if (currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
-                    mainRoutine=currentRoutine;
-                }
-            }else{
-                if (currentRoutine->getPercentageDuration()>mainRoutine->getPercentageDuration()){
-                    mainRoutine=currentRoutine;
-                }else if(currentRoutine->getPercentageDuration()==mainRoutine->getPercentageDuration()&&currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
-                    mainRoutine=currentRoutine;
+            RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
+            for (RRIRoutineInfo* currentRoutine:rRIParts[i]->getRoutines().values()){
+                if (currentRoutine->getPercentageDuration()>=minPercentage){
+                    if (currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
+                        mainRoutine=currentRoutine;
+                    }
+                }else{
+                    if (currentRoutine->getPercentageDuration()>mainRoutine->getPercentageDuration()){
+                        mainRoutine=currentRoutine;
+                    }else if(currentRoutine->getPercentageDuration()==mainRoutine->getPercentageDuration()&&currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){
+                        mainRoutine=currentRoutine;
+                    }
                 }
             }
-        }
         mainRoutineMap.insert(rRIParts[i], mainRoutine);
-        partsAsStrings.insert(i, mainRoutineMap[rRIParts[i]]->getFile()+":"+mainRoutineMap[rRIParts[i]]->getName());
+        partsAsString.push_back(mainRoutineMap[rRIParts[i]]->getFile()+":"+mainRoutineMap[rRIParts[i]]->getName());
+        partsAsInteger.push_back(mainRoutineMap[rRIParts[i]]->getId());
         }
     }
     return mainRoutineMap;
@@ -67,6 +69,10 @@ QVector<RRIObject *> RRIRedistributedModel::generateCodelines()
     return objects;
 }
 
-QVector<QString> RRIRedistributedModel::getPartsAsStrings(){
-    return partsAsStrings;
+QVector<QString> RRIRedistributedModel::getPartsAsString(){
+    return partsAsString;
+}
+
+QVector<QString> RRIRedistributedModel::getPartsAsInteger(){
+    return partsAsInteger;
 }
