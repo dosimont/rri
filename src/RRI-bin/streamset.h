@@ -16,7 +16,7 @@ public:
 
     void close();
     int setOuputStreams(QString path);
-    int setOutputStream(QFile* file, QString path, QTextStream* stream);
+    int openFile(QFile* file, QString path);
     int setInputStream(QString path);
     QTextStream *getInfoStream() const;
     QTextStream *getQualityStream() const;
