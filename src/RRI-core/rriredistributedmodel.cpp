@@ -73,6 +73,6 @@ QVector<QString> RRIRedistributedModel::getPartsAsString(){
     return partsAsString;
 }
 
-QVector<QString> RRIRedistributedModel::getPartsAsInteger(){
+QVector<int> RRIRedistributedModel::getPartsAsInteger(){
     return partsAsInteger;
 }
