@@ -15,10 +15,10 @@ void PrvRegionWriter::setEventTypeBlockItems()
 {
     int i=0;
     for (Region* region : parser->getRegionMap().values()){
-        int basename=BASENAME_RRI+i++;
-        block->addItem(0, basename, region->getName());
+        int basename=BASENAME_RRI;
         mapBaseName.insert(region->getName(), basename);
     }
+    block->addItem(0, basename, "RRI functions");
     block->addValue("End");
 }
 
