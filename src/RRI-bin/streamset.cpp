@@ -23,32 +23,34 @@ void StreamSet::close()
 {
 }
 
-QTextStream * StreamSet::setOutputStream(QFile *file, QString path)
+QTextStream * StreamSet::setOutputStream(QFile *file, QString path, QTextStream *stream)
 {
     file = new QFile(path);
     if (!file->open(QIODevice::ReadWrite | QIODevice::Text)){
-       return new QTextStream();
+       return RETURN_ERR_INVALID_OUTPUT_STREAM;
     }
-    return new QTextStream(file);
+    stream = new QTextStream(file);
+    return RETURN_OK;
 }
 
 int StreamSet::setInputStream(QString path)
 {
     inputFile = new QFile(path);
     if (!inputFile->open(QIODevice::ReadOnly | QIODevice::Text)){
-       return 1;
+       return RETURN_ERR_INVALID_INPUT_STREAM;
     }
     inputStream=new QTextStream(inputFile);
-    return 0;
+    return RETURN_OK;
 }
 
 int StreamSet::setOuputStreams(QString path)
 {
-    infoStream=setOutputStream(infoFile, path+"/"+INFO_FILE);
-    qualityStream=setOutputStream(qualityFile, path+"/"+QUALITY_FILE);
-    partitionStream=setOutputStream(partitionFile, path+"/"+PARTITION_FILE);
-    routineStream=setOutputStream(routineFile, path+"/"+ROUTINE_FILE);
-    return 0;
+    int error;
+    error=setOutputStream(infoFile, path+"/"+INFO_FILE, infoStream);
+    error=setOutputStream(qualityFile, path+"/"+QUALITY_FILE, qualityStream);
+    error=setOutputStream(partitionFile, path+"/"+PARTITION_FILE, partitionStream);
+    error=setOutputStream(routineFile, path+"/"+ROUTINE_FILE, routineStream);
+    return error;
 }
 
 QTextStream *StreamSet::getInfoStream() const

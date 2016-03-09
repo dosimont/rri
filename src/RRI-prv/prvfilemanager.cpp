@@ -26,21 +26,18 @@ int PrvFileManager::initStreams(QString prvPath, QIODevice::OpenMode mode)
     pcfFile=new QFile(pcf);
     rowFile=new QFile(row);
     if (!prvFile->open(mode)){
-       return 1;
+       return RETURN_ERR_INVALID_PRV;
     }
     if (!pcfFile->open(mode)){
-       return 2;
+       return RETURN_ERR_INVALID_PCF;
     }
-    if (rowFile->open(mode)){
-        rowStream=new QTextStream(rowFile);
-        //rowStreamFound=true;
-    }else{
-        //rowStreamFound=false;
-        rowStream=new QTextStream();
+    if (!rowFile->open(mode)){
+        return RETURN_ERR_INVALID_ROW;
     }
     prvStream=new QTextStream(prvFile);
     pcfStream=new QTextStream(pcfFile);
-    return 0;
+    rowStream=new QTextStream(rowFile);
+    return RETURN_OK;
 }
 
 QString PrvFileManager::getPrv() const
@@ -88,8 +85,9 @@ QTextStream *PrvFileManager::getRowStream() const
     return rowStream;
 }
 
-void PrvFileManager::copyTrace(QString prvInputPath, QString prvOutputPath)
+int PrvFileManager::copyTrace(QString prvInputPath, QString prvOutputPath)
 {
+    bool error;
     QString prv1=prvInputPath;
     QFileInfo fileInfo1=QFileInfo(prv1);
     QString baseName1=fileInfo1.completeBaseName();
@@ -105,7 +103,12 @@ void PrvFileManager::copyTrace(QString prvInputPath, QString prvOutputPath)
     QFile::remove(prv2);
     QFile::remove(pcf2);
     QFile::remove(row2);
-    QFile::copy(prv1, prv2);
-    QFile::copy(pcf1, pcf2);
-    QFile::copy(row1, row2);
+    error=QFile::copy(prv1, prv2);
+    error&=QFile::copy(pcf1, pcf2);
+    error&=QFile::copy(row1, row2);
+    if (!error){
+        return RETURN_ERR_COPY;
+    }else{
+        return RETURN_OK;
+    }
 }

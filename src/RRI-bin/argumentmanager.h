@@ -17,21 +17,13 @@ class ArgumentManager
 {
 public:
     ArgumentManager(int argc, char *argv[]);
-
     void printUsage();
-
     QStringList getArguments() const;
-
     QString getInput() const;
-
     QString getOutput() const;
-
     int getTimeSliceNumber() const;
-
     bool getUniqueFile() const;
-
     bool getConform() const;
-
     bool getHelp() const;
 
 private:

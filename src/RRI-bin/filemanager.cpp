@@ -3,7 +3,6 @@
 FileManager::FileManager(ArgumentManager *argumentManager)
 {
     this->argumentManager=argumentManager;
-    init();
 }
 
 FileManager::~FileManager()
@@ -19,18 +18,31 @@ FileManager::~FileManager()
 
 int FileManager::init()
 {
-    mkoutputDir();
-    set();
-    return 0;
+    int error;
+    if ((error=mkoutputDir())!=RETURN_OK){
+        return error;
+    }
+    if ((error=set())!=RETURN_OK){
+        return error;
+    }
+    return RETURN_OK;
 }
 
 int FileManager::mkoutputDir()
 {
     if (!argumentManager->getUniqueFile()){
         QDir dir(argumentManager->getInput());
+        if (!dir.exists()){
+            qWarning().nospace()<<"Invalid input directory";
+            return RETURN_ERR_INVALID_INPUT_DIR;
+        }
         inputDir=dir.absolutePath();
     }else{
         QFileInfo fileInfo(argumentManager->getInput());
+        if (!fileInfo.exists()){
+            qWarning().nospace()<<"Invalid input file";
+            return RETURN_ERR_INVALID_INPUT_FILE;
+        }
         inputDir=fileInfo.absolutePath();
     }
     if (argumentManager->getOutput().isEmpty()){
@@ -38,15 +50,21 @@ int FileManager::mkoutputDir()
     }else{
         outputDir=argumentManager->getOutput();
     }
+    if (QDir(outputDir).exists()){
+        qWarning().nospace()<<"Output directory already exists";
+        return RETURN_ERR_EXISTING_OUTPUT_DIR;
+    }
     if (QDir().mkdir(outputDir)){
-        return 0;
+        return RETURN_OK;
     }else{
-        return 1;
+        qWarning().nospace()<<"Unable to create output directory";
+        return RETURN_ERR_INVALID_OUTPUT_DIR;
     }
 }
 
 int FileManager::set()
 {
+    int error=RETURN_OK;
     if (argumentManager->getUniqueFile()){
         callerDataFileNames.push_back(argumentManager->getInput());
         QFileInfo fileInfo(callerDataFileNames.last());
@@ -57,8 +75,14 @@ int FileManager::set()
         QString outputSubDir=outputDir+"/"+iterationName;
         QDir().mkdir(outputSubDir);
         streamSets.push_back(new StreamSet());
-        streamSets.last()->setOuputStreams(outputSubDir);
-        streamSets.last()->setInputStream(callerDataFileNames.last());
+        if ((error=streamSets.last()->setOuputStreams(outputSubDir))!=RETURN_OK){
+            qWarning().nospace()<<"Unable to set output streams";
+            return RETURN_ERR_INVALID_OUTPUT_STREAM;
+        }
+        if ((error=streamSets.last()->setInputStream(callerDataFileNames.last()))!=RETURN_OK){
+            qWarning().nospace()<<"Unable to set input streams";
+            return RETURN_ERR_INVALID_INPUT_STREAM;
+        }
     }else{     
         QDir dir(inputDir);
         dir.setNameFilters(QStringList() << CALLERDATA_FILES);
@@ -74,30 +98,46 @@ int FileManager::set()
             QString outputSubDir=outputDir+"/"+iterationName;
             QDir().mkdir(outputSubDir);
             streamSets.push_back(new StreamSet());
-            streamSets.last()->setOuputStreams(outputSubDir);
-            streamSets.last()->setInputStream(file);
+            if ((error=streamSets.last()->setOuputStreams(outputSubDir))!=RETURN_OK){
+                qWarning().nospace()<<"Unable to set output streams";
+                return RETURN_ERR_INVALID_OUTPUT_STREAM;
+            }
+            if ((error=streamSets.last()->setInputStream(file))!=RETURN_OK){
+                qWarning().nospace()<<"Unable to set input streams";
+                return RETURN_ERR_INVALID_INPUT_STREAM;
+            }
         }
         dir.setNameFilters(QStringList() << CALLERDATA_REGIONS_FILE);
         dir.setFilter(QDir::Files);
         regions=dir.entryList().first();
         regionFile=new QFile(dir.path()+"/"+regions);
         if (!regionFile->open(QIODevice::ReadOnly | QIODevice::Text)){
-           return 1;
+           qWarning().nospace()<<"Unable to open region file";
+           return RETURN_ERR_INVALID_REGION_FILE;
         }
         regionStream=new QTextStream(regionFile);
         dir.setNameFilters(QStringList() << PRV_INPUT_FILE);
         dir.setFilter(QDir::Files);
         inputPrvFiles=new PrvFileManager();
-        inputPrvFiles->initStreams(dir.path()+"/"+dir.entryList().first(), QIODevice::ReadOnly | QIODevice::Text);
+        if ((error=inputPrvFiles->initStreams(dir.path()+"/"+dir.entryList().first(), QIODevice::ReadOnly | QIODevice::Text))!=RETURN_OK){
+            qWarning().nospace()<<"Unable to open input trace file";
+            return RETURN_ERR_INVALID_INPUT_TRACE;
+        }
         QString inputPrvBaseName=inputPrvFiles->getPrv();
         QFileInfo fileInfo=QFileInfo(inputPrvBaseName);
         inputPrvBaseName=fileInfo.completeBaseName();
         QString outputPrv=outputDir+"/"+inputPrvBaseName+RRI_DIR_PATTERN+RRI_PRV_PATTERN;
-        PrvFileManager::copyTrace(inputPrvFiles->getPrv(), outputPrv);
+        if ((error=PrvFileManager::copyTrace(inputPrvFiles->getPrv(), outputPrv))!=RETURN_OK){
+            qWarning().nospace()<<"Unable to generate output trace file";
+            return RETURN_ERR_COPY_TRACE;
+        }
         outputPrvFiles=new PrvFileManager();
-        outputPrvFiles->initStreams(outputPrv, QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);
+        if ((error=outputPrvFiles->initStreams(outputPrv, QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append))!=RETURN_OK){
+            qWarning().nospace()<<"Unable to open output trace file";
+            return RETURN_ERR_INVALID_OUTPUT_TRACE;
+        }
     }
-    return 0;
+    return RETURN_OK;
 }
 
 QTextStream *FileManager::getRegionStream() const

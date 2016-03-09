@@ -11,24 +11,25 @@
 
 #include <rricore.h>
 #include <part.h>
-#include <argumentmanager.h>
-#include <filemanager.h>
 #include <prvregionwriter.h>
 
-#define RETURN_OK 0
-#define RETURN_ERR_CMD 1
-
+#include "argumentmanager.h"
+#include "filemanager.h"
+#include "bin_constants.h"
 
 int main(int argc, char *argv[])
 {
+    int error;
     ArgumentManager* argumentManager = new ArgumentManager(argc, argv);
     if (!argumentManager->getConform()||argumentManager->getHelp()){
         argumentManager->printUsage();
         return RETURN_ERR_CMD;
     }
-    qDebug()<<"Arguments conform";
     FileManager* fileManager = new FileManager(argumentManager);
-    qDebug()<<"File manager initialized";
+    error=fileManager->init();
+    if (error!=RETURN_OK){
+        qFatal()<<"Exiting";
+    }
     PrvRegionWriter* regionWriter=new PrvRegionWriter();
     if (!argumentManager->getUniqueFile()){
         regionWriter->setInputPrvFile(fileManager->getInputPrvFiles());
