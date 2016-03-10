@@ -48,7 +48,6 @@ int main(int argc, char *argv[])
         core->getParameters()->setAnalysisType(rri::RRI);
         core->getParameters()->setStream(fileManager->getStreamSets()[i]->getInputStream());
         core->getParameters()->setTimesliceNumber(argumentManager->getTimeSliceNumber());
-        qDebug().nospace()<<"Time slice number: "<<core->getParameters()->getTimesliceNumber();
         if (!core->buildMicroscopicModel()){
             return 4;
         }
@@ -73,16 +72,18 @@ int main(int argc, char *argv[])
             core->buildRedistributedModel();           
             QVector<Part*> parts=core->getParts();
             for (int j=0; j< parts.size(); j++){
-                //if (!core->getRedistributedModel()->getPartsAsStrings()[j].compare("void")==0){
                 *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<parts[j]->getLastRelative()<<SEP<<core->getRedistributedModel()->getPartsAsString()[j]<<endl;
-                //}
-
-                QList<RRIRoutineInfo*> routines=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->getRRIParts()[i]->getRoutines().values();
-                if (routines.size()!=0){
+                RRIPart* rriPart=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->getRRIParts()[j];
+                if (rriPart->getRoutines().size()==0){
+                    *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
+                                    parts[j]->getLastRelative()<<SEP<<"void"<<SEP<<0<<SEP<<
+                                    0<<endl;
+                }else{
+                    QList<RRIRoutineInfo*> routines=rriPart->getRoutines().values();
                     for (RRIRoutineInfo* routine:routines){
-                        *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
-                                        parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
-                                        routine->getAverageCallStackLevel()<<endl;
+                            *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
+                                            parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
+                                            routine->getAverageCallStackLevel()<<endl;
                     }
                 }
             }

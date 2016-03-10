@@ -3,7 +3,7 @@
 RRIRoutineInfo::RRIRoutineInfo():
     index(-1),
     id(-1),
-    count(1),
+    count(0),
     file("void"),
     name("void"),
     percentageDuration(0),
