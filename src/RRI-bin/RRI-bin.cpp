@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         core->buildMacroscopicModels();
         QTextStream* qualityStream=fileManager->getStreamSets()[i]->getQualityStream();
         QTextStream* partitionStream=fileManager->getStreamSets()[i]->getPartitionStream();
-        QTextStream* detailStream=fileManager->getStreamSets()[i]->getDetailStream();
+        QTextStream* detailStream=fileManager->getStreamSets()[i]->getDetGgailStream();
         QTextStream* routineStream=fileManager->getStreamSets()[i]->getRoutineStream();
         QTextStream* infoStream=fileManager->getStreamSets()[i]->getInfoStream();
         for (int i=0; i<core->getMacroscopicModel()->getPs().size(); i++){
@@ -76,11 +76,14 @@ int main(int argc, char *argv[])
                 //if (!core->getRedistributedModel()->getPartsAsStrings()[j].compare("void")==0){
                 *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<parts[j]->getLastRelative()<<SEP<<core->getRedistributedModel()->getPartsAsString()[j]<<endl;
                 //}
+
                 QList<RRIRoutineInfo*> routines=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->getRRIParts()[i]->getRoutines().values();
-                for (RRIRoutineInfo* routine:routines){
-                    *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
-                                    parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
-                                    routine->getAverageCallStackLevel()<<endl;
+                if (routines.size()!=0){
+                    for (RRIRoutineInfo* routine:routines){
+                        *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
+                                        parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
+                                        routine->getAverageCallStackLevel()<<endl;
+                    }
                 }
             }
             QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->generateCodelines();

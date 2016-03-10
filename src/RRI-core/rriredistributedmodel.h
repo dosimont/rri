@@ -24,6 +24,8 @@ public:
     QVector<RRIObject*> generateCodelines();
     QVector<QString> getPartsAsString();
     QVector<int> getPartsAsInteger();
+    QVector<RRIPart *> getRRIParts() const;
+
 private:
     RRIMicroscopicModel* rRIMicroscopicModel;
     OMacroscopicModel* oMacroscopicModel;

@@ -112,3 +112,13 @@ QFile *StreamSet::getRoutineFile() const
 {
     return routineFile;
 }
+
+QFile *StreamSet::getDetailFile() const
+{
+    return detailFile;
+}
+
+QTextStream *StreamSet::getDetailStream() const
+{
+    return detailStream;
+}
