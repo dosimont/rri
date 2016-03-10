@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         core->buildMacroscopicModels();
         QTextStream* qualityStream=fileManager->getStreamSets()[i]->getQualityStream();
         QTextStream* partitionStream=fileManager->getStreamSets()[i]->getPartitionStream();
-        QTextStream* detailStream=fileManager->getStreamSets()[i]->getDetGgailStream();
+        QTextStream* detailStream=fileManager->getStreamSets()[i]->getDetailStream();
         QTextStream* routineStream=fileManager->getStreamSets()[i]->getRoutineStream();
         QTextStream* infoStream=fileManager->getStreamSets()[i]->getInfoStream();
         for (int i=0; i<core->getMacroscopicModel()->getPs().size(); i++){
