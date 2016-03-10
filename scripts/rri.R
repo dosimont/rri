@@ -133,10 +133,10 @@ for (p in plist){
   ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 }
 p<-inflex_p(qualities_data)
-parts_output <- paste(args[2],'/',parts_output_basename, "_inflex", ".pdf", sep="")
+parts_output <- paste(args[2],'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
 ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 p<-inflex2_p(qualities_data)
-parts_output <- paste(args[2],'/',parts_output_basename, "_inflex2", ".pdf", sep="")
+parts_output <- paste(args[2],'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
 ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 #warnings()
 

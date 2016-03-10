@@ -181,13 +181,13 @@ void RRICore::setNormInflect()
             index=i;
         }
     }
-    parameters->setP(getPs()[index]);
+    setCurrentPIndex(index);
 }
 
 void RRICore::setNormInflect2()
 {
     setNormInflect();
-    float pInflex=getCurrentP();
+    //float pInflex=getCurrentP();
     double gainInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getGain();
     double lossInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getLoss();
     if (gainInflex==0||lossInflex==0){
@@ -203,7 +203,7 @@ void RRICore::setNormInflect2()
             index=i;
         }
     }
-    parameters->setP(getPs()[index]);
+    setCurrentPIndex(index);
 }
 
 RedistributedModel *RRICore::getRedistributedModel() const
