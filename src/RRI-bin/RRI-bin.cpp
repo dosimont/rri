@@ -85,11 +85,15 @@ int main(int argc, char *argv[])
             }
 
         }
+        *infoStream<<"Overall aggregation score (negative: possible issue, 0: bad, 100: good) = "<<core->getMacroscopicModel()->getAggregationScore()<<endl;
         core->setP(rri::NORM_INFLECT);
         core->selectMacroscopicModel();
         core->buildRedistributedModel();
-        *infoStream<<"Overall aggregation score (negative: possible issue, 0: bad, 100: good) = "<<core->getMacroscopicModel()->getAggregationScore()<<endl;
-        *infoStream<<"Gain normalized inflection point: p = "<<core->getCurrentP()<<endl;
+        *infoStream<<"Global inflection point: p = "<<core->getCurrentP()<<endl;
+        core->setP(rri::NORM_INFLECT2);
+        core->selectMacroscopicModel();
+        core->buildRedistributedModel();
+        *infoStream<<"Local inflection point: p = "<<core->getCurrentP()<<endl;
         *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
             regionWriter->pushRRIRegion(fileManager->getIterationNames()[i], core);
