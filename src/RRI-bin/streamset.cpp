@@ -15,6 +15,7 @@ StreamSet::~StreamSet()
     delete infoStream;
     delete qualityStream;
     delete partitionStream;
+    delete detailStream;
     delete routineStream;
     delete inputStream;
 }
@@ -56,6 +57,7 @@ int StreamSet::setOuputStreams(QString path)
     infoStream=openStream(infoFile, path+"/"+INFO_FILE);
     qualityStream=openStream(qualityFile, path+"/"+QUALITY_FILE);
     partitionStream=openStream(partitionFile, path+"/"+PARTITION_FILE);
+    detailStream=openStream(detailFile, path+"/"+DETAIL_FILE);
     routineStream=openStream(routineFile, path+"/"+ROUTINE_FILE);
     return RETURN_OK;
     //TODO error management

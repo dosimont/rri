@@ -127,3 +127,8 @@ int RRIRoutineInfo::getCount() const
     return count;
 }
 
+QString RRIRoutineInfo::toString()
+{
+    return file+":"+name;
+}
+

@@ -34,6 +34,7 @@ public:
     void setAverageCallStackLevel(double value);
 
     int getCount() const;
+    QString toString();
 
 private:
     int index;

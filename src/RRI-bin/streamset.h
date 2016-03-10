@@ -23,21 +23,26 @@ public:
     QTextStream *getQualityStream() const;
     QTextStream *getPartitionStream() const;
     QTextStream *getRoutineStream() const;
+    QTextStream *getDetailStream() const;
     QTextStream *getInputStream() const;
     QFile *getInputFile() const;
     QFile *getInfoFile() const;
+    QFile *getDetailFile() const;
     QFile *getQualityFile() const;
     QFile *getPartitionFile() const;
     QFile *getRoutineFile() const;
+
 
 private:
     QTextStream* inputStream;
     QTextStream* infoStream;
     QTextStream* qualityStream;
     QTextStream* partitionStream;
+    QTextStream* detailStream;
     QTextStream* routineStream;
     QFile* inputFile;
     QFile* infoFile;
+    QFile* detailFile;
     QFile* qualityFile;
     QFile* partitionFile;
     QFile* routineFile;

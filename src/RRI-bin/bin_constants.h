@@ -12,7 +12,10 @@
 #define INFO_FILE "info.csv"
 #define QUALITY_FILE "qualities.csv"
 #define PARTITION_FILE "partitions.csv"
+#define DETAIL_FILE "detailed_partition.csv"
 #define ROUTINE_FILE "routines.csv"
+
+#define SEP ","
 
 #define RETURN_OK 0
 #define RETURN_ERR_CMD 1

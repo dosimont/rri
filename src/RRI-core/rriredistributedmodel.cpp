@@ -53,7 +53,7 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
                 }
             }
         mainRoutineMap.insert(rRIParts[i], mainRoutine);
-        partsAsString.push_back(mainRoutineMap[rRIParts[i]]->getFile()+":"+mainRoutineMap[rRIParts[i]]->getName());
+        partsAsString.push_back(mainRoutineMap[rRIParts[i]]->toString());
         partsAsInteger.push_back(mainRoutineMap[rRIParts[i]]->getId());
         }
     }
@@ -75,4 +75,9 @@ QVector<QString> RRIRedistributedModel::getPartsAsString(){
 
 QVector<int> RRIRedistributedModel::getPartsAsInteger(){
     return partsAsInteger;
+}
+
+QVector<RRIPart *> RRIRedistributedModel::getRRIParts() const
+{
+    return rRIParts;
 }

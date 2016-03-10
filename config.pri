@@ -2,7 +2,7 @@ include(options.pri)
 
 #Should not be modified
 
-VERSION = 0.0.5
+VERSION = 0.0.6
 
 PROJECT_ROOT_DIRECTORY=$$PWD
 DESTDIR=$${PROJECT_ROOT_DIRECTORY}/generated_files
