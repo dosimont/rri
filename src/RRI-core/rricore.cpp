@@ -191,7 +191,6 @@ void RRICore::setNormInflect2()
     double gainInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getGain();
     double lossInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getLoss();
     if (gainInflex==0||lossInflex==0){
-        parameters->setP(0);
         return;
     }
     double score=getMacroscopicModel()->getQualities()[0]->getLoss()/lossInflex-getMacroscopicModel()->getQualities()[0]->getGain()/gainInflex;

@@ -30,8 +30,9 @@ make_plist <- function(data){
 inflex_p <- function(data){
   dtemp<-data
   dtemp$LOSSCOR<-dtemp$LOSS-dtemp$GAIN
+  dtemp<-dtemp[(dtemp$P >0),]
   i<-which.min(dtemp[,"LOSSCOR"])
-  dtemp[i[dim(i)],"P"]
+  dtemp[i,"P"]
 }
 
 inflex2_p <- function(data){
@@ -41,13 +42,19 @@ inflex2_p <- function(data){
   dtemp1<-dtemp1[(dtemp1$P %in% p),]
   xfactor<-dtemp1[1,"GAIN"]
   yfactor<-dtemp1[1,"LOSS"]
-  dtemp2$GAIN<-dtemp2$GAIN/xfactor
-  dtemp2$LOSS<-dtemp2$LOSS/yfactor
+  if (xfactor>0){
+    dtemp2$GAIN<-dtemp2$GAIN/xfactor
+  }
+  if (yfactor>0){
+    dtemp2$LOSS<-dtemp2$LOSS/yfactor
+  }
+  dtemp2[(dtemp2$P %in% p),"GAIN"]<-1
+  dtemp2[(dtemp2$P %in% p),"LOSS"]<-1
   dtemp2<-dtemp2[(dtemp2$P <=p),]
   dtemp2<-dtemp2[(dtemp2$P >0),]
   dtemp2$LOSSCOR<-dtemp2$LOSS-dtemp2$GAIN
   i<-which.min(dtemp2[,"LOSSCOR"])
-  dtemp2[i[dim(i)],"P"]
+  dtemp2[i,"P"]
 }
 
 
