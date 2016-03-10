@@ -176,7 +176,7 @@ void RRICore::setNormInflect()
     int index=0;
     for (int i=1; i<getPs().size();i++){
         double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()-getMacroscopicModel()->getQualities()[i]->getGain();
-        if (currentScore<score){
+        if (currentScore<=score){
             score=currentScore;
             index=i;
         }
@@ -198,7 +198,7 @@ void RRICore::setNormInflect2()
     int index=0;
     for (int i=1; i<=getCurrentPIndex();i++){
         double currentScore=getMacroscopicModel()->getQualities()[i]->getLoss()/lossInflex-getMacroscopicModel()->getQualities()[i]->getGain()/gainInflex;
-        if (currentScore<score){
+        if (currentScore<=score){
             score=currentScore;
             index=i;
         }

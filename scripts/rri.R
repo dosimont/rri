@@ -31,7 +31,7 @@ inflex_p <- function(data){
   dtemp<-data
   dtemp$LOSSCOR<-dtemp$LOSS-dtemp$GAIN
   i<-which.min(dtemp[,"LOSSCOR"])
-  dtemp[i[1],"P"]
+  dtemp[i[dim(i)],"P"]
 }
 
 inflex2_p <- function(data){
@@ -43,11 +43,11 @@ inflex2_p <- function(data){
   yfactor<-dtemp1[1,"LOSS"]
   dtemp2$GAIN<-dtemp2$GAIN/xfactor
   dtemp2$LOSS<-dtemp2$LOSS/yfactor
-  dtemp2<-dtemp2[(dtemp2$GAIN <1),]
-  dtemp2<-dtemp2[(dtemp2$LOSS <1),]
+  dtemp2<-dtemp2[(dtemp2$P <=p),]
+  dtemp2<-dtemp2[(dtemp2$P >0),]
   dtemp2$LOSSCOR<-dtemp2$LOSS-dtemp2$GAIN
   i<-which.min(dtemp2[,"LOSSCOR"])
-  dtemp2[i[1],"P"]
+  dtemp2[i[dim(i)],"P"]
 }
 
 
