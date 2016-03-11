@@ -116,7 +116,7 @@ print_parts <- function(data, p){
 
 print_details <- function(data, p){
   dtemp<-data[(data$P %in% p),]
-  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$Ratio), ]
+  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, -dtemp$Ratio), ]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
