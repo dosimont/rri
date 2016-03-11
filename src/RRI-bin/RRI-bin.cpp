@@ -77,13 +77,13 @@ int main(int argc, char *argv[])
                 if (rriPart->getRoutines().size()==0){
                     *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
                                     parts[j]->getLastRelative()<<SEP<<"void"<<SEP<<0<<SEP<<
-                                    0<<endl;
+                                    0<<SEP<<0<<endl;
                 }else{
                     QList<RRIRoutineInfo*> routines=rriPart->getRoutines().values();
                     for (RRIRoutineInfo* routine:routines){
                             *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
                                             parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
-                                            routine->getAverageCallStackLevel()<<endl;
+                                            routine->getAverageCallStackLevel()<<SEP<<(routine->toString().compare(core->getRedistributedModel()->getPartsAsString()[j])==0)<<endl;
                     }
                 }
             }

@@ -1,4 +1,5 @@
 library(ggplot2)
+library(RColorBrewer)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
 h <- 6
@@ -6,14 +7,14 @@ w <- 12
 
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
-details_input_file="detailed_qualities.csv"
+details_input_file="detailed_partition.csv"
 codelines_input_file="routines.csv"
 parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
 qualities2_output_file="qualities2.pdf"
 
 cheader_parts<-c("P", "START", "END", "Function")
-cheader_details<-c("P", "START", "END", "Function", "Ratio", "Callstack")
+cheader_details<-c("P", "START", "END", "Function", "Ratio", "Callstack", "SELECTED")
 cheader_codelines<-c("P", "TS", "Codeline")
 cheader_qualities<-c("P", "GAIN", "LOSS")
 
@@ -106,13 +107,16 @@ print_parts <- function(data, p){
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
   plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=0, ymax=1)
+  fnumber<-length(unique(dtemp[["Function"]]))
+  getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+  plot<-plot+scale_fill_manual(values = getPalette(fnumber))
   plot<-plot + theme_bw()
   plot
 }
 
 print_details <- function(data, p){
   dtemp<-data[(data$P %in% p),]
-  dtemp<-dtemp[order(START, -Callstack, Ratio) , ]
+  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$Ratio), ]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
@@ -121,7 +125,7 @@ print_details <- function(data, p){
   currentStart<-dtemp[1,"START"]
   position<-0
   offset<-0
-  for (i in 2:nrwow(dtemp)){
+  for (i in 2:nrow(dtemp)){
     newStart=dtemp[i,"START"]
     if (newStart != currentStart){
       currentStart<-newStart
@@ -134,9 +138,16 @@ print_details <- function(data, p){
       dtemp[i,"OFFSET"]<-offset
     }
   }
+  dtemp<-dtemp[order(dtemp$SELECTED), ]
+  dtemp2<-dtemp[(dtemp$SELECTED %in% 1), ]
+  dsize=0.3
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
-  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=OFFSET, ymax=OFFSET+Ratio)
+  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function), color="white", size=dsize)
+  plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
+  fnumber<-length(unique(dtemp[["Function"]]))
+  getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+  plot<-plot+scale_fill_manual(values = getPalette(fnumber))
   plot<-plot + theme_bw()
   plot
 }
@@ -151,6 +162,9 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+scale_x_continuous(name=xlabel)
   plot<-plot+scale_y_reverse()
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
+  #fnumber<-length(unique(parts_temp[["Function"]]))
+  #getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+  #plot<-plot+scale_fill_manual(values = getPalette(fnumber))
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
   plot<-plot + theme_bw()
   plot
@@ -181,6 +195,6 @@ p<-inflex2_p(qualities_data)
 parts_output <- paste(args[2],'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
 ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 parts_output <- paste(args[2],'/',parts_output_basename, "_details", ".pdf", sep="")
-ggsave(parts_output, plot = print_details(details_data, p), width = w, height = h)
+ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h)
 #warnings()
 
