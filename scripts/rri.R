@@ -195,6 +195,6 @@ p<-inflex2_p(qualities_data)
 parts_output <- paste(args[2],'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
 ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 parts_output <- paste(args[2],'/',parts_output_basename, "_details", ".pdf", sep="")
-ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h)
+ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2)
 #warnings()
 
