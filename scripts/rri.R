@@ -6,12 +6,14 @@ w <- 12
 
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
+details_input_file="detailed_qualities.csv"
 codelines_input_file="routines.csv"
 parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
 qualities2_output_file="qualities2.pdf"
 
 cheader_parts<-c("P", "START", "END", "Function")
+cheader_details<-c("P", "START", "END", "Function", "Ratio", "Callstack")
 cheader_codelines<-c("P", "TS", "Codeline")
 cheader_qualities<-c("P", "GAIN", "LOSS")
 
@@ -108,6 +110,37 @@ print_parts <- function(data, p){
   plot
 }
 
+print_details <- function(data, p){
+  dtemp<-data[(data$P %in% p),]
+  dtemp<-dtemp[order(START, -Callstack, Ratio) , ]
+  xlabel<-  paste("Time (relative), p=", p, sep="")
+  ylabel<-  paste("Execution time (relative), p=", p, sep="")
+  legend<-  paste("Relevant routines, p=", p, sep="")
+  dtemp$POSITION <-0
+  dtemp$OFFSET<-0
+  currentStart<-dtemp[1,"START"]
+  position<-0
+  offset<-0
+  for (i in 2:nrwow(dtemp)){
+    newStart=dtemp[i,"START"]
+    if (newStart != currentStart){
+      currentStart<-newStart
+    position<-0
+    offset<-0
+    }else{
+      position<-position+1
+      dtemp[i,"POSITION"]<-position
+      offset<-offset+dtemp[i-1,"Ratio"]
+      dtemp[i,"OFFSET"]<-offset
+    }
+  }
+  plot<-ggplot()
+  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=OFFSET, ymax=OFFSET+Ratio)
+  plot<-plot + theme_bw()
+  plot
+}
+
 print_parts_codelines <- function(parts_data, codelines_data, p){
   parts_temp<-parts_data[(parts_data$P %in% p),]
   parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
@@ -131,8 +164,10 @@ ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, heig
 qualities2_output <- paste(args[2],'/',qualities2_output_file, sep="")
 ggsave(qualities2_output, plot = print_qualities2(qualities_data), width = w, height = h)
 parts_input <- paste(args[1],'/',parts_input_file, sep="")
+details_input <- paste(args[1],'/',details_input_file, sep="")
 codelines_input <- paste(args[1],'/',codelines_input_file, sep="")
 parts_data <-read(parts_input, cheader_parts)
+details_data <-read(details_input, cheader_details)
 codelines_data <-read(codelines_input, cheader_codelines)
 plist<-make_plist(parts_data)
 for (p in plist){
@@ -145,5 +180,7 @@ ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p)
 p<-inflex2_p(qualities_data)
 parts_output <- paste(args[2],'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
 ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+parts_output <- paste(args[2],'/',parts_output_basename, "_details", ".pdf", sep="")
+ggsave(parts_output, plot = print_details(details_data, p), width = w, height = h)
 #warnings()
 
