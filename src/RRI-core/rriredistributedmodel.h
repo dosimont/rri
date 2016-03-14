@@ -24,6 +24,7 @@ public:
     QVector<RRIObject*> generateCodelines();
     QVector<QString> getPartsAsString();
     QVector<int> getPartsAsInteger();
+    bool hasVoid();
     QVector<RRIPart *> getRRIParts() const;
 
 private:
@@ -33,6 +34,7 @@ private:
     QMap<RRIPart*, RRIRoutineInfo*> mainRoutineMap;
     QVector<QString> partsAsString;
     QVector<int> partsAsInteger;
+    bool hv;
 };
 
 #endif // RRIREDISTRIBUTEDMODEL_H

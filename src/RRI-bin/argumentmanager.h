@@ -25,6 +25,9 @@ public:
     bool getUniqueFile() const;
     bool getConform() const;
     bool getHelp() const;
+    float getMinprop() const;
+    float getThreshold() const;
+    bool getNovoid() const;
 
 private:
     void processArguments();
@@ -33,9 +36,12 @@ private:
     QString input;
     QString output;
     int timeSliceNumber;
+    float threshold;
+    float minprop;
     bool uniqueFile;
     bool conform;
     bool help;
+    bool novoid;
 
 
 };

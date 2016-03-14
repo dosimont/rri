@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
         delete fileManager;
         delete argumentManager;
         qCritical()<<"Exiting";
+        return RETURN_ERR_OTHER;
     }
     PrvRegionWriter* regionWriter=new PrvRegionWriter();
     if (!argumentManager->getUniqueFile()){
@@ -48,8 +49,24 @@ int main(int argc, char *argv[])
         core->getParameters()->setAnalysisType(rri::RRI);
         core->getParameters()->setStream(fileManager->getStreamSets()[i]->getInputStream());
         core->getParameters()->setTimesliceNumber(argumentManager->getTimeSliceNumber());
+        core->getParameters()->setThreshold(argumentManager->getThreshold());
+        core->getParameters()->setMinprop(argumentManager->getMinprop());
         if (!core->buildMicroscopicModel()){
             return 4;
+        }
+        int timesliceNumber=argumentManager->getTimeSliceNumber();
+        while(argumentManager->getNovoid()&&core->hasVoid()&&timesliceNumber>MIN_TSNUMBER_NOVOID){
+            timesliceNumber/=2;
+            qDebug().nospace()<<"Empty timeslice has been found. Changing timeslice number to "<<timesliceNumber;
+            core->getParameters()->setTimesliceNumber(timesliceNumber);
+            if (!core->buildMicroscopicModel()){
+                return 4;
+            }
+            if (argumentManager->getNovoid()&&core->hasVoid()){
+                qDebug().nospace()<<"Success!";
+            }else{
+                qDebug().nospace()<<"Failed!";
+            }
         }
         core->initMacroscopicModels();
         core->buildMacroscopicModels();
@@ -69,7 +86,7 @@ int main(int argc, char *argv[])
                            <<endl;
             core->getParameters()->setP(core->getMacroscopicModel()->getPs()[i]);
             core->selectMacroscopicModel();
-            core->buildRedistributedModel();           
+            core->buildRedistributedModel();
             QVector<Part*> parts=core->getParts();
             for (int j=0; j< parts.size(); j++){
                 *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<parts[j]->getLastRelative()<<SEP<<core->getRedistributedModel()->getPartsAsString()[j]<<endl;

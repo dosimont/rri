@@ -34,7 +34,6 @@ public:
     MacroscopicModel* getMacroscopicModel() const;
     MicroscopicModel* getMicroscopicModel() const;
     RedistributedModel *getRedistributedModel() const;
-
     float getCurrentP();
     float nextP();
     float previousP();
@@ -43,6 +42,7 @@ public:
     void setP(rri::PDefaultValue defaultValue);
     void setP(float value);
     QVector<float> getPs() const;
+    bool hasVoid();
 
 private:
     void setNormInflect();

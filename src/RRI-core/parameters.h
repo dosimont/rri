@@ -30,11 +30,15 @@ public:
     QTextStream *getStream() const;
     void setStream(QTextStream *value);
 
+    float getMinprop() const;
+    void setMinprop(float value);
+
 private:
     QTextStream *stream;
     InputFileType analysisType;
     bool normalize;
     float threshold;
+    float minprop;
     float p;
     int timesliceNumber;
 };

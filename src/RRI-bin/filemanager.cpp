@@ -10,10 +10,18 @@ FileManager::~FileManager()
     for(StreamSet* stream:streamSets){
         delete stream;
     }
-    delete regionFile;
-    delete regionStream;
-    delete inputPrvFiles;
-    delete outputPrvFiles;
+    if (regionFile!=NULL){
+        delete regionFile;
+    }
+    if (regionStream!=NULL){
+        delete regionStream;
+    }
+    if (inputPrvFiles!=NULL){
+        delete inputPrvFiles;
+    }
+    if (outputPrvFiles!=NULL){
+        delete outputPrvFiles;
+    }
 }
 
 int FileManager::init()

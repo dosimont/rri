@@ -59,6 +59,7 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields, int line)
 
 void RRIMicroscopicModel::build(int timeSliceNumber)
 {
+    hv=false;
     while (matrix.size()<(unsigned int) timeSliceNumber){
         matrix.push_back(vector< vector<double> >());
         timeSlices.push_back(new RRITimeSlice());
@@ -97,6 +98,8 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
             double samples=(double)timeSlices[i]->getSamples();
             if (samples!=0.0){
                 matrix[i][j][0]/=samples;
+            }else{
+                hv=true;
             }
         }
     }
@@ -114,6 +117,11 @@ void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object, int timeSlice
     }
     matrix[timeSlice][matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
     timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId()));
+}
+
+bool RRIMicroscopicModel::hasVoid() const
+{
+    return hv;
 }
 
 QVector<RRITimeSlice *> RRIMicroscopicModel::getTimeSlices() const

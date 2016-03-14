@@ -20,6 +20,7 @@ public:
     void setMacroscopicModel(MacroscopicModel *value);
     virtual QVector<QString> getPartsAsString()=0;
     virtual QVector<int> getPartsAsInteger()=0;
+    virtual bool hasVoid()=0;
 protected:
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;

@@ -28,6 +28,7 @@ public:
     void generate(QTextStream *stream, int timeSlices);
     BiQMap<int, int> getMatrixIndexToRoutineId() const;
     QVector<RRITimeSlice*> getTimeSlices() const;
+    bool hasVoid() const;
 
 private:
     RRIObject* buildRRIObject(QStringList fields);
@@ -37,6 +38,7 @@ private:
     QVector<RRIObject*> objects;
     QVector<RRITimeSlice*> timeSlices;
     BiQMap<int, int> matrixIndexToRoutineId;
+    bool hv;
 };
 
 #endif // RRIMICROSCOPICMODEL_H

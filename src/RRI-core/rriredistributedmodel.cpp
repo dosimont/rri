@@ -31,12 +31,14 @@ void RRIRedistributedModel::setMacroscopicModel(MacroscopicModel *value)
 
 QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double minPercentage)
 {
+    hv=false;
     for (int i=0; i<oMacroscopicModel->getParts().size(); i++){
         rRIParts.push_back(new RRIPart(oMacroscopicModel->getParts().at(i)));
         rRIParts[i]->setRoutines(rRIMicroscopicModel->getTimeSlices());
         if (rRIParts[i]->getRoutines().size()==0){
             partsAsString.push_back("void");
             partsAsInteger.push_back(-1);
+            hv=true;
         }else{
             RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
             for (RRIRoutineInfo* currentRoutine:rRIParts[i]->getRoutines().values()){
@@ -78,6 +80,11 @@ QVector<QString> RRIRedistributedModel::getPartsAsString(){
 
 QVector<int> RRIRedistributedModel::getPartsAsInteger(){
     return partsAsInteger;
+}
+
+bool RRIRedistributedModel::hasVoid()
+{
+    return hv;
 }
 
 QVector<RRIPart *> RRIRedistributedModel::getRRIParts() const

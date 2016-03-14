@@ -68,3 +68,13 @@ void Parameters::setStream(QTextStream *value)
 {
     stream = value;
 }
+
+float Parameters::getMinprop() const
+{
+    return minprop;
+}
+
+void Parameters::setMinprop(float value)
+{
+    minprop = value;
+}

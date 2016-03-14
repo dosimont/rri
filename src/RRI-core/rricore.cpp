@@ -62,7 +62,7 @@ void RRICore::buildRedistributedModel()
             delete redistributedModel;
             redistributedModel=new RRIRedistributedModel(microscopicModel, macroscopicModel);
             rRIRedistributedModel=dynamic_cast<RRIRedistributedModel*>(redistributedModel);
-            rRIRedistributedModel->generateRoutines(DEFAULT_ROUTINE_MIN_DURATION);
+            rRIRedistributedModel->generateRoutines(parameters->getMinprop());
             rRIRedistributedModel->generateCodelines();
             break;
         case rri::DEFAULT:;
@@ -168,6 +168,11 @@ void RRICore::setP(float value)
 QVector<float> RRICore::getPs() const
 {
     return macroscopicModel->getPs();
+}
+
+bool RRICore::hasVoid()
+{
+    return dynamic_cast<RRIMicroscopicModel*>(microscopicModel)->hasVoid();
 }
 
 void RRICore::setNormInflect()
