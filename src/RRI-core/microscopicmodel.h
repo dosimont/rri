@@ -13,12 +13,13 @@ public:
     MicroscopicModel();
     virtual ~MicroscopicModel();
 
-    vector<vector<vector<double> > > getMatrix() const;
-    void setMatrix(const vector<vector<vector<double> > > &value);
+
+    vector<vector<vector<double> > > *getMatrix() const;
+    void setMatrix(vector<vector<vector<double> > > *value);
 
 protected:
     QTextStream *stream;
-    vector< vector< vector<double> > > matrix;
+    vector< vector< vector<double> > > *matrix;
 };
 
 #endif // MICROSCOPICMODEL_H

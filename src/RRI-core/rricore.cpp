@@ -1,9 +1,9 @@
 #include "rricore.h"
 
 RRICore::RRICore():parameters(new Parameters()),
-    microscopicModel(new RRIMicroscopicModel()),
-    macroscopicModel(new OMacroscopicModel()),
-    redistributedModel(new RRIRedistributedModel())
+    microscopicModel(NULL),
+    macroscopicModel(NULL),
+    redistributedModel(NULL)
 {
 
 }
@@ -22,9 +22,14 @@ bool RRICore::buildMicroscopicModel()
     switch (parameters->getAnalysisType()){
         case rri::RRI:
             delete microscopicModel;
+            delete macroscopicModel;
+            delete redistributedModel;
+            macroscopicModel=NULL;
+            redistributedModel=NULL;
             microscopicModel=new RRIMicroscopicModel();
             castModel=dynamic_cast<RRIMicroscopicModel*>(microscopicModel);
             castModel->generate(parameters->getStream(), parameters->getTimesliceNumber());
+            macroscopicModel=new OMacroscopicModel(microscopicModel);
             return true;
         case rri::DEFAULT:;
     }
@@ -37,7 +42,6 @@ void RRICore::initMacroscopicModels()
         case rri::RRI:
             delete macroscopicModel;
             macroscopicModel=new OMacroscopicModel(microscopicModel);
-            macroscopicModel->initializeAggregator();
             break;
         case rri::DEFAULT:;
     }

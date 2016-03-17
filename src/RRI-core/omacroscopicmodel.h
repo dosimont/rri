@@ -3,12 +3,12 @@
 
 #include "macroscopicmodel.h"
 #include "part.h"
+#include <QDebug>
 #include <lpaggreg/OLPAggreg3.h>
 
 class OMacroscopicModel : public MacroscopicModel
 {
 public:
-    OMacroscopicModel();
     OMacroscopicModel(MicroscopicModel* microscopicModel);
     ~OMacroscopicModel();
     void initializeAggregator();
@@ -19,7 +19,7 @@ public:
     QVector<Part *> getParts() const;
 
 private:
-    OLPAggreg3 lpaggreg;
+    OLPAggreg3* lpaggreg;
     QVector<Part*> parts;
 };
 

@@ -60,8 +60,8 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields, int line)
 void RRIMicroscopicModel::build(int timeSliceNumber)
 {
     hv=false;
-    while (matrix.size()<(unsigned int) timeSliceNumber){
-        matrix.push_back(vector< vector<double> >());
+    while (matrix->size()<(unsigned int) timeSliceNumber){
+        matrix->push_back(vector< vector<double> >());
         timeSlices.push_back(new RRITimeSlice());
     }
     DummyStreamReader streamReader(stream);
@@ -93,11 +93,11 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
     for (int i=0; i<timeSlices.size(); i++){
         timeSlices[i]->finalize();
     }
-    for (unsigned int i=0; i<matrix.size(); i++){
-        for (unsigned int j=0; j<matrix[i].size(); j++){
+    for (unsigned int i=0; i<matrix->size(); i++){
+        for (unsigned int j=0; j<matrix->at(i).size(); j++){
             double samples=(double)timeSlices[i]->getSamples();
             if (samples!=0.0){
-                matrix[i][j][0]/=samples;
+                matrix->at(i)[j][0]/=samples;
             }else{
                 hv=true;
             }
@@ -109,13 +109,13 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
 
 void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object, int timeSlice)
 {
-    for (unsigned int i=0; i<matrix.size();i++){
-        while (matrix[i].size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineId())+1){
-            matrix[i].push_back(vector<double>());
-            matrix[i][matrix[i].size()-1].push_back(0.0);
+    for (unsigned int i=0; i<matrix->size();i++){
+        while (matrix->at(i).size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineId())+1){
+            matrix->at(i).push_back(vector<double>());
+            matrix->at(i)[matrix->at(i).size()-1].push_back(0.0);
         }
     }
-    matrix[timeSlice][matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
+    matrix->at(timeSlice)[matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
     timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId()));
 }
 

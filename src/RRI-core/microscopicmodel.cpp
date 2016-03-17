@@ -1,21 +1,22 @@
 #include "microscopicmodel.h"
 
-MicroscopicModel::MicroscopicModel():matrix(vector< vector< vector<double> > >())
+MicroscopicModel::MicroscopicModel():matrix(new vector< vector< vector<double> > >())
 {
 
 }
 
 MicroscopicModel::~MicroscopicModel()
 {
-
+    delete matrix;
 }
 
-vector<vector<vector<double> > > MicroscopicModel::getMatrix() const
+vector<vector<vector<double> > > *MicroscopicModel::getMatrix() const
 {
     return matrix;
 }
 
-void MicroscopicModel::setMatrix(const vector<vector<vector<double> > > &value)
+void MicroscopicModel::setMatrix(vector<vector<vector<double> > > *value)
 {
     matrix = value;
 }
+

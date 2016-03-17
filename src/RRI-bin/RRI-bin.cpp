@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
         if (!core->buildMicroscopicModel()){
             return 4;
         }
-        int timesliceNumber=argumentManager->getTimeSliceNumber();
+        core->buildMacroscopicModels();
+        /*int timesliceNumber=argumentManager->getTimeSliceNumber();
         while(argumentManager->getNovoid()&&core->hasVoid()&&timesliceNumber>MIN_TSNUMBER_NOVOID){
             timesliceNumber/=2;
             qDebug().nospace()<<"Empty timeslice has been found. Changing timeslice number to "<<timesliceNumber;
@@ -62,14 +63,18 @@ int main(int argc, char *argv[])
             if (!core->buildMicroscopicModel()){
                 return 4;
             }
-            if (argumentManager->getNovoid()&&core->hasVoid()){
-                qDebug().nospace()<<"Success!";
-            }else{
-                qDebug().nospace()<<"Failed!";
-            }
+            core->buildMacroscopicModels();
         }
-        core->initMacroscopicModels();
-        core->buildMacroscopicModels();
+        if (argumentManager->getNovoid()&&core->hasVoid()){
+            qDebug().nospace()<<"Failed!";
+            core->getParameters()->setTimesliceNumber(argumentManager->getTimeSliceNumber());
+            if (!core->buildMicroscopicModel()){
+                return 4;
+            }
+            core->buildMacroscopicModels();
+        }else{
+            qDebug().nospace()<<"Success!";
+        }*/
         QTextStream* qualityStream=fileManager->getStreamSets()[i]->getQualityStream();
         QTextStream* partitionStream=fileManager->getStreamSets()[i]->getPartitionStream();
         QTextStream* detailStream=fileManager->getStreamSets()[i]->getDetailStream();
