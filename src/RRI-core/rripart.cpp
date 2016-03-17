@@ -28,13 +28,13 @@ void RRIPart::setRoutines(QVector<RRITimeSlice *> tS)
             }
             else{
                 routines[currentRoutine]->addToPercentageDuration(currentRoutines[currentRoutine]->getPercentageDuration());
-                routines[currentRoutine]->addToAverageCallStackLevel(currentRoutines[currentRoutine]->getAverageCallStackLevel());
+                //routines[currentRoutine]->addToAverageCallStackLevel(currentRoutines[currentRoutine]->getAverageCallStackLevel());
             }
         }
     }
     for(RRIRoutineInfo* routine : routines.values()){
        routine->normalizePercentageDuration(getSizeTimeSlice());
-       routine->normalizeAverageCallStackLevel();
+       //routine->normalizeAverageCallStackLevel();
     }
 }
 

@@ -148,3 +148,8 @@ void RRIObject::setFileName(const QString &value)
 {
     fileName = value;
 }
+
+QString RRIObject::getRoutineIdAndCallStack()
+{
+    return routineId+":"+callstackLvl;
+}

@@ -26,7 +26,7 @@ public:
     RRIMicroscopicModel(MicroscopicModel);
     ~RRIMicroscopicModel();
     void generate(QTextStream *stream, int timeSlices);
-    BiQMap<int, int> getMatrixIndexToRoutineId() const;
+    BiQMap<int, QString> getMatrixIndexToRoutineId() const;
     QVector<RRITimeSlice*> getTimeSlices() const;
     bool hasVoid() const;
 
@@ -37,7 +37,7 @@ private:
     void addToMicroscopicModel(RRIObject* object, int timeSlice);
     QVector<RRIObject*> objects;
     QVector<RRITimeSlice*> timeSlices;
-    BiQMap<int, int> matrixIndexToRoutineId;
+    BiQMap<int, QString> matrixIndexToRoutineId;
     bool hv;
 };
 

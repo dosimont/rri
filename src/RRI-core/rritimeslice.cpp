@@ -25,14 +25,14 @@ void RRITimeSlice::addObject(RRIObject *object, int routine)
         routines[routine]->initAverageCallStackLevel(object->getCallstackLvl());
     }else{
         routines[routine]->addToPercentageDuration(1);
-        routines[routine]->addToAverageCallStackLevel(object->getCallstackLvl());
+        //routines[routine]->addToAverageCallStackLevel(object->getCallstackLvl());
     }
 }
 
 void RRITimeSlice::finalize()
 {
     for (RRIRoutineInfo* routine:routines.values()){
-        routine->normalizeAverageCallStackLevel();
+        //routine->normalizeAverageCallStackLevel();
         routine->normalizePercentageDuration(getSamples());
     }
     //if (routines.empty()){
@@ -43,7 +43,7 @@ void RRITimeSlice::finalize()
 void RRITimeSlice::finalize(int count)
 {
     for (RRIRoutineInfo* routine:routines.values()){
-        routine->normalizeAverageCallStackLevel();
+        //routine->normalizeAverageCallStackLevel();
         routine->normalizePercentageDuration(count);
     }
     //if (routines.empty()){
@@ -53,11 +53,11 @@ void RRITimeSlice::finalize(int count)
 
 int RRITimeSlice::getSamples()
 {
-    if (objects.size()>=2){
+    /*if (objects.size()>=2){
         return objects.last()->getSample()-objects.first()->getSample()+1;
-    }else{
+    }else{*/
         return objects.size();
-    }
+    //}
 }
 
 QMap<int, RRIRoutineInfo *> RRITimeSlice::getRoutines() const
@@ -70,11 +70,11 @@ QVector<RRIObject *> RRITimeSlice::getObjects() const
     return objects;
 }
 
-QVector<RRIObject *> RRITimeSlice::getCompatibleObjects(int routineId) const
+QVector<RRIObject *> RRITimeSlice::getCompatibleObjects(int routine) const
 {
     QVector<RRIObject *> compatibleObjects = QVector<RRIObject *>();
     for (RRIObject* object:objects){
-        if (object->getRoutineId()==routineId){
+        if (object->getRoutineId()==routine){
             compatibleObjects.push_back(object);
         }
     }

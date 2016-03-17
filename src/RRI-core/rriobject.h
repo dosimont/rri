@@ -46,6 +46,8 @@ public:
     QString getFileName() const;
     void setFileName(const QString &value);
 
+    QString getRoutineIdAndCallStack();
+
 private:
     int id;
     int sample;

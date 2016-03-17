@@ -1,10 +1,7 @@
 #include "rrimicroscopicmodel.h"
 
 RRIMicroscopicModel::RRIMicroscopicModel():
-                            MicroscopicModel(),
-                            objects(QVector<RRIObject*>()),
-                            timeSlices(QVector<RRITimeSlice*>()),
-                            matrixIndexToRoutineId(BiQMap<int, int>())
+                            MicroscopicModel()
 {
 
 }
@@ -84,8 +81,8 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
             RRIERR("Input file is not ordered");
             return;
         }
-        if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineId())){
-            matrixIndexToRoutineId.add(i++,tempObject->getRoutineId());
+        if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineIdAndCallStack())){
+            matrixIndexToRoutineId.add(i++,tempObject->getRoutineIdAndCallStack());
         }
         objects.push_back(tempObject);
         addToMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
@@ -110,13 +107,13 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
 void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object, int timeSlice)
 {
     for (unsigned int i=0; i<matrix->size();i++){
-        while (matrix->at(i).size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineId())+1){
+        while (matrix->at(i).size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineIdAndCallStack())+1){
             matrix->at(i).push_back(vector<double>());
             matrix->at(i)[matrix->at(i).size()-1].push_back(0.0);
         }
     }
-    matrix->at(timeSlice)[matrixIndexToRoutineId.getFromValue(object->getRoutineId())][0]+=1.0;
-    timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineId()));
+    matrix->at(timeSlice)[matrixIndexToRoutineId.getFromValue(object->getRoutineIdAndCallStack())][0]+=1.0;
+    timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineIdAndCallStack()));
 }
 
 bool RRIMicroscopicModel::hasVoid() const
@@ -129,7 +126,7 @@ QVector<RRITimeSlice *> RRIMicroscopicModel::getTimeSlices() const
     return timeSlices;
 }
 
-BiQMap<int, int> RRIMicroscopicModel::getMatrixIndexToRoutineId() const
+BiQMap<int, QString> RRIMicroscopicModel::getMatrixIndexToRoutineId() const
 {
     return matrixIndexToRoutineId;
 }
