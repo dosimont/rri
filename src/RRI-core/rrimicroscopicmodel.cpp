@@ -41,7 +41,7 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
     rRIObject->setCodelineId(fields[CSV_RRI_CODELINE_ID]);
     rRIObject->setFileName(fields[CSV_RRI_FILE_NAME]);
     rRIObject->setCodeline(fields[CSV_RRI_CODELINE]);
-    qDebug()<<rRIObject;
+    //qDebug()<<*rRIObject;
     return rRIObject;
 }
 
