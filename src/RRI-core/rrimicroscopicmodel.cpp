@@ -41,6 +41,7 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
     rRIObject->setCodelineId(fields[CSV_RRI_CODELINE_ID]);
     rRIObject->setFileName(fields[CSV_RRI_FILE_NAME]);
     rRIObject->setCodeline(fields[CSV_RRI_CODELINE]);
+    qDebug()<<rRIObject;
     return rRIObject;
 }
 
@@ -86,6 +87,7 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
         }
         objects.push_back(tempObject);
         addToMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
+        qDebug()<<matrixIndexToRoutineId.getFromValue(tempObject->getRoutineId())<<"/"<<tempObject;
     }
     for (int i=0; i<timeSlices.size(); i++){
         timeSlices[i]->finalize();
