@@ -2,6 +2,7 @@
 #define RRIOBJECT_H
 
 #include <QString>
+#include <QTextStream>
 
 class RRIObject
 {
@@ -45,6 +46,9 @@ public:
 
     QString getFileName() const;
     void setFileName(const QString &value);
+
+    friend QTextStream& operator<<(QTextStream& out, RRIObject object);
+    friend QTextStream& operator<<(QTextStream& out, RRIObject *object);
 
 private:
     int id;

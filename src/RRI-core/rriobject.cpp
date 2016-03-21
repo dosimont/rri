@@ -148,3 +148,23 @@ void RRIObject::setFileName(const QString &value)
 {
     fileName = value;
 }
+
+QTextStream& operator<<(QTextStream& out, RRIObject object)
+{
+    out<<"RRI Object: ID "<<object.getId()<<
+      ", sample "<<object.getSample()<<
+      ", timestamp: "<<object.getTsAbsolute()<<" ("<<object.getTsPercentage()<<")"<<
+      ", routine ID"<<object.getRoutineId()<<
+      ", callstack LVL"<<object.getCallstackLvl()<<endl;
+    return out;
+}
+
+QTextStream& operator<<(QTextStream& out, RRIObject* object)
+{
+    out<<"RRI Object: ID "<<object->getId()<<
+      ", sample "<<object->getSample()<<
+      ", timestamp: "<<object->getTsAbsolute()<<" ("<<object->getTsPercentage()<<")"<<
+      ", routine ID"<<object->getRoutineId()<<
+      ", callstack LVL"<<object->getCallstackLvl()<<endl;
+    return out;
+}
