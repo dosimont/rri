@@ -38,6 +38,7 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
         if (rRIParts[i]->getRoutines().size()==0){
             partsAsString.push_back("void");
             partsAsInteger.push_back(-1);
+            partsAsIndex.push_back(-1);
             hv=true;
         }else{
             RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
