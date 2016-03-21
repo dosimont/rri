@@ -53,6 +53,11 @@ public:
     friend QTextStream& operator<<(QTextStream& out, RRIObject object);
     friend QTextStream& operator<<(QTextStream& out, RRIObject *object);
 
+    QString toString();
+
+
+    int getIndex() const;
+    void setIndex(int value);
 
 private:
     int id;
@@ -61,6 +66,7 @@ private:
     int tsAbsolute;
     int callstackLvl;
     int routineId;
+    int index;
     QString routineName;
     int codelineId;
     QString fileName;

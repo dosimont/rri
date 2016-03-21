@@ -25,15 +25,32 @@ void RRITimeSlice::addObject(RRIObject *object, int routine)
         routines[routine]->initAverageCallStackLevel(object->getCallstackLvl());
     }else{
         routines[routine]->addToPercentageDuration(1);
-        //routines[routine]->addToAverageCallStackLevel(object->getCallstackLvl());
+        routines[routine]->addToAverageCallStackLevel(object->getCallstackLvl());
+    }
+}
+
+void RRITimeSlice::addObject(RRIObject *object)
+{
+    objects.push_back(object);
+    if (!routines.contains(object->getIndex())){
+        routines.insert(object->getIndex(), new RRIRoutineInfo());
+        routines[object->getIndex()]->setIndex(object->getIndex());
+        routines[object->getIndex()]->setId(object->getRoutineId());
+        routines[object->getIndex()]->setName(object->getRoutineName());
+        routines[object->getIndex()]->setFile(object->getFileName());
+        routines[object->getIndex()]->initPercentageDuration(1);
+        routines[object->getIndex()]->initAverageCallStackLevel(object->getCallstackLvl());
+    }else{
+        routines[object->getIndex()]->addToPercentageDuration(1);
+        routines[object->getIndex()]->addToAverageCallStackLevel(object->getCallstackLvl());
     }
 }
 
 void RRITimeSlice::finalize()
 {
     for (RRIRoutineInfo* routine:routines.values()){
-        //routine->normalizeAverageCallStackLevel();
-        routine->normalizePercentageDuration(getSamples());
+        routine->normalizeAverageCallStackLevel();
+        routine->normalizePercentageDuration(getSampleNumber());
     }
     //if (routines.empty()){
     //    routines.insert(-1, new RRIRoutineInfo());
@@ -43,7 +60,7 @@ void RRITimeSlice::finalize()
 void RRITimeSlice::finalize(int count)
 {
     for (RRIRoutineInfo* routine:routines.values()){
-        //routine->normalizeAverageCallStackLevel();
+        routine->normalizeAverageCallStackLevel();
         routine->normalizePercentageDuration(count);
     }
     //if (routines.empty()){
@@ -51,13 +68,22 @@ void RRITimeSlice::finalize(int count)
     //}
 }
 
-int RRITimeSlice::getSamples()
+int RRITimeSlice::getSampleNumber()
 {
-    /*if (objects.size()>=2){
-        return objects.last()->getSample()-objects.first()->getSample()+1;
-    }else{*/
+    if (objects.size()>=2){
+        int max=objects[0]->getSample();
+        int min=objects[0]->getSample();
+        for (RRIObject* object: objects){
+            if (object->getSample()>max){
+                max=object->getSample();
+            }
+            if (object->getSample()<min)
+                min=object->getSample();
+        }
+        return max-min+1;
+    }else{
         return objects.size();
-    //}
+    }
 }
 
 QMap<int, RRIRoutineInfo *> RRITimeSlice::getRoutines() const

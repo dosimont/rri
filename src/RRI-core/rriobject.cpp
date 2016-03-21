@@ -152,7 +152,27 @@ void RRIObject::setFileName(const QString &value)
 
 QString RRIObject::getRoutineIdAndCallStack()
 {
-    return routineId+":"+callstackLvl;
+    return QString::number(routineId)+":"+QString::number(callstackLvl);
+}
+
+QString RRIObject::toString()
+{
+    return "RRI Object: ID "+QString::number(getId())+
+          ", sample "+QString::number(getSample())+
+          ", timestamp: "+QString::number(getTsAbsolute())+" ("+QString::number(getTsPercentage())+")"+
+          ", routine: "+getRoutineName()+
+          ", routine ID: "+QString::number(getRoutineId())+
+          ", callstack LVL: "+QString::number(getCallstackLvl());
+}
+
+int RRIObject::getIndex() const
+{
+    return index;
+}
+
+void RRIObject::setIndex(int value)
+{
+    index = value;
 }
 
 QTextStream& operator<<(QTextStream& out, RRIObject object)
@@ -160,8 +180,8 @@ QTextStream& operator<<(QTextStream& out, RRIObject object)
     out<<"RRI Object: ID "<<object.getId()<<
       ", sample "<<object.getSample()<<
       ", timestamp: "<<object.getTsAbsolute()<<" ("<<object.getTsPercentage()<<")"<<
-      ", routine ID"<<object.getRoutineId()<<
-      ", callstack LVL"<<object.getCallstackLvl()<<endl;
+      ", routine ID: "<<object.getRoutineId()<<
+      ", callstack LVL: "<<object.getCallstackLvl()<<endl;
     return out;
 }
 
@@ -170,7 +190,9 @@ QTextStream& operator<<(QTextStream& out, RRIObject* object)
     out<<"RRI Object: ID "<<object->getId()<<
       ", sample "<<object->getSample()<<
       ", timestamp: "<<object->getTsAbsolute()<<" ("<<object->getTsPercentage()<<")"<<
-      ", routine ID"<<object->getRoutineId()<<
-      ", callstack LVL"<<object->getCallstackLvl()<<endl;
+      ", routine ID: "<<object->getRoutineId()<<
+      ", callstack LVL: "<<object->getCallstackLvl()<<endl;
     return out;
 }
+
+

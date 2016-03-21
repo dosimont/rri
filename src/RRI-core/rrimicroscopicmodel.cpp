@@ -85,16 +85,17 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
         if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineIdAndCallStack())){
             matrixIndexToRoutineId.add(i++,tempObject->getRoutineIdAndCallStack());
         }
+        tempObject->setIndex(matrixIndexToRoutineId.getFromValue(tempObject->getRoutineIdAndCallStack()));
         objects.push_back(tempObject);
         addToMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
-        qDebug()<<matrixIndexToRoutineId.getFromValue(tempObject->getRoutineId())<<"/"<<tempObject;
+        qDebug()<<matrixIndexToRoutineId.getFromValue(tempObject->getRoutineIdAndCallStack())<<"/"<<tempObject->toString();
     }
     for (int i=0; i<timeSlices.size(); i++){
         timeSlices[i]->finalize();
     }
     for (unsigned int i=0; i<matrix->size(); i++){
         for (unsigned int j=0; j<matrix->at(i).size(); j++){
-            double samples=(double)timeSlices[i]->getSamples();
+            double samples=(double)timeSlices[i]->getSampleNumber();
             if (samples!=0.0){
                 matrix->at(i)[j][0]/=samples;
             }else{
@@ -109,13 +110,13 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
 void RRIMicroscopicModel::addToMicroscopicModel(RRIObject *object, int timeSlice)
 {
     for (unsigned int i=0; i<matrix->size();i++){
-        while (matrix->at(i).size()<(unsigned int)matrixIndexToRoutineId.getFromValue(object->getRoutineIdAndCallStack())+1){
+        while (matrix->at(i).size()<(unsigned int)object->getIndex()+1){
             matrix->at(i).push_back(vector<double>());
             matrix->at(i)[matrix->at(i).size()-1].push_back(0.0);
         }
     }
     matrix->at(timeSlice)[matrixIndexToRoutineId.getFromValue(object->getRoutineIdAndCallStack())][0]+=1.0;
-    timeSlices[timeSlice]->addObject(object, matrixIndexToRoutineId.getFromValue(object->getRoutineIdAndCallStack()));
+    timeSlices[timeSlice]->addObject(object);
 }
 
 bool RRIMicroscopicModel::hasVoid() const

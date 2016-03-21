@@ -116,25 +116,36 @@ print_parts <- function(data, p){
 
 print_details <- function(data, p){
   dtemp<-data[(data$P %in% p),]
+  dtemp<-dtemp[!(dtemp$Function %in% "void"),]
   dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, -dtemp$Ratio), ]
+  callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
   dtemp$POSITION <-0
   dtemp$OFFSET<-0
   currentStart<-dtemp[1,"START"]
+  currentCallstack<-dtemp[1,"Callstack"]
   position<-0
   offset<-0
   for (i in 2:nrow(dtemp)){
     newStart=dtemp[i,"START"]
+    newCallstack=dtemp[i,"Callstack"]
     if (newStart != currentStart){
-      currentStart<-newStart
+    currentStart<-newStart
+    currentCallstack=newCallstack
     position<-0
     offset<-0
     }else{
       position<-position+1
       dtemp[i,"POSITION"]<-position
+      if (newCallstack != currentCallstack){
+      currentCallstack=newCallstack
+      offset<-callstackDepth-currentCallstack
+      }
+      else{
       offset<-offset+dtemp[i-1,"Ratio"]
+      }
       dtemp[i,"OFFSET"]<-offset
     }
   }
