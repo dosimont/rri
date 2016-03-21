@@ -96,11 +96,11 @@ QVector<RRIObject *> RRITimeSlice::getObjects() const
     return objects;
 }
 
-QVector<RRIObject *> RRITimeSlice::getCompatibleObjects(int routine) const
+QVector<RRIObject *> RRITimeSlice::getCompatibleObjects(int index) const
 {
     QVector<RRIObject *> compatibleObjects = QVector<RRIObject *>();
     for (RRIObject* object:objects){
-        if (object->getRoutineId()==routine){
+        if (object->getIndex()==index){
             compatibleObjects.push_back(object);
         }
     }

@@ -16,7 +16,7 @@ public:
     ~RRIPart();
     void setRoutines(QVector<RRITimeSlice*> tS);
     QMap<int, RRIRoutineInfo*> getRoutines() const;
-    QVector<RRIObject*> getCompatibleObjects(int routine);
+    QVector<RRIObject*> getCompatibleObjects(int index);
 
 private:
     QVector<RRITimeSlice*> timeSlices;

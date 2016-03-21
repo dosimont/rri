@@ -45,11 +45,11 @@ QMap<int, RRIRoutineInfo *> RRIPart::getRoutines() const
     return routines;
 }
 
-QVector<RRIObject *> RRIPart::getCompatibleObjects(int routine)
+QVector<RRIObject *> RRIPart::getCompatibleObjects(int index)
 {
     QVector<RRIObject*> compatibleObjects;
     for (RRITimeSlice* tS:timeSlices){
-        compatibleObjects+=tS->getCompatibleObjects(routine);
+        compatibleObjects+=tS->getCompatibleObjects(index);
     }
     return compatibleObjects;
 }

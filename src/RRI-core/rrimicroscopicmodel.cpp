@@ -79,7 +79,7 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
         if (tempObject->getTsPercentage()>currentTimeStamp){
             currentTimeStamp=tempObject->getTsPercentage();
         }else if(tempObject->getTsPercentage()<currentTimeStamp){
-            RRIERR("Input file is not ordered");
+            qWarning("Input file is not ordered");
             return;
         }
         if (!matrixIndexToRoutineId.containsValue(tempObject->getRoutineIdAndCallStack())){
@@ -88,7 +88,7 @@ void RRIMicroscopicModel::build(int timeSliceNumber)
         tempObject->setIndex(matrixIndexToRoutineId.getFromValue(tempObject->getRoutineIdAndCallStack()));
         objects.push_back(tempObject);
         addToMicroscopicModel(tempObject, (int) (tempObject->getTsPercentage()*(double) timeSliceNumber));
-        qDebug()<<matrixIndexToRoutineId.getFromValue(tempObject->getRoutineIdAndCallStack())<<"/"<<tempObject->toString();
+        //qDebug()<<matrixIndexToRoutineId.getFromValue(tempObject->getRoutineIdAndCallStack())<<"/"<<tempObject->toString();
     }
     for (int i=0; i<timeSlices.size(); i++){
         timeSlices[i]->finalize();

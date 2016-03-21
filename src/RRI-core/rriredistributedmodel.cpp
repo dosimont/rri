@@ -59,7 +59,8 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
             }
         mainRoutineMap.insert(rRIParts[i], mainRoutine);
         partsAsString.push_back(mainRoutineMap[rRIParts[i]]->toString());
-        partsAsInteger.push_back(mainRoutineMap[rRIParts[i]]->getIndex());
+        partsAsInteger.push_back(mainRoutineMap[rRIParts[i]]->getId());
+        partsAsIndex.push_back(mainRoutineMap[rRIParts[i]]->getIndex());
         }
     }
     return mainRoutineMap;
@@ -69,7 +70,7 @@ QVector<RRIObject *> RRIRedistributedModel::generateCodelines()
 {
     QVector<RRIObject*> objects;
     for (RRIPart* part:mainRoutineMap.keys()){
-        objects+=part->getCompatibleObjects(mainRoutineMap[part]->getId());
+        objects+=part->getCompatibleObjects(mainRoutineMap[part]->getIndex());
     }
     return objects;
 }
@@ -80,6 +81,10 @@ QVector<QString> RRIRedistributedModel::getPartsAsString(){
 
 QVector<int> RRIRedistributedModel::getPartsAsInteger(){
     return partsAsInteger;
+}
+
+QVector<int> RRIRedistributedModel::getPartsAsIndex(){
+    return partsAsIndex;
 }
 
 bool RRIRedistributedModel::hasVoid()

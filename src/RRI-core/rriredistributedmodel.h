@@ -24,6 +24,7 @@ public:
     QVector<RRIObject*> generateCodelines();
     QVector<QString> getPartsAsString();
     QVector<int> getPartsAsInteger();
+    QVector<int> getPartsAsIndex();
     bool hasVoid();
     QVector<RRIPart *> getRRIParts() const;
 
@@ -34,6 +35,7 @@ private:
     QMap<RRIPart*, RRIRoutineInfo*> mainRoutineMap;
     QVector<QString> partsAsString;
     QVector<int> partsAsInteger;
+    QVector<int> partsAsIndex;
     bool hv;
 };
 

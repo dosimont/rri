@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
                     for (RRIRoutineInfo* routine:routines){
                             *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
                                             parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
-                                            routine->getAverageCallStackLevel()<<SEP<<(routine->toString().compare(core->getRedistributedModel()->getPartsAsString()[j])==0)<<endl;
+                                            routine->getAverageCallStackLevel()<<SEP<<(routine->getIndex()==core->getRedistributedModel()->getPartsAsIndex()[j])<<endl;
                     }
                 }
             }
