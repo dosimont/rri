@@ -7,7 +7,7 @@
 - qt, qt-devel (version 5 -- do not compile with version 4)
 - qmake
 - R
-- ggplot2 (R library)
+- R libraries: ggplot2, RColorBrewer
 
 ## Related tools
 
