@@ -17,7 +17,6 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "eventtypeitem.h"
 #ifndef PRV_CONSTANTS_H
 #define PRV_CONSTANTS_H
 

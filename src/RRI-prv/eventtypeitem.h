@@ -17,7 +17,6 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "eventtypeitem.h"
 #ifndef EVENTTYPEITEM_H
 #define EVENTTYPEITEM_H
 
