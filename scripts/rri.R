@@ -31,11 +31,13 @@ codelines_input_file="routines.csv"
 parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
 qualities2_output_file="qualities2.pdf"
-
 cheader_parts<-c("P", "START", "END", "Function")
 cheader_details<-c("P", "START", "END", "Function", "Ratio", "Callstack", "SELECTED")
 cheader_codelines<-c("P", "TS", "Codeline")
 cheader_qualities<-c("P", "GAIN", "LOSS")
+cheader_dump<-c("TYPE", "INSTANCE", "GROUP", "TS", "COUNTER", "VALUE")
+cheader_interpolate<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE")
+cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
 read <- function(file, cheader) {
   df <- read.csv(file, header=FALSE, sep = ",", strip.white=TRUE)
@@ -47,6 +49,12 @@ make_plist <- function(data){
   plist<-data[["P"]]
   plist<-unique(plist)
   plist
+}
+
+make_counterlist <- function(data){
+  counterlist<-data[["COUNTER"]]
+  counterlist<-unique(counterlist)
+  counterlist
 }
 
 inflex_p <- function(data){
@@ -179,7 +187,6 @@ print_details <- function(data, p){
   getPalette = colorRampPalette(brewer.pal(9, "Set1"))
   plot<-plot+scale_fill_manual(values = getPalette(fnumber))
   plot<-plot + theme_bw()
-  plot
 }
 
 print_parts_codelines <- function(parts_data, codelines_data, p){
@@ -198,9 +205,65 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
   plot<-plot + theme_bw()
   plot
+
+  g <- arrangeGrob(plot1, plot2, nrow=2) #generates g
+  g
+}
+
+print_parts_codelines <- function(parts_data, codelines_data, p){
+  parts_temp<-parts_data[(parts_data$P %in% p),]
+  parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
+  codelines_temp<-codelines_data[(codelines_data$P %in% p),]
+  xlabel<-paste("Time (relative), p=", p, sep="")
+  legend<-paste("Relevant routines, p=", p, sep="")
+  plot<-ggplot()
+  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+scale_y_reverse()
+  plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
+  #fnumber<-length(unique(parts_temp[["Function"]]))
+  #getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+  #plot<-plot+scale_fill_manual(values = getPalette(fnumber))
+  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
+  plot<-plot + theme_bw()
+  plot
+
+  g <- arrangeGrob(plot1, plot2, nrow=2) #generates g
+  g
+}
+
+print_parts_codelines <- function(parts_data, codelines_data, p, instance, counter){
+  parts_temp<-parts_data[(parts_data$P %in% p),]
+  parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
+  codelines_temp<-codelines_data[(codelines_data$P %in% p),]
+  xlabel<-paste("Time (relative), p=", p, sep="")
+  legend<-paste("Relevant routines, p=", p, sep="")
+  plot<-ggplot()
+  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+scale_y_reverse()
+  plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
+  #fnumber<-length(unique(parts_temp[["Function"]]))
+  #getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+  #plot<-plot+scale_fill_manual(values = getPalette(fnumber))
+  plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
+  plot<-plot + theme_bw()
+  plot
+
+  g <- arrangeGrob(plot1, plot2, nrow=2) #generates g
+  g
 }
 
 args <- commandArgs(trailingOnly = TRUE)
+dump_input=list.files(paste(args[1],"/.."), pattern="\\.dump\\.csv$")
+interpolate_input=list.files(paste(args[1],"/.."), pattern="\\.interpolate\\.csv$")
+slope_input=list.files(paste(args[1],"/.."), pattern="\\.slope\\.csv$")
+dump_data <-read(dump_input, cheader_dump)
+interpolate_data <-read(interpolate_input, cheader_interpolate)
+slope_data <-read(slope_input, cheader_slope)
+
+
+
+
+
 qualities_input <- paste(args[1],'/',qualities_input_file, sep="")
 qualities_data <-read(qualities_input, cheader_qualities)
 qualities_output <- paste(args[2],'/',qualities_output_file, sep="")
@@ -216,14 +279,14 @@ codelines_data <-read(codelines_input, cheader_codelines)
 plist<-make_plist(parts_data)
 for (p in plist){
   parts_output <- paste(args[2],'/',parts_output_basename, "_" , p, ".pdf", sep="")
-  ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 }
 p<-inflex_p(qualities_data)
 parts_output <- paste(args[2],'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
-ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+ggsave(parts_output, print_parts_codelines_full(parts_data, codelines_data, p), width = w, height = h)
 p<-inflex2_p(qualities_data)
 parts_output <- paste(args[2],'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
-ggsave(parts_output, plot = print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+ggsave(parts_output, print_parts_codelinesi_full(parts_data, codelines_data, p), width = w, height = h)
 parts_output <- paste(args[2],'/',parts_output_basename, "_details", ".pdf", sep="")
 ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2)
 #warnings()
