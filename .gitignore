@@ -47,3 +47,7 @@ Makefile*
 #Perso
 
 *.bak
+
+#samples
+
+samples/nemo.exe.128tasks.chop1.clustered.folding.rri/
