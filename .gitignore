@@ -43,6 +43,10 @@ Makefile*
 
 # Vi
 *.swp
+*.swo
+
+# R
+*.Rhistory
 
 #Perso
 

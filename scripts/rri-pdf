@@ -65,7 +65,8 @@ do
 if [ -d $sub_dir ]
 then
 echo "Processing $sub_dir directory"
-R --slave --vanilla --args $sub_dir $sub_dir < $rscript
+instance=`basename $sub_dir`
+R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir < $rscript
 fi
 done
 
