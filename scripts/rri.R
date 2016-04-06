@@ -188,6 +188,7 @@ print_details <- function(data, p){
   getPalette = colorRampPalette(brewer.pal(9, "Set1"))
   plot<-plot+scale_fill_manual(values = getPalette(fnumber))
   plot<-plot + theme_bw()
+  plot<-plot+ theme(legend.position="bottom")
 }
 
 print_parts_codelines <- function(parts_data, codelines_data, p){
@@ -293,11 +294,13 @@ plot1=print_parts_codelines(parts_data, codelines_data, p)
 instance=arg_instance_name
 test_data<-interpolate_data
 test_data<-test_data[(test_data$INSTANCE %in% instance),]
+print("Discarded counters:")
+print(unique(test_data[!(is.finite(test_data$VALUE)),"COUNTER"]))
 test_data<-test_data[(is.finite(test_data$VALUE)),]
 counterlist<-make_counterlist(test_data)
 for (counter in counterlist){
   plot2=print_perf_counter(dump_data, interpolate_data, slope_data, instance, counter)
-  g <- arrangeGrob(plot1, plot2, nrow=2) #generates g
+  g <- arrangeGrob(plot1, plot2, nrow=2, heights=c(1/3,2/3)) #generates g
   parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
   ggsave(parts_output, g, width = w, height = h*2)
 }
