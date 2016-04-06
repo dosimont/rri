@@ -20,6 +20,7 @@
 library(ggplot2)
 library(RColorBrewer)
 library(gridExtra)
+library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
 h <- 6
@@ -56,6 +57,26 @@ make_counterlist <- function(data){
   counterlist<-data[["COUNTER"]]
   counterlist<-unique(counterlist)
   counterlist
+}
+
+color_generator <- function(stringlist){
+
+  sorted<-sort(stringlist)
+  print(sorted)
+  hashcoded<-rep(0, length(stringlist))
+  for (i in 1:length(stringlist)){
+    hashcoded[i]=digest(sorted[i],algo="xxhash64")
+  }
+  #hashCode(sorted)
+  print(hashcoded)
+  moduled<-strtoi(c(hashcoded))%%16777215
+  print(moduled)
+  absed<-(abs(moduled))
+  print(absed)
+  hexed<-format(as.hexmode(absed),width=6)
+  print(hexed)
+  #format(as.hexmode(abs(hashCode(sort(stringlist)))%%16777215), width=6)
+  hexed
 }
 
 inflex_p <- function(data){
@@ -128,20 +149,6 @@ print_qualities2 <- function(data){
   plot
 }
 
-print_parts <- function(data, p){
-  dtemp<-data[(data$P %in% p),]
-  xlabel<-  paste("Time (relative), p=", p, sep="")
-  legend<-  paste("Relevant routines, p=", p, sep="")
-  plot<-ggplot()
-  plot<-plot+scale_x_continuous(name=xlabel)
-  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=0, ymax=1)
-  fnumber<-length(unique(dtemp[["Function"]]))
-  getPalette = colorRampPalette(brewer.pal(9, "Set1"))
-  plot<-plot+scale_fill_manual(values = getPalette(fnumber))
-  plot<-plot + theme_bw()
-  plot
-}
-
 print_details <- function(data, p){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
@@ -184,9 +191,8 @@ print_details <- function(data, p){
   plot<-plot+scale_x_continuous(name=xlabel)
   plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function), color="white", size=dsize)
   plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
-  fnumber<-length(unique(dtemp[["Function"]]))
-  getPalette = colorRampPalette(brewer.pal(9, "Set1"))
-  plot<-plot+scale_fill_manual(values = getPalette(fnumber))
+  func<-unique(dtemp[["Function"]])
+  plot<-plot+scale_fill_manual(values = color_generator(func))
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
 }
@@ -204,6 +210,8 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+ggtitle(title)
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
+  func<-unique(parts_temp[["Function"]])
+  plot<-plot+scale_fill_manual(values = color_generator(func))
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
   #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
