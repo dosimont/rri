@@ -195,24 +195,58 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
   codelines_temp<-codelines_data[(codelines_data$P %in% p),]
   xlabel<-paste("Time (relative), p=", p, sep="")
-  legend<-paste("Relevant routines, p=", p, sep="")
+  ylabel<-"Codeline"
+  title<-("Relevant Routines")
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
-  plot<-plot+scale_y_reverse()
+  plot<-plot+scale_y_reverse(name=ylabel)
+  plot<-plot+ggtitle(title)
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
+  #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
   plot
 }
 
 print_perf_counter <- function(dump_data, interpolate_data, slope_data, instance, counter){
   slope_temp<-slope_data[(slope_data$INSTANCE %in% instance),]
-  slope_temp<-slope_temp[(slope_data$COUNTER %in% counter),]
+  slope_temp<-slope_temp[(slope_temp$COUNTER %in% counter),]
+  interpolate_temp<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
+  interpolate_temp<-interpolate_temp[(interpolate_temp$COUNTER %in% counter),]
+  dump_temp<-dump_data[(dump_data$INSTANCE %in% instance),]
+  dump_temp<-dump_temp[(dump_temp$COUNTER %in% counter),]
+  dump_temp$CUMUL<-0
+  dump_temp$SAMPLES<-1
+  excluded<-dump_temp[(dump_temp$TYPE %in% "e"),]
+  unused<-dump_temp[(dump_temp$TYPE %in% "un"),]
+  used<-dump_temp[(dump_temp$TYPE %in% "u"),]
+  slope_max<-slope_temp[which.max(slope_temp[,"VALUE"]),"VALUE"]
+  sample_max<-interpolate_temp[which.max(interpolate_temp[,"VALUE"]),"VALUE"]
+  slope_temp$VALUE<-slope_temp$VALUE/slope_max
+  excluded$VALUE<-excluded$VALUE/sample_max
+  unused$VALUE<-unused$VALUE/sample_max
+  used$VALUE<-used$VALUE/sample_max
+  interpolate_temp$VALUE<-interpolate_temp$VALUE/sample_max
+  interpolate_temp$CUMUL<-0
+  interpolate_temp$TYPE<-"i"
+  interpolate_temp$SAMPLES<-0
+  slope_temp$TYPE<-"s"
+  slope_temp$SAMPLES<-0
+  total<-rbind(rbind(rbind(excluded,unused),rbind(used,slope_temp)),interpolate_temp)
   #slope_temp<-slope_temp[(slope_data$GROUP %in% "0"),]
-  plot<-ggplot()
-  plot<-plot+geom_line(data=slope_temp,aes(x=TS,y=VALUE), color="blue")
-  plot<-plot + theme_bw()
+  xlabel<-"Time (relative)"
+  ylabel<-"Amplitude (normalized)"
+  title<-paste(counter,"vs Time")
+  plot<-ggplot(total, aes(x=TS,y=VALUE,colour=TYPE))
+  plot<-plot+geom_point(data=total[total$SAMPLES %in% 1,])
+  plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
+  plot<-plot+labs(x=xlabel,y=ylabel)
+  plot<-plot+ggtitle(title)
+  plot<-plot + scale_colour_manual(name="Legend",labels = c("excluded samples ", "interpolation ", "slope ", "unused samples ", "used samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey", "s"="blue"))
+  plot<-plot+theme_bw()
+  plot<-plot+theme(legend.position="bottom")
+  #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
   plot
 }
 
@@ -244,7 +278,7 @@ details_data <-read(details_input, cheader_details)
 codelines_data <-read(codelines_input, cheader_codelines)
 plist<-make_plist(parts_data)
 for (p in plist){
-  parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_" , p, ".pdf", sep="")
+  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
   ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
 }
 p<-inflex_p(qualities_data)
@@ -256,11 +290,13 @@ ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details", ".pdf", sep="")
 ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
-counter="PAPI_TOT_INS"
 instance=arg_instance_name
-plot2=print_perf_counter(dump_data, interpolate_data, slope_data, instance, counter)
-g <- arrangeGrob(plot1, plot2, nrow=2) #generates g
-parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
-ggsave(parts_output, g, width = w, height = h*2)
+counterlist<-make_counterlist(interpolate_data)
+for (counter in counterlist){
+  plot2=print_perf_counter(dump_data, interpolate_data, slope_data, instance, counter)
+  g <- arrangeGrob(plot1, plot2, nrow=2) #generates g
+  parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
+  ggsave(parts_output, g, width = w, height = h*2)
+}
 #warnings()
 
