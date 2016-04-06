@@ -25,6 +25,7 @@
 #define THRESHOLD 0.0001
 #define MINPROP 0.8
 
+#define CSV_FILES "*.csv"
 #define RRI_DIR_PATTERN ".rri"
 #define RRI_PRV_PATTERN ".prv"
 #define CALLERDATA_FILES "*.callerdata"
@@ -52,6 +53,7 @@
 #define RETURN_ERR_INVALID_INPUT_TRACE -8
 #define RETURN_ERR_COPY_TRACE -9
 #define RETURN_ERR_INVALID_OUTPUT_TRACE -10
+#define RETURN_ERR_COPY_CSV -11
 
 
 

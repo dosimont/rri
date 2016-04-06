@@ -243,7 +243,7 @@ print_perf_counter <- function(dump_data, interpolate_data, slope_data, instance
   plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
   plot<-plot+labs(x=xlabel,y=ylabel)
   plot<-plot+ggtitle(title)
-  plot<-plot + scale_colour_manual(name="Legend",labels = c("excluded samples ", "interpolation ", "slope ", "unused samples ", "used samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey", "s"="blue"))
+  plot<-plot + scale_colour_manual(name="",labels = c("Excluded samples ", "Interpolation ", "Slope ", "Used samples ", "Unused samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey", "s"="blue"))
   plot<-plot+theme_bw()
   plot<-plot+theme(legend.position="bottom")
   #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
@@ -291,7 +291,10 @@ parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details"
 ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 instance=arg_instance_name
-counterlist<-make_counterlist(interpolate_data)
+test_data<-interpolate_data
+test_data<-test_data[(test_data$INSTANCE %in% instance),]
+test_data<-test_data[(is.finite(test_data$VALUE)),]
+counterlist<-make_counterlist(test_data)
 for (counter in counterlist){
   plot2=print_perf_counter(dump_data, interpolate_data, slope_data, instance, counter)
   g <- arrangeGrob(plot1, plot2, nrow=2) #generates g

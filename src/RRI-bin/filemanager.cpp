@@ -93,6 +93,19 @@ int FileManager::set()
         }
     }else{     
         QDir dir(inputDir);
+        dir.setNameFilters(QStringList() << CSV_FILES);
+        dir.setFilter(QDir::Files);
+        foreach(QFileInfo fileInfo, dir.entryInfoList())
+        {
+            bool error;
+            QString name=fileInfo.fileName();
+            QString destFile=outputDir+"/"+name;
+            QFile::remove(destFile);
+            error=QFile::copy(fileInfo.filePath(), destFile);
+            if (!error){
+                return RETURN_ERR_COPY_CSV;
+            }
+        }
         dir.setNameFilters(QStringList() << CALLERDATA_FILES);
         dir.setFilter(QDir::Files);
         foreach(QFileInfo fileInfo, dir.entryInfoList())
