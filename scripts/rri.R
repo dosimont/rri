@@ -20,7 +20,6 @@
 library(ggplot2)
 library(RColorBrewer)
 library(gridExtra)
-library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
 h <- 6
@@ -59,24 +58,28 @@ make_counterlist <- function(data){
   counterlist
 }
 
-color_generator <- function(stringlist){
-
-  sorted<-sort(stringlist)
-  print(sorted)
-  hashcoded<-rep(0, length(stringlist))
-  for (i in 1:length(stringlist)){
-    hashcoded[i]=digest(sorted[i],algo="xxhash64")
+hash<- function(string){
+  h=0
+  string<-utf8ToInt(as.character(string))
+  for (i in 1:length(string)){
+    h = (31 * h * string[i] + string[i])%%16777215
   }
-  #hashCode(sorted)
-  print(hashcoded)
-  moduled<-strtoi(c(hashcoded))%%16777215
-  print(moduled)
-  absed<-(abs(moduled))
-  print(absed)
-  hexed<-format(as.hexmode(absed),width=6)
-  print(hexed)
+  h
+}
+
+
+color_generator <- function(stringlist){
+  sorted<-sort(stringlist)
+  hashcoded<-rep(0, length(stringlist))
+  for (i in 1:length(sorted)){
+    hashcoded[i]=hash(sorted[i])
+  }
+  hexed<-format(as.hexmode(hashcoded),width=6)
+  #print(hexed)
   #format(as.hexmode(abs(hashCode(sort(stringlist)))%%16777215), width=6)
-  hexed
+  color=paste("#",hexed,sep="")
+  names(color)=sorted
+  color
 }
 
 inflex_p <- function(data){
@@ -152,7 +155,7 @@ print_qualities2 <- function(data){
 print_details <- function(data, p){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
-  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, -dtemp$Ratio), ]
+  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$Function), ]
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
@@ -252,7 +255,7 @@ print_perf_counter <- function(dump_data, interpolate_data, slope_data, instance
   plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
   plot<-plot+labs(x=xlabel,y=ylabel)
   plot<-plot+ggtitle(title)
-  plot<-plot + scale_colour_manual(name="",labels = c("Excluded samples ", "Interpolation ", "Slope ", "Used samples ", "Unused samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey", "s"="blue"))
+  plot<-plot + scale_colour_manual(name="",breaks = c("i", "s", "u", "un", "e"), labels = c("e"="Excluded samples ", "i"="Interpolation ", "s"="Slope ", "u"="Used samples ", "un"="Unused samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey", "s"="blue"))
   plot<-plot+theme_bw()
   plot<-plot+theme(legend.position="bottom")
   #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
