@@ -20,6 +20,7 @@
 library(ggplot2)
 library(RColorBrewer)
 library(gridExtra)
+library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
 h <- 6
@@ -58,11 +59,72 @@ make_counterlist <- function(data){
   counterlist
 }
 
-hash<- function(string){
-  h=0
-  string<-utf8ToInt(as.character(string))
-  for (i in 1:length(string)){
-    h = (31 * h * string[i] + string[i])%%16777215
+
+#string2color2<- function(string){
+#  string2<-utf8ToInt(as.character(string))
+#  vrgb=c(0,0,0)
+#  names(vrgb)=c("r","g","b")
+#  d=length(string2)
+#  for (i in 1:d){
+#    vrgb["r"]=vrgb["r"]+t[string[i],"r"]
+#    vrgb["g"]=vrgb["g"]+t[string[i],"g"]
+#    vrgb["b"]=vrgb["b"]+t[string[i],"b"]
+#  }
+#  r=r%%255
+#  b=b%%255
+#  g=g%%255
+#  h<-paste(format(as.hexmode(r), width=2),format(as.hexmode(g), width=2),format(as.hexmode(b), width=2), sep="")
+#  if ((r>200&g>200&b>200)|(r<50&g<50&b<50)){
+#    h = string2color(paste(string,":.l.?:",sep=""))
+#  }
+#  h
+#}
+
+#string2color<- function(string){
+#  string2<-utf8ToInt(as.character(string))
+#  r=0
+#  g=0
+#  b=0
+#  d=length(string2)
+#  for (i in d:1){
+#    di=d-i+1
+#    if(di%%3==1){
+#      r=((r+string2[di]+di)*string2[di]*di)%%255
+#    } else if(di%%3==2){
+#      g=((g+string2[di]+di)*string2[di]*di)%%255
+#    } else{
+#      b=((b+string2[di]+di)*string2[di]*di)%%255
+#    }
+#  }
+#  for (i in 1:d){
+#    if(i%%3==2){
+#      r=((r+string2[i]+i)*string2[i]*i)%%255
+#    } else if(i%%3==0){
+#      g=((g+string2[i]+i)*string2[i]*i)%%255
+#    } else{
+#      b=((b+string2[i]+i)*string2[i]*i)%%255
+#    }
+#  }
+#  r=r%%255
+#  b=b%%255
+#  g=g%%255
+#  h<-paste(format(as.hexmode(r), width=2),format(as.hexmode(g), width=2),format(as.hexmode(b), width=2), sep="")
+#  if ((r>200&g>200&b>200)|(r<50&g<50&b<50)){
+#    h = string2color(paste(string,":.l.?:",sep=""))
+#  }
+#  h
+#}
+#
+
+
+string2color<- function(string){
+  digested=digest(as.character(string), serialize=FALSE)
+  r=substr(digested,1,2)
+  g=substr(digested,3,4)
+  b=substr(digested,5,6)
+  h<-paste(r,g,b,sep="")
+  if ((r>200&g>200&b>200)|(r<50&g<50&b<50)){
+    h = string2color(paste(string,":270:Republique",sep=""))
   }
   h
 }
@@ -72,7 +134,7 @@ color_generator <- function(stringlist){
   sorted<-sort(stringlist)
   hashcoded<-rep(0, length(stringlist))
   for (i in 1:length(sorted)){
-    hashcoded[i]=hash(sorted[i])
+    hashcoded[i]=string2color(sorted[i])
   }
   hexed<-format(as.hexmode(hashcoded),width=6)
   #print(hexed)
