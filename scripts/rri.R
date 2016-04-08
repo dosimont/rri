@@ -211,19 +211,24 @@ print_qualities2 <- function(data){
   plot
 }
 
-print_details <- function(data, p){
+print_details <- function(data, p, jesus){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
-  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$Function), ]
+  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack), ]
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
+  for (i in 0:callstackDepth){
+    func<-unique(dtemp[(dtemp$Callstack %in% i),"Function"])
+    fv<-seq(1,length(func))
+    names(fv)<-func
+    dtemp[(dtemp$Callstack %in% i),"POSITION"]<-fv[dtemp[(dtemp$Callstack %in% i),"Function"]]
+  }
+  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$POSITION),]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
-  dtemp$POSITION <-0
   dtemp$OFFSET<-0
   currentStart<-dtemp[1,"START"]
   currentCallstack<-dtemp[1,"Callstack"]
-  position<-0
   offset<-0
   for (i in 2:nrow(dtemp)){
     newStart=dtemp[i,"START"]
@@ -231,11 +236,8 @@ print_details <- function(data, p){
     if (newStart != currentStart){
     currentStart<-newStart
     currentCallstack=newCallstack
-    position<-0
     offset<-0
     }else{
-      position<-position+1
-      dtemp[i,"POSITION"]<-position
       if (newCallstack != currentCallstack){
       currentCallstack=newCallstack
       offset<-callstackDepth-currentCallstack
@@ -251,10 +253,18 @@ print_details <- function(data, p){
   dsize=0.3
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel)
-  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function), color="white", size=dsize)
-  plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
   func<-unique(dtemp[["Function"]])
-  plot<-plot+scale_fill_manual(values = color_generator(func))
+  vcolors=color_generator(func)
+  if (jesus){
+    plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function, colour=Function))
+    plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize)
+    plot<-plot+scale_colour_manual(values = vcolors)
+  }
+  else{
+    plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function), color="white", size=dsize)
+    plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
+  }
+  plot<-plot+scale_fill_manual(values = vcolors)
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
 }
@@ -276,7 +286,6 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+scale_fill_manual(values = color_generator(func))
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
-  #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
   plot
 }
 
@@ -359,7 +368,9 @@ p<-inflex2_p(qualities_data)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details", ".pdf", sep="")
-ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2, dpi=d)
+ggsave(parts_output, plot = print_details(details_data, p, FALSE), width = w*2, height = h*2, dpi=d)
+parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_jesus", ".pdf", sep="")
+ggsave(parts_output, plot = print_details(details_data, p, TRUE), width = w*2, height = h*2, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
