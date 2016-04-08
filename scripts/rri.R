@@ -23,9 +23,6 @@ library(gridExtra)
 library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
-h <- 6
-w <- 12
-
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
 details_input_file="detailed_partition.csv"
@@ -329,6 +326,9 @@ arg_perf_directory=args[1]
 arg_instance_directory=args[2]
 arg_instance_name=args[3]
 arg_output_directory=args[4]
+w=args[5]
+h=args[6]
+d=args[7]
 dump_input=list.files(arg_perf_directory, pattern="\\.dump\\.csv$")
 interpolate_input=list.files(arg_perf_directory, pattern="\\.interpolate\\.csv$")
 slope_input=list.files(arg_perf_directory, pattern="\\.slope\\.csv$")
@@ -341,9 +341,9 @@ slope_data <-read(slope_input, cheader_slope, ';')
 qualities_input <- paste(arg_instance_directory,'/',qualities_input_file, sep="")
 qualities_data <-read(qualities_input, cheader_qualities)
 qualities_output <- paste(arg_output_directory,'/',qualities_output_file, sep="")
-ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = h)
+ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = h, dpi=d)
 qualities2_output <- paste(arg_output_directory,'/',qualities2_output_file, sep="")
-ggsave(qualities2_output, plot = print_qualities2(qualities_data), width = w, height = h)
+ggsave(qualities2_output, plot = print_qualities2(qualities_data), width = w, height = h, dpi=d)
 parts_input <- paste(arg_instance_directory,'/',parts_input_file, sep="")
 details_input <- paste(arg_instance_directory,'/',details_input_file, sep="")
 codelines_input <- paste(arg_instance_directory,'/',codelines_input_file, sep="")
@@ -353,16 +353,16 @@ codelines_data <-read(codelines_input, cheader_codelines)
 plist<-make_plist(parts_data)
 for (p in plist){
   parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
-  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 }
 p<-inflex_p(qualities_data)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
-ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 p<-inflex2_p(qualities_data)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
-ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h)
+ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details", ".pdf", sep="")
-ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2)
+ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 instance=arg_instance_name
 test_data<-interpolate_data
@@ -375,7 +375,7 @@ for (counter in counterlist){
   plot2=print_perf_counter(dump_data, interpolate_data, slope_data, instance, counter)
   g <- arrangeGrob(plot1, plot2, nrow=2, heights=c(1/3,2/3)) #generates g
   parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
-  ggsave(parts_output, g, width = w, height = h*2)
+  ggsave(parts_output, g, width = w, height = h*2, dpi=d)
 }
 #warnings()
 

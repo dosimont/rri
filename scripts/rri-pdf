@@ -20,11 +20,16 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri.R
+width=12
+height=6
+dpi=300
 
 usage_fct(){
   echo "Usage : $0 [options] <rri-directory>"
   echo "Options:"
   echo "-h --help: Print help"
+  echo "-s --size w h: Set pdf outputs width and height in inch (default: $width $height)"
+  echo "-d --dpi: Set pdf outputs dpi (default: $dpi)"
   exit 2
 }
 
@@ -47,12 +52,27 @@ then
 usage_fct
 fi
 #Test arguments
+while [ $# -gt 1 ]
+do
 if [ $1 = "-h" ] || [ $1 = "--help" ]
 then
 usage_fct
-shift
 exit 0
 fi
+if [ $1 = "-s" ] || [ $1 = "--size" ]
+then
+shift
+width=$1
+shift
+height=$1
+fi
+if [ $1 = "-d" ] || [ $1 = "--dpi" ]
+then
+shift
+dpi=$1
+fi
+shift
+done
 if [ ! -d $1 ]
 then
 echo "$1 is not a valid directory"
@@ -66,7 +86,7 @@ if [ -d $sub_dir ]
 then
 echo "Processing $sub_dir directory"
 instance=`basename $sub_dir`
-R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir < $rscript
+R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript
 fi
 done
 
