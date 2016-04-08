@@ -281,8 +281,8 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
 }
 
 print_perf_counter <- function(dump_data, interpolate_data, slope_data, counter){
-  slope_temp<-slope_data[(slope_temp$COUNTER %in% counter),]
-  interpolate_temp<-interpolate_data[(interpolate_temp$COUNTER %in% counter),]
+  slope_temp<-slope_data[(slope_data$COUNTER %in% counter),]
+  interpolate_temp<-interpolate_data[(interpolate_data$COUNTER %in% counter),]
   dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
   dump_temp$CUMUL<-0
   dump_temp$SAMPLES<-1
