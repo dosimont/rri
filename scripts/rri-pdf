@@ -58,15 +58,13 @@ if [ $1 = "-h" ] || [ $1 = "--help" ]
 then
 usage_fct
 exit 0
-fi
-if [ $1 = "-s" ] || [ $1 = "--size" ]
+elif [ $1 = "-s" ] || [ $1 = "--size" ]
 then
 shift
 width=$1
 shift
 height=$1
-fi
-if [ $1 = "-d" ] || [ $1 = "--dpi" ]
+elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
 then
 shift
 dpi=$1

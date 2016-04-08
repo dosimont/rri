@@ -280,12 +280,9 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot
 }
 
-print_perf_counter <- function(dump_data, interpolate_data, slope_data, instance, counter){
-  slope_temp<-slope_data[(slope_data$INSTANCE %in% instance),]
+print_perf_counter <- function(dump_data, interpolate_data, slope_data, counter){
   slope_temp<-slope_temp[(slope_temp$COUNTER %in% counter),]
-  interpolate_temp<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
   interpolate_temp<-interpolate_temp[(interpolate_temp$COUNTER %in% counter),]
-  dump_temp<-dump_data[(dump_data$INSTANCE %in% instance),]
   dump_temp<-dump_temp[(dump_temp$COUNTER %in% counter),]
   dump_temp$CUMUL<-0
   dump_temp$SAMPLES<-1
@@ -326,9 +323,9 @@ arg_perf_directory=args[1]
 arg_instance_directory=args[2]
 arg_instance_name=args[3]
 arg_output_directory=args[4]
-w=args[5]
-h=args[6]
-d=args[7]
+w=as.integer(args[5])
+h=as.integer(args[6])
+d=as.integer(args[7])
 dump_input=list.files(arg_perf_directory, pattern="\\.dump\\.csv$")
 interpolate_input=list.files(arg_perf_directory, pattern="\\.interpolate\\.csv$")
 slope_input=list.files(arg_perf_directory, pattern="\\.slope\\.csv$")
@@ -365,9 +362,11 @@ parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details"
 ggsave(parts_output, plot = print_details(details_data, p), width = w*2, height = h*2, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 instance=arg_instance_name
-test_data<-interpolate_data
-test_data<-test_data[(test_data$INSTANCE %in% instance),]
+interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
+slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
+dump_data<-dump_data[(dump_data$INSTANCE %in% instance),]
 print("Discarded counters:")
+test_data=interpolate_data
 print(unique(test_data[!(is.finite(test_data$VALUE)),"COUNTER"]))
 test_data<-test_data[(is.finite(test_data$VALUE)),]
 counterlist<-make_counterlist(test_data)
