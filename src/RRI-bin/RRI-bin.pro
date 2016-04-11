@@ -41,7 +41,10 @@ unix {
     target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
     target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-pdf
     target_scripts.path = $$TARGET_PATH/bin
-    INSTALLS += target_scripts
+    postinstall.path = $$TARGET_PATH/bin
+    postinstall.commands =  R --slave --vanilla < $$PROJECT_ROOT_DIRECTORY/scripts/rri-install.R
+    INSTALLS += target_scripts\
+                postinstall
 }
 
 HEADERS += \
