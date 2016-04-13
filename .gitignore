@@ -3,7 +3,6 @@
 /generated_files
 
 # Generated files
-*.csv
 *.pdf
 
 # C++ objects and libs

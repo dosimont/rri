@@ -91,10 +91,61 @@ set y2tics nomirror format "%g";
 # Breakpoints
 # Unneeded phases separators, nb. breakpoints = 2
 
+slope_PAPI_BR_CN(ret,c,r,g) = (c eq 'PAPI_BR_CN' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_BR_CN(ret,c,r,g) = (c eq 'PAPI_BR_CN_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_BR_MSP(ret,c,r,g) = (c eq 'PAPI_BR_MSP' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_BR_MSP(ret,c,r,g) = (c eq 'PAPI_BR_MSP_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_BR_UCN(ret,c,r,g) = (c eq 'PAPI_BR_UCN' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_BR_UCN(ret,c,r,g) = (c eq 'PAPI_BR_UCN_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_FP_INS(ret,c,r,g) = (c eq 'PAPI_FP_INS' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_FP_INS(ret,c,r,g) = (c eq 'PAPI_FP_INS_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_L1_DCM(ret,c,r,g) = (c eq 'PAPI_L1_DCM' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_L1_DCM(ret,c,r,g) = (c eq 'PAPI_L1_DCM_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_L2_DCM(ret,c,r,g) = (c eq 'PAPI_L2_DCM' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_L2_DCM(ret,c,r,g) = (c eq 'PAPI_L2_DCM_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_L3_TCM(ret,c,r,g) = (c eq 'PAPI_L3_TCM' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_L3_TCM(ret,c,r,g) = (c eq 'PAPI_L3_TCM_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_LD_INS(ret,c,r,g) = (c eq 'PAPI_LD_INS' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_LD_INS(ret,c,r,g) = (c eq 'PAPI_LD_INS_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_SR_INS(ret,c,r,g) = (c eq 'PAPI_SR_INS' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_SR_INS(ret,c,r,g) = (c eq 'PAPI_SR_INS_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_TOT_CYC(ret,c,r,g) = (c eq 'PAPI_TOT_CYC' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_TOT_CYC(ret,c,r,g) = (c eq 'PAPI_TOT_CYC_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
 slope_PAPI_TOT_INS(ret,c,r,g) = (c eq 'PAPI_TOT_INS' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_VEC_DP(ret,c,r,g) = (c eq 'PAPI_VEC_DP' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_VEC_DP(ret,c,r,g) = (c eq 'PAPI_VEC_DP_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_PAPI_VEC_SP(ret,c,r,g) = (c eq 'PAPI_VEC_SP' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_PAPI_VEC_SP(ret,c,r,g) = (c eq 'PAPI_VEC_SP_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_RESOURCE_STALLS(ret,c,r,g) = (c eq 'RESOURCE_STALLS' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_RESOURCE_STALLS(ret,c,r,g) = (c eq 'RESOURCE_STALLS_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_RESOURCE_STALLS_LB(ret,c,r,g) = (c eq 'RESOURCE_STALLS:LB' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_RESOURCE_STALLS_LB(ret,c,r,g) = (c eq 'RESOURCE_STALLS:LB_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_RESOURCE_STALLS_ROB(ret,c,r,g) = (c eq 'RESOURCE_STALLS:ROB' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_RESOURCE_STALLS_ROB(ret,c,r,g) = (c eq 'RESOURCE_STALLS:ROB_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_RESOURCE_STALLS_RS(ret,c,r,g) = (c eq 'RESOURCE_STALLS:RS' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_RESOURCE_STALLS_RS(ret,c,r,g) = (c eq 'RESOURCE_STALLS:RS_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+slope_RESOURCE_STALLS_SB(ret,c,r,g) = (c eq 'RESOURCE_STALLS:SB' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
+ratio_RESOURCE_STALLS_SB(ret,c,r,g) = (c eq 'RESOURCE_STALLS:SB_per_ins' && r eq 'Cluster_4' && g == 0 ) ? ret : NaN;
 
 plot \
-'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(slope_PAPI_TOT_INS($5, strcol(3), strcol(1), $2)) ti 'MIPS' axes x2y2 w lines lw 3;
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_BR_CN($5, strcol(3), strcol(1), $2)) ti 'BR_CN/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_BR_MSP($5, strcol(3), strcol(1), $2)) ti 'BR_MSP/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_BR_UCN($5, strcol(3), strcol(1), $2)) ti 'BR_UCN/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_FP_INS($5, strcol(3), strcol(1), $2)) ti 'FP_INS/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_L1_DCM($5, strcol(3), strcol(1), $2)) ti 'L1_DCM/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_L2_DCM($5, strcol(3), strcol(1), $2)) ti 'L2_DCM/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_L3_TCM($5, strcol(3), strcol(1), $2)) ti 'L3_TCM/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_LD_INS($5, strcol(3), strcol(1), $2)) ti 'LD_INS/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_SR_INS($5, strcol(3), strcol(1), $2)) ti 'SR_INS/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_TOT_CYC($5, strcol(3), strcol(1), $2)) ti 'TOT_CYC/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(slope_PAPI_TOT_INS($5, strcol(3), strcol(1), $2)) ti 'MIPS' axes x2y2 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_VEC_DP($5, strcol(3), strcol(1), $2)) ti 'VEC_DP/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_PAPI_VEC_SP($5, strcol(3), strcol(1), $2)) ti 'VEC_SP/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_RESOURCE_STALLS($5, strcol(3), strcol(1), $2)) ti 'STALLS/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_RESOURCE_STALLS_LB($5, strcol(3), strcol(1), $2)) ti 'STALLS:LB/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_RESOURCE_STALLS_ROB($5, strcol(3), strcol(1), $2)) ti 'STALLS:ROB/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_RESOURCE_STALLS_RS($5, strcol(3), strcol(1), $2)) ti 'STALLS:RS/ins' axes x2y1 w lines lw 3,\
+'nemo.exe.128tasks.chop1.clustered.codeblocks.fused.any.any.any.slope.csv' u ($4*FACTOR):(ratio_RESOURCE_STALLS_SB($5, strcol(3), strcol(1), $2)) ti 'STALLS:SB/ins' axes x2y1 w lines lw 3;
 
 unset label;
 unset arrow;
