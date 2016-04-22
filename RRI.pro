@@ -2,8 +2,6 @@ include(config.pri)
 
 TEMPLATE = subdirs
 
-CONFIG += c++11
-
 greaterThan(QT_MAJOR_VERSION, 4) {
 }else{
 error(You need QT5 to compile this program)
