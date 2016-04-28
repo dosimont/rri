@@ -128,6 +128,12 @@ void RRIObject::setRoutineName(QString value)
     routineName = value;
 }
 
+void RRIObject::setReducedRoutineName(QString value)
+{
+    routineName = value;
+    routineName = routineName.remove( QRegExp( "\\(*\\)" ) );
+}
+
 int RRIObject::getCodelineId() const
 {
     return codelineId;

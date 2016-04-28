@@ -56,7 +56,7 @@ RRIObject *RRIMicroscopicModel::buildRRIObject(QStringList fields)
     rRIObject->setTsAbsolute(fields[CSV_RRI_TS_ABSOLUTE]);
     rRIObject->setCallstackLvl(fields[CSV_RRI_CALLSTACK_LVL]);
     rRIObject->setRoutineId(fields[CSV_RRI_ROUTINE_ID]);
-    rRIObject->setRoutineName(fields[CSV_RRI_ROUTINE_NAME]);
+    rRIObject->setReducedRoutineName(fields[CSV_RRI_ROUTINE_NAME]);
     rRIObject->setCodelineId(fields[CSV_RRI_CODELINE_ID]);
     rRIObject->setFileName(fields[CSV_RRI_FILE_NAME]);
     rRIObject->setCodeline(fields[CSV_RRI_CODELINE]);

@@ -78,6 +78,8 @@ public:
     int getIndex() const;
     void setIndex(int value);
 
+    void setReducedRoutineName(QString value);
+
 private:
     int id;
     int sample;
