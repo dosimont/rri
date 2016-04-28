@@ -131,7 +131,8 @@ void RRIObject::setRoutineName(QString value)
 void RRIObject::setFilteredFileName(QString value)
 {
     fileName = value;
-    fileName = fileName.remove( QRegExp( "*\\(" ) );
+    fileName= fileName.split(" ").last();
+    fileName = fileName.remove( QRegExp( "^\\(" ) );
 }
 
 int RRIObject::getCodelineId() const
