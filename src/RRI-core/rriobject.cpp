@@ -128,10 +128,10 @@ void RRIObject::setRoutineName(QString value)
     routineName = value;
 }
 
-void RRIObject::setReducedRoutineName(QString value)
+void RRIObject::setFilteredFileName(QString value)
 {
-    routineName = value;
-    routineName = routineName.remove( QRegExp( "\\(*\\)" ) );
+    fileName = value;
+    fileName = fileName.remove( QRegExp( "*\\(" ) );
 }
 
 int RRIObject::getCodelineId() const

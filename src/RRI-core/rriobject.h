@@ -78,8 +78,7 @@ public:
     int getIndex() const;
     void setIndex(int value);
 
-    void setReducedRoutineName(QString value);
-
+    void setFilteredFileName(QString value);
 private:
     int id;
     int sample;
