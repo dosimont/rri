@@ -56,64 +56,6 @@ make_counterlist <- function(data){
   counterlist
 }
 
-
-#string2color2<- function(string){
-#  string2<-utf8ToInt(as.character(string))
-#  vrgb=c(0,0,0)
-#  names(vrgb)=c("r","g","b")
-#  d=length(string2)
-#  for (i in 1:d){
-#    vrgb["r"]=vrgb["r"]+t[string[i],"r"]
-#    vrgb["g"]=vrgb["g"]+t[string[i],"g"]
-#    vrgb["b"]=vrgb["b"]+t[string[i],"b"]
-#  }
-#  r=r%%255
-#  b=b%%255
-#  g=g%%255
-#  h<-paste(format(as.hexmode(r), width=2),format(as.hexmode(g), width=2),format(as.hexmode(b), width=2), sep="")
-#  if ((r>200&g>200&b>200)|(r<50&g<50&b<50)){
-#    h = string2color(paste(string,":.l.?:",sep=""))
-#  }
-#  h
-#}
-
-#string2color<- function(string){
-#  string2<-utf8ToInt(as.character(string))
-#  r=0
-#  g=0
-#  b=0
-#  d=length(string2)
-#  for (i in d:1){
-#    di=d-i+1
-#    if(di%%3==1){
-#      r=((r+string2[di]+di)*string2[di]*di)%%255
-#    } else if(di%%3==2){
-#      g=((g+string2[di]+di)*string2[di]*di)%%255
-#    } else{
-#      b=((b+string2[di]+di)*string2[di]*di)%%255
-#    }
-#  }
-#  for (i in 1:d){
-#    if(i%%3==2){
-#      r=((r+string2[i]+i)*string2[i]*i)%%255
-#    } else if(i%%3==0){
-#      g=((g+string2[i]+i)*string2[i]*i)%%255
-#    } else{
-#      b=((b+string2[i]+i)*string2[i]*i)%%255
-#    }
-#  }
-#  r=r%%255
-#  b=b%%255
-#  g=g%%255
-#  h<-paste(format(as.hexmode(r), width=2),format(as.hexmode(g), width=2),format(as.hexmode(b), width=2), sep="")
-#  if ((r>200&g>200&b>200)|(r<50&g<50&b<50)){
-#    h = string2color(paste(string,":.l.?:",sep=""))
-#  }
-#  h
-#}
-#
-
-
 string2color<- function(string){
   digested=digest(as.character(string), serialize=FALSE)
   r=substr(digested,1,2)
@@ -126,7 +68,6 @@ string2color<- function(string){
   h
 }
 
-
 color_generator <- function(stringlist){
   sorted<-sort(stringlist)
   hashcoded<-rep(0, length(stringlist))
@@ -134,8 +75,6 @@ color_generator <- function(stringlist){
     hashcoded[i]=string2color(sorted[i])
   }
   hexed<-format(as.hexmode(hashcoded),width=6)
-  #print(hexed)
-  #format(as.hexmode(abs(hashCode(sort(stringlist)))%%16777215), width=6)
   color=paste("#",hexed,sep="")
   names(color)=sorted
   color
@@ -252,7 +191,7 @@ print_details <- function(data, p, jesus){
   dtemp2<-dtemp[(dtemp$SELECTED %in% 1), ]
   dsize=0.3
   plot<-ggplot()
-  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   func<-unique(dtemp[["Function"]])
   vcolors=color_generator(func)
   if (jesus){
@@ -277,7 +216,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   ylabel<-"Codeline"
   title<-("Relevant Routines")
   plot<-ggplot()
-  plot<-plot+scale_x_continuous(name=xlabel)
+  plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)
   plot<-plot+ggtitle(title)
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
@@ -289,41 +228,43 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot
 }
 
-print_perf_counter <- function(dump_data, interpolate_data, slope_data, counter){
-  slope_temp<-slope_data[(slope_data$COUNTER %in% counter),]
-  interpolate_temp<-interpolate_data[(interpolate_data$COUNTER %in% counter),]
-  dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
+print_perf_counter <- function(dump_temp, interpolate_temp, slope_temp, counter){
+  #Dump
   dump_temp$CUMUL<-0
   dump_temp$SAMPLES<-1
   excluded<-dump_temp[(dump_temp$TYPE %in% "e"),]
   unused<-dump_temp[(dump_temp$TYPE %in% "un"),]
   used<-dump_temp[(dump_temp$TYPE %in% "u"),]
+  #Slope
   slope_max<-slope_temp[which.max(slope_temp[,"VALUE"]),"VALUE"]
-  sample_max<-interpolate_temp[which.max(interpolate_temp[,"VALUE"]),"VALUE"]
   slope_temp$VALUE<-slope_temp$VALUE/slope_max
-  excluded$VALUE<-excluded$VALUE/sample_max
-  unused$VALUE<-unused$VALUE/sample_max
-  used$VALUE<-used$VALUE/sample_max
+  slope_temp$TYPE<-"s"
+  slope_temp$SAMPLES<-0
+  #Interpolate
+  sample_max<-interpolate_temp[which.max(interpolate_temp[,"VALUE"]),"VALUE"]
   interpolate_temp$VALUE<-interpolate_temp$VALUE/sample_max
   interpolate_temp$CUMUL<-0
   interpolate_temp$TYPE<-"i"
   interpolate_temp$SAMPLES<-0
-  slope_temp$TYPE<-"s"
-  slope_temp$SAMPLES<-0
+  #Normalizing
+  excluded$VALUE<-excluded$VALUE/sample_max
+  unused$VALUE<-unused$VALUE/sample_max
+  used$VALUE<-used$VALUE/sample_max
+  #Merging
   total<-rbind(rbind(rbind(excluded,unused),rbind(used,slope_temp)),interpolate_temp)
-  #slope_temp<-slope_temp[(slope_data$GROUP %in% "0"),]
+  #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude (normalized)"
   title<-paste(counter,"vs Time")
   plot<-ggplot(total, aes(x=TS,y=VALUE,colour=TYPE))
   plot<-plot+geom_point(data=total[total$SAMPLES %in% 1,])
   plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
-  plot<-plot+labs(x=xlabel,y=ylabel)
+  plot<-plot+labs(y=ylabel)
+  plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+ggtitle(title)
   plot<-plot + scale_colour_manual(name="",breaks = c("i", "s", "u", "un", "e"), labels = c("e"="Excluded samples ", "i"="Interpolation ", "s"="Slope ", "u"="Used samples ", "un"="Unused samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey", "s"="blue"))
   plot<-plot+theme_bw()
   plot<-plot+theme(legend.position="bottom")
-  #plot<-plot+guides(fill=guide_legend(keywidth=0.1,keyheight=0.1,default.unit="inch"))
   plot
 }
 
@@ -378,14 +319,26 @@ slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
 dump_data<-dump_data[(dump_data$INSTANCE %in% instance),]
 print("Discarded counters:")
 test_data=interpolate_data
-print(unique(test_data[!(is.finite(test_data$VALUE)),"COUNTER"]))
-test_data<-test_data[(is.finite(test_data$VALUE)),]
+discarded_counter=unique(test_data[!(is.finite(test_data$VALUE)),"COUNTER"])
+print(discarded_counter)
+if (length(discarded_counter)!=0){
+  test_data<-test_data[(is.finite(test_data$VALUE)),]
+}
 counterlist<-make_counterlist(test_data)
 for (counter in counterlist){
-  plot2=print_perf_counter(dump_data, interpolate_data, slope_data, counter)
-  g <- arrangeGrob(plot1, plot2, nrow=2, heights=c(1/3,2/3)) #generates g
-  parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
-  ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+  print(counter)
+  dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
+  slope_temp<-slope_data[(slope_data$COUNTER %in% counter),]
+  interpolate_temp<-interpolate_data[(interpolate_data$COUNTER %in% counter),]
+  if (nrow(dump_temp)==0 | nrow(slope_temp)==0 | nrow(interpolate_temp)==0){
+    print("Invalid data, passing")
+  }
+  else{
+    plot2=print_perf_counter(dump_temp, interpolate_temp, slope_temp, counter)
+    g <- arrangeGrob(plot1, plot2, nrow=2, heights=c(1/3,2/3)) #generates g
+    parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
+    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+  }
 }
 #warnings()
 
