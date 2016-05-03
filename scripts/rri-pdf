@@ -95,6 +95,11 @@ else
 echo "Processing $sub_dir directory"
 instance=`basename $sub_dir`
 R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript
+if [ "$?" != "0" ]
+then
+echo "Error, leaving..."
+exit 1
+fi
 fi
 fi
 done
