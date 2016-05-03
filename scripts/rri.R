@@ -238,6 +238,7 @@ print_details_aggreg <- function(data, p, jesus){
       }else break
     }else break
   }
+  aggString=c("")
   print(aggVector)
   if (aggCallstackDepth>=2){
     aggString=paste(aggVector,collapse="+")
@@ -250,13 +251,13 @@ print_details_aggreg <- function(data, p, jesus){
   print(dtemp)
   dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack), ]
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
-#  for (i in 0:callstackDepth){
-#    func<-unique(dtemp[(dtemp$Callstack %in% i),"Function"])
-#    fv<-seq(1,length(func))
-#    names(fv)<-func
-#    #dtemp$POSITION[(dtemp$Callstack %in% i),"POSITION"]<-fv[dtemp[(dtemp$Callstack %in% i),"Function"]]
-#  }
-#  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$POSITION),]
+  for (i in 0:callstackDepth){
+    func<-unique(dtemp[(dtemp$Callstack %in% i),"Function"])
+    fv<-seq(1,length(func))
+    names(fv)<-func
+    dtemp$POSITION[(dtemp$Callstack %in% i)]<-fv[dtemp[(dtemp$Callstack %in% i),"Function"]]
+  }
+  dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$POSITION),]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
@@ -407,7 +408,7 @@ ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE), width = w*2, height = h*2, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_jesus", ".pdf", sep="")
-ggsave(parts_output, plot = print_details(details_data, p, TRUE), width = w*2, height = h*2, dpi=d)
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE), width = w*2, height = h*2, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
