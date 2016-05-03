@@ -255,7 +255,7 @@ print_perf_counter <- function(dump_temp, interpolate_temp, slope_temp, counter)
   #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude (normalized)"
-  title<-paste(counter,"vs Time", "Max interpolate value =", sample_max, "Max slope value =", slope_max)
+  title<-paste(counter,"vs Time", "- Max interpolate value =", sample_max, "- Max slope value =", slope_max)
   plot<-ggplot(total, aes(x=TS,y=VALUE,colour=TYPE))
   plot<-plot+geom_point(data=total[total$SAMPLES %in% 1,])
   plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
