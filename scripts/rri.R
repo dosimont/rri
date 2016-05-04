@@ -155,7 +155,7 @@ print_qualities2 <- function(data){
   plot
 }
 
-print_details_aggreg <- function(data, p, jesus, aggreg){
+print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
@@ -192,6 +192,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg){
     names(fv)<-func
     dtemp$POSITION[(dtemp$Callstack %in% i)]<-fv[dtemp[(dtemp$Callstack %in% i),"Function"]]
   }
+  dtemp<-dtemp[dtemp$Ratio >= (filter/100),]
   dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$POSITION),]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
@@ -227,18 +228,23 @@ print_details_aggreg <- function(data, p, jesus, aggreg){
   vcolors=color_generator(func, as.character(aggString))
   if (jesus){
     plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function, colour=Function))
-    plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize)
+    if (showSelected){
+      plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize)
+    }
     plot<-plot+scale_colour_manual(values = vcolors)
   }
   else{
     plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function), color="white", size=dsize)
-    plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
+    if (showSelected){
+      plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
+    }
   }
   plot<-plot+scale_fill_manual(values = vcolors)
   plot<-plot + theme_bw()
-  plot<-plot+ theme(legend.position="bottom")
+  plot<-plot + theme(legend.position="bottom")
+  plot<-plot + guides(fill=guide_legend(direction="vertical", box="horizontal", ncol=2), color=FALSE)
+  plot
 }
-
 print_parts_codelines <- function(parts_data, codelines_data, p){
   parts_temp<-parts_data[(parts_data$P %in% p),]
   parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
@@ -273,20 +279,20 @@ print_perf_counter <- function(dump_temp, interpolate_temp, slope_temp, counter)
   slope_temp$SAMPLES<-0
   #Interpolate
   sample_max<-interpolate_temp[which.max(interpolate_temp[,"VALUE"]),"VALUE"]
-  interpolate_temp$VALUE<-interpolate_temp$VALUE/sample_max
+  #interpolate_temp$VALUE<-interpolate_temp$VALUE/sample_max
   interpolate_temp$CUMUL<-0
   interpolate_temp$TYPE<-"i"
   interpolate_temp$SAMPLES<-0
   #Normalizing
-  excluded$VALUE<-excluded$VALUE/sample_max
-  unused$VALUE<-unused$VALUE/sample_max
-  used$VALUE<-used$VALUE/sample_max
+  #excluded$VALUE<-excluded$VALUE/sample_max
+  #unused$VALUE<-unused$VALUE/sample_max
+  #used$VALUE<-used$VALUE/sample_max
   #Merging
   total<-rbind(rbind(rbind(excluded,unused),rbind(used,slope_temp)),interpolate_temp)
   #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude (normalized)"
-  title<-paste(counter,"vs Time", "- Max interpolate value =", sample_max, "- Max slope value =", slope_max)
+  title<-paste(counter,"vs Time", "- Max slope value =", slope_max)
   plot<-ggplot(total, aes(x=TS,y=VALUE,colour=TYPE))
   plot<-plot+geom_point(data=total[total$SAMPLES %in% 1,])
   plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
@@ -307,6 +313,7 @@ arg_output_directory=args[4]
 w=as.integer(args[5])
 h=as.integer(args[6])
 d=as.integer(args[7])
+filter=10
 dump_input=list.files(arg_perf_directory, pattern="\\.dump\\.csv$")
 interpolate_input=list.files(arg_perf_directory, pattern="\\.interpolate\\.csv$")
 slope_input=list.files(arg_perf_directory, pattern="\\.slope\\.csv$")
@@ -339,11 +346,12 @@ ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width
 p<-inflex2_p(qualities_data)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_details", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE), width = w*2, height = h*2, dpi=d)
-parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_jesus", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE), width = w*2, height = h*2, dpi=d)
+parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
+parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_jesus", ".pdf", sep="")
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
+plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
@@ -365,9 +373,12 @@ for (counter in counterlist){
     print("Invalid data, passing")
   }
   else{
-    plot2=print_perf_counter(dump_temp, interpolate_temp, slope_temp, counter)
-    g <- arrangeGrob(plot1, plot2, nrow=2, heights=c(1/3,2/3)) #generates g
+    plot3=print_perf_counter(dump_temp, interpolate_temp, slope_temp, counter)
+    g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/3,2/3)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
+    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+    g <- arrangeGrob(plot2, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
+    parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,"_callstack.pdf", sep="")
     ggsave(parts_output, g, width = w, height = h*2, dpi=d)
   }
 }
