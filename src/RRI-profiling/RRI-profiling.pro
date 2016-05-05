@@ -16,7 +16,8 @@ SOURCES += \
     statsparser.cpp \
     stats.cpp \
     slopeparser.cpp \
-    slope.cpp
+    slope.cpp \
+    rriprofiling.cpp
 
 HEADERS +=\
         rri-profiling_global.h \
@@ -24,7 +25,8 @@ HEADERS +=\
     statsparser.h \
     stats.h \
     slopeparser.h \
-    slope.h
+    slope.h \
+    rriprofiling.h
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core

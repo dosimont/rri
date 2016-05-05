@@ -1,13 +1,13 @@
 #ifndef RRIPROFILING_H
 #define RRIPROFILING_H
 
-#include "rri-profiling_global.h"
 
-class RRIPROFILINGSHARED_EXPORT RRIProfiling
+class RRIProfiling
 {
-
 public:
     RRIProfiling();
+private:
+
 };
 
 #endif // RRIPROFILING_H
