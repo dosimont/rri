@@ -14,7 +14,7 @@ StatsParser::~StatsParser()
 
 int StatsParser::buildStats(QTextStream *stream)
 {
-    RRICsv streamReader=RRICsv(stream, ';');
+    RRICsv streamReader=RRICsv(stream);
     QStringList stringList;
     //header
     streamReader.readline();
@@ -31,6 +31,20 @@ int StatsParser::buildStats(QTextStream *stream)
 Stats* StatsParser::buildStats(QStringList stringList)
 {
     Stats* stats=new Stats();
+    stats->setRegion(stringList[CSV_STATS_REGION]);
+    stats->setGroup(stringList[CSV_STATS_GROUP]);
+    stats->setTotalInstanceNumber(stringList[CSV_STATS_TOTAL_INS_NUMBER]);
+    stats->setTotalSampleNumber(stringList[CSV_STATS_TOTAL_SAMPLE_NUMBER]);
+    stats->setTotalMedian(stringList[CSV_STATS_TOTAL_MEDIAN]);
+    stats->setTotalMad(stringList[CSV_STATS_TOTAL_MAD]);
+    stats->setSigmaTimeFactor(stringList[CSV_STATS_SIGMA_FACTOR]);
+    stats->setSelectionIntervalMin(stringList[CSV_STATS_SELECTION_INTERVAL_MIN]);
+    stats->setSelectionIntervalMax(stringList[CSV_STATS_SELECTION_INTERVAL_MAX]);
+    stats->setSelectedInstanceNumber(stringList[CSV_STATS_SELECTED_INS_NUMBER]);
+    stats->setSelectedInstanceProportion(stringList[CSV_STATS_SELECTED_INS_PROPORTION]);
+    stats->setSelectedInstanceMedian(stringList[CSV_STATS_SELECTED_INS_MEDIAN]);
+    stats->setSelectedInstanceMad(stringList[CSV_STATS_SELECTED_INS_MAD]);
+    return stats;
 }
 
 

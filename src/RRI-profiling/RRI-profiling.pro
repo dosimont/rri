@@ -14,13 +14,17 @@ DEFINES += RRIPROFILING_LIBRARY
 
 SOURCES += \
     statsparser.cpp \
-    stats.cpp
+    stats.cpp \
+    slopeparser.cpp \
+    slope.cpp
 
 HEADERS +=\
         rri-profiling_global.h \
     profiling_constants.h \
     statsparser.h \
-    stats.h
+    stats.h \
+    slopeparser.h \
+    slope.h
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
