@@ -1,0 +1,6 @@
+#ifndef CSV_CONSTANTS_H
+#define CSV_CONSTANTS_H
+
+#endif // CSV_CONSTANTS_H
+
+#define CSV_DEFAULT_SEPARATOR ','

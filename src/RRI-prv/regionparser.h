@@ -27,7 +27,7 @@
 #include <QDebug>
 
 #include "region.h"
-#include "dummystreamreader.h"
+#include "rricsv.h"
 #include "prv_constants.h"
 
 class RegionParser

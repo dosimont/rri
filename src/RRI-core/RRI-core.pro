@@ -25,8 +25,7 @@ SOURCES += biqmap.cpp \
     rrimicroscopicmodel.cpp \
     rripart.cpp \
     rritimeslice.cpp \
-    rriroutineinfo.cpp \
-    dummystreamreader.cpp
+    rriroutineinfo.cpp
 
 HEADERS += biqmap.h \
     microscopicmodel.h \
@@ -44,8 +43,13 @@ HEADERS += biqmap.h \
     rripart.h \
     rritimeslice.h \
     rriroutineinfo.h \
-    core_constants.h \
-    dummystreamreader.h
+    core_constants.h
+
+unix:!macx: LIBS += -L$$DESTDIR -lrri-csv
+INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
+DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
+
+QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../lib\''
 
 unix:!macx: LIBS += -llpaggreg
 isEmpty( LPAGGREG_PATH ){

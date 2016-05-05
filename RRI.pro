@@ -8,13 +8,19 @@ error(You need QT5 to compile this program)
 }
 
 SUBDIRS += \
-           RRI-core \
+           RRI-csv
+
+RRI-csv.subdir = src/RRI-csv
+
+SUBDIRS += RRI-core
 
 RRI-core.subdir = src/RRI-core
+RRI-core.depends = RRI-csv
 
 SUBDIRS += RRI-prv
 RRI-prv.subdir  = src/RRI-prv
-RRI-prv.depends = RRI-core
+RRI-prv.depends = RRI-csv
+RRI-prv.depends += RRI-core
 
 equals(BUILD_BIN, true){
 SUBDIRS += RRI-bin

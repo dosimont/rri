@@ -33,9 +33,11 @@ HEADERS +=\
     region.h \
     prvregionwriter.h
 
-unix:!macx: LIBS += -L$$DESTDIR -lrri
+unix:!macx: LIBS += -L$$DESTDIR -lrri -lrri-csv
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
+INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
+DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
 
 QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../lib\''
 
