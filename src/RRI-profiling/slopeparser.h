@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include "slope.h"
 #include "profiling_constants.h"
+#include "rricsv.h"
 
 
 class SlopeParser
@@ -15,7 +16,7 @@ public:
     ~SlopeParser();
     int buildSlopes(QTextStream* stream);
 private:
-    void AddToSlope(QStringList stringList);
+    int addToSlope(QStringList stringList);
     QMap<QString,QMap<QString, Slope*>> slopes;
 };
 

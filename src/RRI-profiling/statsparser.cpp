@@ -7,7 +7,7 @@ StatsParser::StatsParser()
 
 StatsParser::~StatsParser()
 {
-    for (Stats* stats:statsMap->values()){
+    for (Stats* stats:statsMap.values()){
         delete stats;
     }
 }

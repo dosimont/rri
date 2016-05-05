@@ -7,8 +7,8 @@ SlopeParser::SlopeParser()
 
 SlopeParser::~SlopeParser()
 {
-    for (auto items:slopes->values()){
-        for (Slope* slope:items->values()){
+    for (auto items:slopes.values()){
+        for (Slope* slope:items.values()){
             delete slope;
         }
     }
@@ -16,21 +16,20 @@ SlopeParser::~SlopeParser()
 
 int SlopeParser::buildSlopes(QTextStream *stream)
 {
-    RRICsv streamReader=RRICsv(stream);
+    RRICsv streamReader=RRICsv(stream, ';');
     QStringList stringList;
     //header
     streamReader.readline();
     for (stringList=streamReader.readline();!streamReader.isEnd();stringList=streamReader.readline()){
-        buildStats(stringList);
-        if (stats->getGroup().compare("Group_0")!=0){
-            return RETURN_ERR_GROUP;
+        int err=addToSlope(stringList);
+        if (err!=RETURN_OK){
+            return err;
         }
-        statsMap.insert(stats->getRegion(), stats);
     }
     return RETURN_OK;
 }
 
-int SlopeParser::AddToSlope(QStringList stringList)
+int SlopeParser::addToSlope(QStringList stringList)
 {
     if (stringList.size()<CSV_SLOPE_SIZE){
         return RETURN_ERR_CSVLINESIZE;
@@ -42,9 +41,9 @@ int SlopeParser::AddToSlope(QStringList stringList)
         return RETURN_ERR_GROUP;
     }
     QString counter=stringList[CSV_SLOPE_COUNTER];
-    QString tsStr=stringList(CSV_SLOPE_TS);
-    QString valueStr=stringList(CSV_SLOPE_VALUE);
-    QString unknownStr=stringList(CSV_SLOPE_UNKNOWN);
+    QString tsStr=stringList[CSV_SLOPE_TS];
+    QString valueStr=stringList[CSV_SLOPE_VALUE];
+    QString unknownStr=stringList[CSV_SLOPE_UNKNOWN];
     float ts=tsStr.toFloat();
     float value=valueStr.toFloat();
     float unknown=unknownStr.toFloat();

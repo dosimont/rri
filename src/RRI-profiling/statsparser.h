@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include "stats.h"
 #include "profiling_constants.h"
+#include "rricsv.h"
 
 
 class StatsParser
