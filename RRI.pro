@@ -8,7 +8,7 @@ error(You need QT5 to compile this program)
 }
 
 SUBDIRS += \
-           RRI-csv
+           RRI-csv \
 
 RRI-csv.subdir = src/RRI-csv
 
@@ -22,10 +22,16 @@ RRI-prv.subdir  = src/RRI-prv
 RRI-prv.depends = RRI-csv
 RRI-prv.depends += RRI-core
 
+SUBDIRS += RRI-profiling
+RRI-profiling.subdir  = src/RRI-profiling
+RRI-profiling.depends = RRI-csv
+RRI-profiling.depends += RRI-core
+
 equals(BUILD_BIN, true){
 SUBDIRS += RRI-bin
 RRI-bin.subdir  = src/RRI-bin
-RRI-bin.depends = RRI-core
+RRI-bin.depends = RRI-csv
+RRI-bin.depends += RRI-core
 RRI-bin.depends += RRI-prv
 }
 

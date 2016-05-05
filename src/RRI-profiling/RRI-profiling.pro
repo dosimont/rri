@@ -1,37 +1,26 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-02-24T17:31:35
+# Project created by QtCreator 2016-05-05T10:55:45
 #
 #-------------------------------------------------
 include(../../config.pri)
 
-
 QT       -= gui
 
-TARGET = rri-prv
+TARGET = rri-profiling
 TEMPLATE = lib
 
-DEFINES += RRIPRV_LIBRARY
+DEFINES += RRIPROFILING_LIBRARY
 
 SOURCES += \
-    prvfilemanager.cpp \
-    eventtypeblock.cpp \
-    eventtypeitem.cpp \
-    eventtypevalue.cpp \
-    regionparser.cpp \
-    region.cpp \
-    prvregionwriter.cpp
+    statsparser.cpp \
+    stats.cpp
 
 HEADERS +=\
-        rri-prv_global.h \
-    prvfilemanager.h \
-    prv_constants.h \
-    eventtypeblock.h \
-    eventtypeitem.h \
-    eventtypevalue.h \
-    regionparser.h \
-    region.h \
-    prvregionwriter.h
+        rri-profiling_global.h \
+    profiling_constants.h \
+    statsparser.h \
+    stats.h
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
@@ -42,14 +31,6 @@ INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
 
 QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../lib\''
-
-unix:!macx: LIBS += -llpaggreg
-isEmpty( LPAGGREG_PATH ){
-} else {
-unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
-INCLUDEPATH += $$LPAGGREG_PATH/include
-QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
-}
 
 unix {
     target.path = $$TARGET_PATH/lib

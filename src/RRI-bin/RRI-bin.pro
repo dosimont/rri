@@ -17,6 +17,10 @@ SOURCES += \
     filemanager.cpp \
     streamset.cpp
 
+unix:!macx: LIBS += -L$$DESTDIR -lrri-csv
+INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
+DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
+
 unix:!macx: LIBS += -L$$DESTDIR -lrri
 INCLUDEPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core
 DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-core

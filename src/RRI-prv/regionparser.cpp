@@ -34,7 +34,7 @@ RegionParser::~RegionParser()
 
 void RegionParser::buildRegions(QTextStream* stream)
 {
-    RRICsv streamReader=RRICsv(stream, ";");
+    RRICsv streamReader=RRICsv(stream, ';');
     QStringList stringList;
     //header
     streamReader.readline();
