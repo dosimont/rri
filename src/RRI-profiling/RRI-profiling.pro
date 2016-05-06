@@ -17,6 +17,7 @@ SOURCES += \
     stats.cpp \
     slopeparser.cpp \
     slope.cpp \
+    routineprofile.cpp \
     rriprofiling.cpp
 
 HEADERS +=\
@@ -26,6 +27,7 @@ HEADERS +=\
     stats.h \
     slopeparser.h \
     slope.h \
+    routineprofile.h \
     rriprofiling.h
 
 unix:!macx: LIBS += -L$$DESTDIR -lrri

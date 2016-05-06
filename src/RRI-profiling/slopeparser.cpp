@@ -23,7 +23,9 @@ int SlopeParser::buildSlopes(QTextStream *stream)
     for (stringList=streamReader.readline();!streamReader.isEnd();stringList=streamReader.readline()){
         int err=addToSlope(stringList);
         if (err!=RETURN_OK){
-            return err;
+            if (err!=RETURN_ERR_CSVLINESIZE){
+                return err;
+            }
         }
     }
     return RETURN_OK;
