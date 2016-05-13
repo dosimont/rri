@@ -67,3 +67,17 @@ float RoutineProfile::getSlopeAvg(QString counter)
 {
     return currentSlope[counter]/currentDuration[counter];
 }
+
+QTextStream& operator<<(QTextStream& out, RoutineProfile profile)
+{
+    out<<&profile;
+    return out;
+}
+
+QTextStream& operator<<(QTextStream& out, RoutineProfile* profile)
+{
+    for (QString counter:profile->currentSlope.keys()){
+            out<<profile->id<<","<<profile->name<<","<<counter<<","<<profile->getSlopeAvg(counter)<<endl;
+    }
+    return out;
+}

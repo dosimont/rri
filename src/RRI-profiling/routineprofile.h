@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QMap>
+#include <QTextStream>
 
 class RoutineProfile
 {
@@ -21,6 +22,9 @@ public:
 
     QMap<QString, float> getCurrentSlope() const;
     QMap<QString, float> getCurrentDuration() const;
+
+    friend QTextStream& operator<<(QTextStream& out, RoutineProfile profile);
+    friend QTextStream& operator<<(QTextStream& out, RoutineProfile* profile);
 
 private:
     QString name;
