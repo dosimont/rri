@@ -151,13 +151,3 @@ QString RRIRoutineInfo::toString()
     return file+":"+name;
 }
 
-bool RRIRoutineInfo::CompareByCallStackLvlAsc(const RRIRoutineInfo &rriInfo1, const RRIRoutineInfo &rriInfo2)
-{
-    return rriInfo1.getAverageCallStackLevel()<rriInfo2.getAverageCallStackLevel();
-}
-
-bool RRIRoutineInfo::CompareByCallStackLvlDesc(const RRIRoutineInfo &rriInfo1, const RRIRoutineInfo &rriInfo2)
-{
-    return rriInfo1.getAverageCallStackLevel()>rriInfo2.getAverageCallStackLevel();
-}
-

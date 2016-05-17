@@ -10,11 +10,6 @@ QMap<QString, float> RoutineProfile::getCurrentSlope() const
     return currentSlope;
 }
 
-QMap<QString, float> RoutineProfile::getCurrentSlope() const
-{
-    return currentSlope;
-}
-
 QMap<QString, float> RoutineProfile::getCurrentDuration() const
 {
     return currentDuration;
@@ -26,17 +21,17 @@ RoutineProfile::RoutineProfile(QString name):name(name)
 
 }
 
-QString routineProfile::getName() const
+QString RoutineProfile::getName() const
 {
     return name;
 }
 
-void routineProfile::setName(const QString &value)
+void RoutineProfile::setName(const QString &value)
 {
     name = value;
 }
 
-float routineProfile::getCurrentDuration(QString counter) const
+float RoutineProfile::getCurrentDuration(QString counter) const
 {
     return currentDuration[counter];
 }

@@ -55,9 +55,9 @@ public:
     int getCount() const;
     QString toString();
 
-    static bool CompareByCallStackLvlAsc(const RRIRoutineInfo & rriInfo1 , const RRIRoutineInfo & rriInfo2);
-
-    static bool CompareByCallStackLvlDesc(const RRIRoutineInfo & rriInfo1 , const RRIRoutineInfo & rriInfo2);
+    bool operator<(const RRIRoutineInfo & other) const {
+        return getAverageCallStackLevel()<other.getAverageCallStackLevel();
+    }
 
 private:
     int index;

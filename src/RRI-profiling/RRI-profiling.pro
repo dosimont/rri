@@ -40,6 +40,14 @@ DEPENDPATH += $$PROJECT_ROOT_DIRECTORY/src/RRI-csv
 
 QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../lib\''
 
+unix:!macx: LIBS += -llpaggreg
+isEmpty( LPAGGREG_PATH ){
+} else {
+unix:!macx: LIBS +=-L$$LPAGGREG_PATH/lib
+INCLUDEPATH += $$LPAGGREG_PATH/include
+QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
+}
+
 unix {
     target.path = $$TARGET_PATH/lib
     header_files.files = $$HEADERS

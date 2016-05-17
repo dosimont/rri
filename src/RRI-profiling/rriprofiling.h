@@ -21,7 +21,7 @@ public:
 private:
     void parseSlope();
     void parseStats();
-    QMap<QString, *RoutineProfile> routineProfiles;
+    QMap<QString, RoutineProfile*> routineProfiles;
     SlopeParser *slopeParser;
     StatsParser *statsParser;
     QTextStream *statsStream;

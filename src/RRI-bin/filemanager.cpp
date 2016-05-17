@@ -141,7 +141,7 @@ int FileManager::set()
         dir.setNameFilters(QStringList() << STATS_FILE);
         dir.setFilter(QDir::Files);
         stats=dir.entryList().first();
-        statsFile=new QFile(dir.path()+"/"+statss);
+        statsFile=new QFile(dir.path()+"/"+stats);
         if (!statsFile->open(QIODevice::ReadOnly | QIODevice::Text)){
            qWarning().nospace()<<"Unable to open stats file";
            return RETURN_ERR_INVALID_STATS_FILE;

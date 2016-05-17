@@ -19,7 +19,7 @@ int SlopeParser::buildSlopes(QTextStream *stream)
     RRICsv streamReader=RRICsv(stream, ';');
     QStringList stringList;
     //header
-    streamReader.readline();
+    //streamReader.readline();
     for (stringList=streamReader.readline();!streamReader.isEnd();stringList=streamReader.readline()){
         int err=addToSlope(stringList);
         if (err!=RETURN_OK){

@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         regionWriter->parseRegions(fileManager->getRegionStream());
         regionWriter->setEventTypeBlockItems();
         regionWriter->pushRRIRegionHeader();
-        rriProfiling=new rriProfiling(fileManager->getStatsStream(), fileManager->getSlopeStream(), fileManager->getProfilingStream());
+        rriProfiling=new RRIProfiling(fileManager->getStatsStream(), fileManager->getSlopeStream(), fileManager->getProfilingStream());
     }
     rriProfiling->parse();
     RRICore* core;
