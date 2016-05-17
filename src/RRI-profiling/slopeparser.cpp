@@ -62,3 +62,8 @@ int SlopeParser::addToSlope(QStringList stringList)
     slopes[region][counter]->addPoint(ts, value, unknown);
     return RETURN_OK;
 }
+
+QMap<QString, QMap<QString, Slope *> > SlopeParser::getSlopes() const
+{
+    return slopes;
+}

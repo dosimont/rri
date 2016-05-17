@@ -4,13 +4,14 @@
 #include <QString>
 #include <QMap>
 #include <QTextStream>
+#include <QList>
 
 class RoutineProfile
 {
 public:
     RoutineProfile();
     RoutineProfile(QString name);
-    void addToAvg(QString counter, float value, float duration, float ratio, int weight);
+    void addToAvg(QString region, QString counter, float value, float duration, float ratio, int weight);
     float getSlopeAvg(QString counter);
     QString getName() const;
     void setName(const QString &value);
@@ -31,6 +32,7 @@ private:
     int id;
     QMap<QString, float> currentSlope;
     QMap<QString, float> currentDuration;
+    QList<QString> regions;
 };
 
 #endif // ROUTINEPROFILE_H

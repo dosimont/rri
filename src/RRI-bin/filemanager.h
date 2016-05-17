@@ -49,6 +49,12 @@ public:
     QTextStream *getRegionStream() const;
     int init();
 
+    QTextStream *getStatsStream() const;
+
+    QTextStream *getSlopeStream() const;
+
+    QTextStream *getProfilingStream() const;
+
 protected:
     int mkoutputDir();
     int set();
@@ -57,6 +63,15 @@ protected:
     QString regions;
     QFile* regionFile;
     QTextStream* regionStream;
+    QString stats;
+    QFile* statsFile;
+    QTextStream* statsStream;
+    QString slopes;
+    QFile* slopeFile;
+    QTextStream* slopeStream;
+    QString profiling;
+    QFile* profilingFile;
+    QTextStream* profilingStream;
     QVector<QString> callerDataFileNames;
     QVector<QString> iterationNames;
     QVector<StreamSet*> streamSets;

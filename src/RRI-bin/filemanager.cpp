@@ -137,6 +137,35 @@ int FileManager::set()
            return RETURN_ERR_INVALID_REGION_FILE;
         }
         regionStream=new QTextStream(regionFile);
+
+        dir.setNameFilters(QStringList() << STATS_FILE);
+        dir.setFilter(QDir::Files);
+        stats=dir.entryList().first();
+        statsFile=new QFile(dir.path()+"/"+statss);
+        if (!statsFile->open(QIODevice::ReadOnly | QIODevice::Text)){
+           qWarning().nospace()<<"Unable to open stats file";
+           return RETURN_ERR_INVALID_STATS_FILE;
+        }
+        statsStream=new QTextStream(statsFile);
+
+        dir.setNameFilters(QStringList() << SLOPE_FILE);
+        dir.setFilter(QDir::Files);
+        slopes=dir.entryList().first();
+        slopeFile=new QFile(dir.path()+"/"+slopes);
+        if (!slopeFile->open(QIODevice::ReadOnly | QIODevice::Text)){
+           qWarning().nospace()<<"Unable to open slope file";
+           return RETURN_ERR_INVALID_SLOPE_FILE;
+        }
+        slopeStream=new QTextStream(slopeFile);
+
+        profiling=outputDir+"/"+PROFILING_FILE;
+        profilingFile=new QFile(profiling);
+        if (!profilingFile->open(QIODevice::ReadWrite | QIODevice::Text)){
+           qWarning().nospace()<<"Unable to open profiling file";
+           return RETURN_ERR_INVALID_PROFILING_FILE;
+        }
+        profilingStream=new QTextStream(profilingFile);
+
         dir.setNameFilters(QStringList() << PRV_INPUT_FILE);
         dir.setFilter(QDir::Files);
         inputPrvFiles=new PrvFileManager();
@@ -159,6 +188,21 @@ int FileManager::set()
         }
     }
     return RETURN_OK;
+}
+
+QTextStream *FileManager::getProfilingStream() const
+{
+    return profilingStream;
+}
+
+QTextStream *FileManager::getSlopeStream() const
+{
+    return slopeStream;
+}
+
+QTextStream *FileManager::getStatsStream() const
+{
+    return statsStream;
 }
 
 QTextStream *FileManager::getRegionStream() const

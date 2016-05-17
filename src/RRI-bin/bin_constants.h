@@ -30,6 +30,8 @@
 #define RRI_PRV_PATTERN ".prv"
 #define CALLERDATA_FILES "*.callerdata"
 #define CALLERDATA_REGIONS_FILE "*.callerdata.regions"
+#define STATS_FILE "*.stats"
+#define SLOPE_FILE "*slope.csv"
 #define PRV_INPUT_FILE "*.codeblocks.fused.folded.prv"
 
 #define INFO_FILE "info.csv"
@@ -37,6 +39,8 @@
 #define PARTITION_FILE "partitions.csv"
 #define DETAIL_FILE "detailed_partition.csv"
 #define ROUTINE_FILE "routines.csv"
+
+#define PROFILING_FILE "profiling.csv"
 
 #define SEP ","
 
@@ -48,6 +52,9 @@
 #define RETURN_ERR_INVALID_OUTPUT_DIR -3
 #define RETURN_ERR_EXISTING_OUTPUT_DIR -4
 #define RETURN_ERR_INVALID_REGION_FILE -5
+#define RETURN_ERR_INVALID_SLOPE_FILE -12
+#define RETURN_ERR_INVALID_STATS_FILE -13
+#define RETURN_ERR_INVALID_PROFILING_FILE -14
 #define RETURN_ERR_INVALID_OUTPUT_STREAM -6
 #define RETURN_ERR_INVALID_INPUT_STREAM -7
 #define RETURN_ERR_INVALID_INPUT_TRACE -8

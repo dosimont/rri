@@ -31,6 +31,7 @@
 #include <rricore.h>
 #include <part.h>
 #include <prvregionwriter.h>
+#include <rriprofiling.h>
 
 #include "argumentmanager.h"
 #include "filemanager.h"
@@ -53,13 +54,16 @@ int main(int argc, char *argv[])
         return RETURN_ERR_OTHER;
     }
     PrvRegionWriter* regionWriter=new PrvRegionWriter();
+    RRIProfiling* rriProfiling;
     if (!argumentManager->getUniqueFile()){
         regionWriter->setInputPrvFile(fileManager->getInputPrvFiles());
         regionWriter->setOutputPrvFile(fileManager->getOutputPrvFiles());
         regionWriter->parseRegions(fileManager->getRegionStream());
         regionWriter->setEventTypeBlockItems();
         regionWriter->pushRRIRegionHeader();
+        rriProfiling=new rriProfiling(fileManager->getStatsStream(), fileManager->getSlopeStream(), fileManager->getProfilingStream());
     }
+    rriProfiling->parse();
     RRICore* core;
     for (int i=0; i<fileManager->getIterationNames().size(); i++){
         qDebug().nospace()<<"Iteration "<<i+1<<", session: "<<fileManager->getIterationNames()[i];
@@ -149,12 +153,15 @@ int main(int argc, char *argv[])
         *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
             regionWriter->pushRRIRegion(fileManager->getIterationNames()[i], core);
+            rriProfiling->computeRoutines(fileManager->getIterationNames()[i], core);
         }
         fileManager->getStreamSets()[i]->close();
         delete core;
     }
     if (!argumentManager->getUniqueFile()){
         regionWriter->pushRRIEventTypeBlock();
+        rriProfiling->writeStream();
+        delete rriProfiling;
     }
     delete fileManager;
     delete regionWriter;

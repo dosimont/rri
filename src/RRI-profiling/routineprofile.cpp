@@ -1,6 +1,6 @@
 #include "routineprofile.h"
 
-RoutineProfile::RoutineProfile():currentSlope(0), currentDuration(0)
+RoutineProfile::RoutineProfile()
 {
 
 }
@@ -21,7 +21,7 @@ QMap<QString, float> RoutineProfile::getCurrentDuration() const
 }
 
 
-RoutineProfile::RoutineProfile(QString name, int id):name(name), id(id)
+RoutineProfile::RoutineProfile(QString name):name(name)
 {
 
 }
@@ -36,24 +36,13 @@ void routineProfile::setName(const QString &value)
     name = value;
 }
 
-
-int routineProfile::getId() const
-{
-    return id;
-}
-
-void routineProfile::setId(int value)
-{
-    id = value;
-}
-
 float routineProfile::getCurrentDuration(QString counter) const
 {
     return currentDuration[counter];
 }
 
 
-void RoutineProfile::addToAvg(QString counter, float value, float duration, float ratio, int weight)
+void RoutineProfile::addToAvg(QString region, QString counter, float value, float duration, float ratio, int weight)
 {
     if (!currentSlope.contains(counter)){
         currentSlope.insert(counter, 0);
@@ -61,6 +50,9 @@ void RoutineProfile::addToAvg(QString counter, float value, float duration, floa
     }
     currentSlope[counter]+=(value*duration*ratio*(float)weight);
     currentDuration[counter]+=duration*ratio*(float)weight;
+    if (!regions.contains(region)){
+        regions.push_back(region);
+    }
 }
 
 float RoutineProfile::getSlopeAvg(QString counter)

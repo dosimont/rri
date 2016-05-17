@@ -15,6 +15,8 @@ public:
     SlopeParser();
     ~SlopeParser();
     int buildSlopes(QTextStream* stream);
+    QMap<QString, QMap<QString, Slope *> > getSlopes() const;
+
 private:
     int addToSlope(QStringList stringList);
     QMap<QString,QMap<QString, Slope*>> slopes;

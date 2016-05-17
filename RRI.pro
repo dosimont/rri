@@ -33,6 +33,7 @@ RRI-bin.subdir  = src/RRI-bin
 RRI-bin.depends = RRI-csv
 RRI-bin.depends += RRI-core
 RRI-bin.depends += RRI-prv
+RRI-bin.depends += RRI-profiling
 }
 
 equals(BUILD_GUI, true){

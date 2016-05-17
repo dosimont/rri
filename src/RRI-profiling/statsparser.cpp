@@ -47,4 +47,14 @@ Stats* StatsParser::buildStats(QStringList stringList)
     return stats;
 }
 
+QMap<QString, Stats *> StatsParser::getStatsMap() const
+{
+    return statsMap;
+}
+
+void StatsParser::setStatsMap(const QMap<QString, Stats *> &value)
+{
+    statsMap = value;
+}
+
 

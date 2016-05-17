@@ -15,6 +15,9 @@ public:
     StatsParser();
     ~StatsParser();
     int buildStats(QTextStream* stream);
+    QMap<QString, Stats *> getStatsMap() const;
+    void setStatsMap(const QMap<QString, Stats *> &value);
+
 private:
     Stats* buildStats(QStringList stringList);
     QMap<QString, Stats*> statsMap;
