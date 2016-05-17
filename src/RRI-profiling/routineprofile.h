@@ -29,7 +29,6 @@ public:
 
 private:
     QString name;
-    int id;
     QMap<QString, float> currentSlope;
     QMap<QString, float> currentDuration;
     QList<QString> regions;

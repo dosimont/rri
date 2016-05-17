@@ -64,7 +64,7 @@ QTextStream& operator<<(QTextStream& out, RoutineProfile profile)
 QTextStream& operator<<(QTextStream& out, RoutineProfile* profile)
 {
     for (QString counter:profile->currentSlope.keys()){
-            out<<profile->id<<","<<profile->name<<","<<counter<<","<<profile->getSlopeAvg(counter)<<endl;
+            out<<profile->name<<","<<counter<<","<<profile->getSlopeAvg(counter)<<","<<profile->getCurrentDuration(counter)<<endl;
     }
     return out;
 }
