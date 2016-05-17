@@ -15,6 +15,11 @@ QMap<QString, float> RoutineProfile::getCurrentDuration() const
     return currentDuration;
 }
 
+QList<QString> RoutineProfile::getRegions() const
+{
+    return regions;
+}
+
 
 RoutineProfile::RoutineProfile(QString name):name(name)
 {
@@ -64,7 +69,15 @@ QTextStream& operator<<(QTextStream& out, RoutineProfile profile)
 QTextStream& operator<<(QTextStream& out, RoutineProfile* profile)
 {
     for (QString counter:profile->currentSlope.keys()){
-            out<<profile->name<<","<<counter<<","<<profile->getSlopeAvg(counter)<<","<<profile->getCurrentDuration(counter)<<endl;
+            out<<profile->name<<","<<counter<<","<<profile->getSlopeAvg(counter)<<","<<profile->getCurrentDuration(counter)<<",";
+            int i;
+            for (i=0; i<profile->getRegions().size()-1;i++){
+                out<<profile->getRegions()[i]<<":";
+            }
+            if (profile->getRegions().size()>0){
+                out<<profile->getRegions()[i];
+            }
+            out<<endl;
     }
     return out;
 }

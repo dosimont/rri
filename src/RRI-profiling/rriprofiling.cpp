@@ -68,11 +68,13 @@ void RRIProfiling::computeRoutines(QString region, RRICore *core)
                 if (ratio[routine]!=0){
                     if (!routineProfiles.contains(routine->toString())){
                         routineProfiles.insert(routine->toString(),new RoutineProfile(routine->toString()));
-                        for (QString counter:slopeParser->getSlopes()[region].keys()){
+                    }
+                    for (QString counter:slopeParser->getSlopes()[region].keys()){
                             routineProfiles[routine->toString()]->addToAvg(region, counter,
                                     slopeParser->getSlopes()[region][counter]->mean(rriPart->getFirstRelative(), rriPart->getLastRelative()),
                                     rriPart->getSizeRelative()*duration, ratio[routine], weight);
-                        }
+                            //qDebug()<<"Routine"<<routine->toString()<<"region"<<region<<"counter"<<counter<<"Slope AVG"<<slopeParser->getSlopes()[region][counter]->mean(rriPart->getFirstRelative(), rriPart->getLastRelative())
+                              //     <<"Duration"<<rriPart->getSizeRelative()*duration<<"Ratio"<<ratio[routine]<<"Weight"<<weight<<endl;
                     }
                 }
             }

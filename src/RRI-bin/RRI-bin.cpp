@@ -103,40 +103,40 @@ int main(int argc, char *argv[])
         QTextStream* detailStream=fileManager->getStreamSets()[i]->getDetailStream();
         QTextStream* routineStream=fileManager->getStreamSets()[i]->getRoutineStream();
         QTextStream* infoStream=fileManager->getStreamSets()[i]->getInfoStream();
-        for (int i=0; i<core->getMacroscopicModel()->getPs().size(); i++){
-            if (std::isnan(core->getMacroscopicModel()->getQualities()[i]->getGain())||std::isnan(core->getMacroscopicModel()->getQualities()[i]->getLoss())){
+        for (int j=0; j<core->getMacroscopicModel()->getPs().size(); j++){
+            if (std::isnan(core->getMacroscopicModel()->getQualities()[j]->getGain())||std::isnan(core->getMacroscopicModel()->getQualities()[j]->getLoss())){
                 std::cerr<<"NaN value detected, stopping the rendering"<<std::endl;
                 return 5;
             }
-            *qualityStream<<core->getMacroscopicModel()->getPs()[i]<<SEP
-                           <<core->getMacroscopicModel()->getQualities()[i]->getGain()<<SEP
-                           <<core->getMacroscopicModel()->getQualities()[i]->getLoss()
+            *qualityStream<<core->getMacroscopicModel()->getPs()[j]<<SEP
+                           <<core->getMacroscopicModel()->getQualities()[j]->getGain()<<SEP
+                           <<core->getMacroscopicModel()->getQualities()[j]->getLoss()
                            <<endl;
-            core->getParameters()->setP(core->getMacroscopicModel()->getPs()[i]);
+            core->getParameters()->setP(core->getMacroscopicModel()->getPs()[j]);
             core->selectMacroscopicModel();
             core->buildRedistributedModel();
             QVector<Part*> parts=core->getParts();
-            for (int j=0; j< parts.size(); j++){
-                *partitionStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<parts[j]->getLastRelative()<<SEP<<core->getRedistributedModel()->getPartsAsString()[j]<<endl;
-                RRIPart* rriPart=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->getRRIParts()[j];
+            for (int k=0; k< parts.size(); k++){
+                *partitionStream<<core->getMacroscopicModel()->getPs()[j]<<SEP<<parts[k]->getFirstRelative()<<SEP<<parts[k]->getLastRelative()<<SEP<<core->getRedistributedModel()->getPartsAsString()[k]<<endl;
+                RRIPart* rriPart=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->getRRIParts()[k];
                 if (rriPart->getRoutines().size()==0){
-                    *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
-                                    parts[j]->getLastRelative()<<SEP<<"void"<<SEP<<0<<SEP<<
+                    *detailStream<<core->getMacroscopicModel()->getPs()[j]<<SEP<<parts[k]->getFirstRelative()<<SEP<<
+                                    parts[k]->getLastRelative()<<SEP<<"void"<<SEP<<0<<SEP<<
                                     0<<SEP<<0<<endl;
                 }else{
                     QList<RRIRoutineInfo*> routines=rriPart->getRoutines().values();
                     for (RRIRoutineInfo* routine:routines){
-                            *detailStream<<core->getMacroscopicModel()->getPs()[i]<<SEP<<parts[j]->getFirstRelative()<<SEP<<
-                                            parts[j]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
-                                            routine->getAverageCallStackLevel()<<SEP<<(routine->getIndex()==core->getRedistributedModel()->getPartsAsIndex()[j])<<endl;
+                            *detailStream<<core->getMacroscopicModel()->getPs()[j]<<SEP<<parts[k]->getFirstRelative()<<SEP<<
+                                            parts[k]->getLastRelative()<<SEP<<routine->toString()<<SEP<<routine->getPercentageDuration()<<SEP<<
+                                            routine->getAverageCallStackLevel()<<SEP<<(routine->getIndex()==core->getRedistributedModel()->getPartsAsIndex()[k])<<endl;
                     }
                 }
             }
             QVector<RRIObject*> codelines=dynamic_cast<RRIRedistributedModel*>(core->getRedistributedModel())->generateCodelines();
-            for (int j=0; j< codelines.size(); j++){
-                *routineStream<<core->getMacroscopicModel()->getPs()[i]<<SEP
-                      <<codelines[j]->getTsPercentage()<<SEP
-                      <<codelines[j]->getCodeline()
+            for (int k=0; k< codelines.size(); k++){
+                *routineStream<<core->getMacroscopicModel()->getPs()[j]<<SEP
+                      <<codelines[k]->getTsPercentage()<<SEP
+                      <<codelines[k]->getCodeline()
                       <<endl;
             }
 

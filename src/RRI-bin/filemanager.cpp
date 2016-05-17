@@ -16,6 +16,24 @@ FileManager::~FileManager()
     if (regionStream!=NULL){
         delete regionStream;
     }
+    if (statsFile!=NULL){
+        delete statsFile;
+    }
+    if (statsStream!=NULL){
+        delete statsStream;
+    }
+    if (slopeFile!=NULL){
+        delete slopeFile;
+    }
+    if (slopeStream!=NULL){
+        delete slopeStream;
+    }
+    if (profilingFile!=NULL){
+        delete profilingFile;
+    }
+    if (profilingStream!=NULL){
+        delete profilingStream;
+    }
     if (inputPrvFiles!=NULL){
         delete inputPrvFiles;
     }

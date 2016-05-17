@@ -27,6 +27,8 @@ public:
     friend QTextStream& operator<<(QTextStream& out, RoutineProfile profile);
     friend QTextStream& operator<<(QTextStream& out, RoutineProfile* profile);
 
+    QList<QString> getRegions() const;
+
 private:
     QString name;
     QMap<QString, float> currentSlope;
