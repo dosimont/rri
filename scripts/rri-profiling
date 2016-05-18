@@ -1,0 +1,70 @@
+#!/bin/bash
+
+#   RRI - Relevant Routine Identifier
+#   Copyright (C) 2016  Damien Dosimont
+#
+#   This file is part of RRI.
+#
+#   RRI is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+basedir=$(dirname $0)
+clean="false"
+
+usage_fct(){
+  echo "Usage : $0 [options] <rri-directory>"
+  echo "Options:"
+  echo "-h --help: Print help"
+  echo "-c --clean: Remove all the generated files"
+  exit 2
+}
+
+#No arguments
+if [ $# -eq 0 ]
+then
+usage_fct
+fi
+#Test arguments
+while [ $# -gt 1 ]
+do
+if [ $1 = "-h" ] || [ $1 = "--help" ]
+then
+usage_fct
+exit 0
+elif [ $1 = "-c" ] || [ $1 = "--clean" ]
+then
+clean="true"
+fi
+shift
+done
+if [ ! -d $1 ]
+then
+echo "$1 is not a valid directory"
+usage_fct
+exit 1
+fi
+input_dir=$1
+output_dir=$input_dir/$input_dir.profiling
+if [ $clean = "true" ]
+then
+echo "Cleaning $output_dir directory"
+rm -fr  $output_dir
+else
+input_file=$input_dir/*rri.profiling.csv
+for counter in `awk -vFPAT='([^,]*)|("[^"]+")' '{print $2}' $input_file | sort | uniq`
+do
+sed -n "/$counter/p" $input_file > $output_dir/${counter}_temp
+sort -r -g -t, -k4 $output_dir/${counter}_temp $output_dir/$counter
+rm $output_dir/${counter}_temp
+done
+fi
