@@ -197,7 +197,7 @@ int FileManager::set()
             return RETURN_ERR_INVALID_OUTPUT_TRACE;
         }
 
-        profiling=outputDir + "/" + inputPrvBaseName + RRI_DIR_PATTERN + PROFILING_FILE;
+        profiling=outputDir + "/" + inputPrvBaseName + RRI_DIR_PATTERN + "." + PROFILING_FILE;
         profilingFile=new QFile(profiling);
         if (!profilingFile->open(QIODevice::ReadWrite | QIODevice::Text)){
            qWarning().nospace()<<"Unable to open profiling file";
