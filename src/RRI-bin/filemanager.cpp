@@ -176,14 +176,6 @@ int FileManager::set()
         }
         slopeStream=new QTextStream(slopeFile);
 
-        profiling=outputDir+"/"+PROFILING_FILE;
-        profilingFile=new QFile(profiling);
-        if (!profilingFile->open(QIODevice::ReadWrite | QIODevice::Text)){
-           qWarning().nospace()<<"Unable to open profiling file";
-           return RETURN_ERR_INVALID_PROFILING_FILE;
-        }
-        profilingStream=new QTextStream(profilingFile);
-
         dir.setNameFilters(QStringList() << PRV_INPUT_FILE);
         dir.setFilter(QDir::Files);
         inputPrvFiles=new PrvFileManager();
@@ -204,6 +196,14 @@ int FileManager::set()
             qWarning().nospace()<<"Unable to open output trace file";
             return RETURN_ERR_INVALID_OUTPUT_TRACE;
         }
+
+        profiling=outputDir + "/" + inputPrvBaseName + RRI_DIR_PATTERN + PROFILING_FILE;
+        profilingFile=new QFile(profiling);
+        if (!profilingFile->open(QIODevice::ReadWrite | QIODevice::Text)){
+           qWarning().nospace()<<"Unable to open profiling file";
+           return RETURN_ERR_INVALID_PROFILING_FILE;
+        }
+        profilingStream=new QTextStream(profilingFile);
     }
     return RETURN_OK;
 }
