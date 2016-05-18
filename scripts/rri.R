@@ -356,21 +356,21 @@ instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
 dump_data<-dump_data[(dump_data$INSTANCE %in% instance),]
-print("Discarded counters:")
+#print("Discarded counters:")
 test_data=interpolate_data
 discarded_counter=unique(test_data[!(is.finite(test_data$VALUE)),"COUNTER"])
-print(discarded_counter)
+#print(discarded_counter)
 if (length(discarded_counter)!=0){
   test_data<-test_data[(is.finite(test_data$VALUE)),]
 }
 counterlist<-make_counterlist(test_data)
 for (counter in counterlist){
-  print(counter)
+ # print(counter)
   dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
   slope_temp<-slope_data[(slope_data$COUNTER %in% counter),]
   interpolate_temp<-interpolate_data[(interpolate_data$COUNTER %in% counter),]
   if (nrow(dump_temp)==0 | nrow(slope_temp)==0 | nrow(interpolate_temp)==0){
-    print("Invalid data, passing")
+  #  print("Invalid data, passing")
   }
   else{
     plot3=print_perf_counter(dump_temp, interpolate_temp, slope_temp, counter)

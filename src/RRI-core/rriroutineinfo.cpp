@@ -148,6 +148,9 @@ int RRIRoutineInfo::getCount() const
 
 QString RRIRoutineInfo::toString()
 {
-    return file+":"+name;
+    QString string=file+":"+name;
+    if (string.contains(",")){
+        string = "\""+string+"\"";
+    }
 }
 

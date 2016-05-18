@@ -131,9 +131,6 @@ void RRIObject::setRoutineName(QString value)
 void RRIObject::setFilteredRoutineName(QString value)
 {
     routineName = value;
-    if (routineName.contains(",")){
-        routineName = "\""+routineName+"\"";
-    }
 }
 
 void RRIObject::setFilteredFileName(QString value)
