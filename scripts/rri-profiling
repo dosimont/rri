@@ -60,11 +60,12 @@ then
 echo "Cleaning $output_dir directory"
 rm -fr  $output_dir
 else
+mkdir -p $output_dir
 input_file=$input_dir/*rri.profiling.csv
 for counter in `awk -vFPAT='([^,]*)|("[^"]+")' '{print $2}' $input_file | sort | uniq`
 do
 sed -n "/$counter/p" $input_file > $output_dir/${counter}_temp
-sort -r -g -t, -k4 $output_dir/${counter}_temp $output_dir/$counter
+sort -r -g -t, -k4 $output_dir/${counter}_temp > $output_dir/$counter
 rm $output_dir/${counter}_temp
 done
 fi
