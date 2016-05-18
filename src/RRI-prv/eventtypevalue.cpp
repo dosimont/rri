@@ -62,7 +62,7 @@ void EventTypeValue::setLabel(const QString &value)
 
 QTextStream& operator<<(QTextStream &out, EventTypeValue value)
 {
-    out << value.getValue() << "\t" << value.getLabel() << endl;
+    out << &value;
     return out;
 }
 

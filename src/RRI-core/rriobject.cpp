@@ -128,6 +128,14 @@ void RRIObject::setRoutineName(QString value)
     routineName = value;
 }
 
+void RRIObject::setFilteredRoutineName(QString value)
+{
+    routineName = value;
+    if (routineName.contains(",")){
+        routineName = "\""+routineName+"\"";
+    }
+}
+
 void RRIObject::setFilteredFileName(QString value)
 {
     fileName = value;
@@ -203,21 +211,13 @@ void RRIObject::setIndex(int value)
 
 QTextStream& operator<<(QTextStream& out, RRIObject object)
 {
-    out<<"RRI Object: ID "<<object.getId()<<
-      ", sample "<<object.getSample()<<
-      ", timestamp: "<<object.getTsAbsolute()<<" ("<<object.getTsPercentage()<<")"<<
-      ", routine ID: "<<object.getRoutineId()<<
-      ", callstack LVL: "<<object.getCallstackLvl()<<endl;
+    out<<&object;
     return out;
 }
 
 QTextStream& operator<<(QTextStream& out, RRIObject* object)
 {
-    out<<"RRI Object: ID "<<object->getId()<<
-      ", sample "<<object->getSample()<<
-      ", timestamp: "<<object->getTsAbsolute()<<" ("<<object->getTsPercentage()<<")"<<
-      ", routine ID: "<<object->getRoutineId()<<
-      ", callstack LVL: "<<object->getCallstackLvl()<<endl;
+    out<<object->toString()<<endl;
     return out;
 }
 

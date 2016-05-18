@@ -85,19 +85,7 @@ QMap<QString, EventTypeItem *> EventTypeBlock::getItemMap() const
 
 QTextStream& operator<<(QTextStream& out, EventTypeBlock block)
 {
-    out<<endl;
-    if (!block.getComment().isEmpty()){
-        out<<"#"<<block.getComment()<<endl<<endl;
-    }
-    out<<"EVENT_TYPE"<<endl;
-    for(EventTypeItem* item:block.getItemMap().values()){
-        out<<item;
-    }
-    out<<"VALUES"<<endl;
-    for(QString key:block.getValueMap().keys()){
-        out<<block.getValueMap()[key];
-    }
-    out<<endl;
+    out<<&block;
     return out;
 }
 

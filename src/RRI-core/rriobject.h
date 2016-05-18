@@ -74,11 +74,12 @@ public:
 
     QString toString();
 
-
     int getIndex() const;
     void setIndex(int value);
 
     void setFilteredFileName(QString value);
+    void setFilteredRoutineName(QString value);
+
 private:
     int id;
     int sample;
