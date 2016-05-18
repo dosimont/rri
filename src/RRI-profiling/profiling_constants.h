@@ -31,6 +31,6 @@
 #define RETURN_ERR_GROUP 1
 #define RETURN_ERR_CSVLINESIZE 2
 
-#define SEP ";"
-#define SEP2 ":"
+#define PROFILING_SEP ";"
+#define PROFILING_SEP2 ":"
 

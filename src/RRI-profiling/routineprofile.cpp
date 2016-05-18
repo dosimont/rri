@@ -69,10 +69,10 @@ QTextStream& operator<<(QTextStream& out, RoutineProfile profile)
 QTextStream& operator<<(QTextStream& out, RoutineProfile* profile)
 {
     for (QString counter:profile->currentSlope.keys()){
-            out<<profile->name<<SEP<<counter<<SEP<<profile->getSlopeAvg(counter)<<SEP<<profile->getCurrentDuration(counter)<<SEP;
+            out<<profile->name<<PROFILING_SEP<<counter<<PROFILING_SEP<<profile->getSlopeAvg(counter)<<PROFILING_SEP<<profile->getCurrentDuration(counter)<<PROFILING_SEP;
             int i;
             for (i=0; i<profile->getRegions().size()-1;i++){
-                out<<profile->getRegions()[i]<<SEP2;
+                out<<profile->getRegions()[i]<<PROFILING_SEP2;
             }
             if (profile->getRegions().size()>0){
                 out<<profile->getRegions()[i];
