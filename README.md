@@ -10,7 +10,7 @@
 
 ## Related tools
 
-- [folding tool](https://www.bsc.es/computer-sciences/performance-tools/downloads) - callerdata feature required (not available in the current version).
+- [folding tool](https://github.com/bsc-performance-tools/folding). Requires version 1.2.1.
 
 ## Get the sources
 
