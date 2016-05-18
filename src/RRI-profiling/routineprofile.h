@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QTextStream>
 #include <QList>
+#include "profiling_constants.h"
 
 class RoutineProfile
 {
