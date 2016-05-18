@@ -152,5 +152,6 @@ QString RRIRoutineInfo::toString()
     if (string.contains(",")){
         string = "\""+string+"\"";
     }
+    return string;
 }
 
