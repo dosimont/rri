@@ -4,7 +4,7 @@
 
 - [lpaggreg library](https://github.com/bsc-performance-tools/lpaggreg)
 - gcc 5
-- qt, qt-devel (version 5 -- do not compile with version 4)
+- qt, qt-devel
 - qmake
 - R
 
@@ -20,11 +20,24 @@
 
     $ cd RRI
 
-## Compile
+## Configure
 
-*Edit* `options.pri` *to enable or disable the compilation of subsidiary functionalities and change the target directory and the dependency location*.
+*Edit* `options.pri` *to enable or disable the compilation of subsidiary functionalities*.
 
     $ qmake-qt5
+or
+    $ qmake-qt4
+or
+    $ qmake
+
+depending of the version of qt you want to use.
+
+*You may want to change the installation directory, and/or define the lpaggreg library location*
+
+    $ qmake-qt[n] "PREFIX=[target_location]" "LPAGGREG_PATH=[lpaggreg_location]"
+
+## Compile
+
     $ make
 
 ## Install
