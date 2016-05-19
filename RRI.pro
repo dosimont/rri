@@ -2,11 +2,6 @@ include(config.pri)
 
 TEMPLATE = subdirs
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-}else{
-error(You need QT5 to compile this program)
-}
-
 SUBDIRS += \
            RRI-csv \
 

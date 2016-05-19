@@ -51,6 +51,8 @@ INCLUDEPATH += $$LPAGGREG_PATH/include
 QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
 }
 
+
+
 unix {
     target.path = $$TARGET_PATH/lib
     header_files.files = $$HEADERS

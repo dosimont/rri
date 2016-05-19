@@ -36,6 +36,8 @@ INCLUDEPATH += $$LPAGGREG_PATH/include
 QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
 }
 
+QMAKE_CXXFLAGS -= -std=gnu++98
+
 unix {
     target.path = $$TARGET_PATH/bin
     INSTALLS += target

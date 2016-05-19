@@ -5,6 +5,7 @@
 
 #include <QTextStream>
 #include <QChar>
+#include <QStringList>
 #include "csv_constants.h"
 
 

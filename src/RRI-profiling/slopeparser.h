@@ -19,7 +19,7 @@ public:
 
 private:
     int addToSlope(QStringList stringList);
-    QMap<QString,QMap<QString, Slope*>> slopes;
+    QMap<QString,QMap<QString, Slope*> > slopes;
 };
 
 #endif // SLOPEPARSER_H

@@ -7,7 +7,7 @@ SlopeParser::SlopeParser()
 
 SlopeParser::~SlopeParser()
 {
-    for (auto items:slopes.values()){
+    for (QMap<QString, Slope*> items:slopes.values()){
         for (Slope* slope:items.values()){
             delete slope;
         }

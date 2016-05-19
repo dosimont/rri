@@ -16,6 +16,8 @@ HEADERS += rricsv.h\
 
 QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../lib\''
 
+
+
 unix {
     target.path = $$TARGET_PATH/lib
     header_files.files = $$HEADERS

@@ -60,7 +60,7 @@ QMap<RRIPart*, RRIRoutineInfo*> RRIRedistributedModel::generateRoutines(double m
             partsAsIndex.push_back(-1);
             hv=true;
         }else{
-            RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().first();
+            RRIRoutineInfo* mainRoutine=rRIParts[i]->getRoutines().values()[0];
             for (RRIRoutineInfo* currentRoutine:rRIParts[i]->getRoutines().values()){
                 if (currentRoutine->getPercentageDuration()>=minPercentage){
                     if (currentRoutine->getAverageCallStackLevel()<mainRoutine->getAverageCallStackLevel()){

@@ -21,6 +21,8 @@
 #define RRIOBJECT_H
 
 #include <QString>
+#include <QStringList>
+#include <QRegExp>
 #include <QTextStream>
 
 class RRIObject
