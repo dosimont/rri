@@ -30,3 +30,16 @@ greaterThan(QT_MAJOR_VERSION, 3) {
 }else{
 error(You need at least QT4 or QT5 to compile this program)
 }
+
+isEmpty( PREFIX ){
+    PREFIX=/usr/local/
+    message("PREFIX not defined, using default location: $$PREFIX")
+}else{
+    message("PREFIX : $$PREFIX")
+}
+isEmpty( LPAGGREG_PATH ){
+    message("LPAGGREG_PATH not defined, using LD_PATH")
+}else{
+    message("LPAGGREG_PATH: $$LPAGGREG_PATH")
+}
+
