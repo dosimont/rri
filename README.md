@@ -34,7 +34,7 @@ depending of the version of qt you want to use.
 
 *You may want to change the installation directory, and/or define the lpaggreg library location*
 
-    $ qmake-qt[n] "PREFIX=[target_location]" "LPAGGREG_PATH=[lpaggreg_location]"
+    $ qmake-qt[n] "CONFIG+=GLOBAL_VAR" "PREFIX=[target_location]" "LPAGGREG_PATH=[lpaggreg_location]"
 
 ## Compile
 

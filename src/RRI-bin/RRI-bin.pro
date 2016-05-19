@@ -46,13 +46,13 @@ QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
 
 
 unix {
-    target.path = $$TARGET_PATH/bin
+    target.path = $$PREFIX/bin
     INSTALLS += target
     target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
     target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-visualize
     target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-profiling
-    target_scripts.path = $$TARGET_PATH/bin
-    postinstall.path = $$TARGET_PATH/bin
+    target_scripts.path = $$PREFIX/bin
+    postinstall.path = $$PREFIX/bin
     postinstall.commands =  R --slave --vanilla < $$PROJECT_ROOT_DIRECTORY/scripts/rri-install.R
     INSTALLS += target_scripts\
                 postinstall

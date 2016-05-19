@@ -51,9 +51,9 @@ QMAKE_LFLAGS += -Wl,-rpath,$$LPAGGREG_PATH/lib
 
 
 unix {
-    target.path = $$TARGET_PATH/lib
+    target.path = $$PREFIX/lib
     header_files.files = $$HEADERS
-    header_files.path = $$TARGET_PATH/include/$$TARGET
+    header_files.path = $$PREFIX/include/$$TARGET
     INSTALLS += target \
                 header_files
 }
