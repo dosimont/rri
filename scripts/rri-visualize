@@ -24,14 +24,16 @@ width=12
 height=6
 dpi=300
 clean="false"
+threads=1
 
 usage_fct(){
   echo "Usage : $0 [options] <rri-directory>"
   echo "Options:"
   echo "-h --help: Print help"
   echo "-c --clean: Remove all the generated pdf"
-  echo "-s --size w h: Set pdf outputs width and height in inch (default: $width $height)"
-  echo "-d --dpi: Set pdf outputs dpi (default: $dpi)"
+  echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
+  echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
+  echo "-t --threads [n]: Enable multithreading using n threads"
   exit 2
 }
 
@@ -73,6 +75,11 @@ elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
 then
 shift
 dpi=$1
+elif [ $1 = "-t" ] || [ $1 = "--threads" ]
+then
+shift
+threads=$1
+echo "Using $threads threads"
 fi
 shift
 done
@@ -83,23 +90,32 @@ usage_fct
 exit 1
 fi
 input_dir=$1
+if [ $clean = "true" ]
+then
 for sub_dir in $input_dir/*
 do
 if [ -d $sub_dir ]
 then
-if [ $clean = "true" ]
-then
 echo "Cleaning $sub_dir directory"
 rm -f $sub_dir/*.pdf $sub_dir/.*.pdf
+fi
+done
 else
+it=0
+for sub_dir in $input_dir/*
+do
+if [ -d $sub_dir ]
+then
 echo "Processing $sub_dir directory"
 instance=`basename $sub_dir`
-R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript
-if [ "$?" != "0" ]
+R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript &
+it=$((it + 1))
+if [ $it -eq $threads ]
 then
-echo "Error, leaving..."
-exit 1
-fi
+it=0
+wait
 fi
 fi
 done
+wait
+fi
