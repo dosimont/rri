@@ -10,11 +10,11 @@ FileManager::~FileManager()
     for(StreamSet* stream:streamSets){
         delete stream;
     }
-    if (regionFile!=NULL){
-        delete regionFile;
+    if (callerDataRegionFile!=NULL){
+        delete callerDataRegionFile;
     }
-    if (regionStream!=NULL){
-        delete regionStream;
+    if (callerDataRegionStream!=NULL){
+        delete callerDataRegionStream;
     }
     if (statsFile!=NULL){
         delete statsFile;
@@ -97,7 +97,7 @@ int FileManager::set()
         QString basename=fileInfo.completeBaseName();
         QStringList iterationNameList=basename.split('.');
         QString iterationName=iterationNameList.last();
-        iterationNames.push_back(iterationName);
+        callerDataRegions.push_back(iterationName);
         QString outputSubDir=outputDir+"/"+iterationName;
         QDir().mkdir(outputSubDir);
         streamSets.push_back(new StreamSet());
@@ -131,30 +131,32 @@ int FileManager::set()
             QString file=fileInfo.absoluteFilePath();
             callerDataFileNames.push_back(file);
             QString basename=fileInfo.completeBaseName();
-            QStringList iterationNameList=basename.split('.');
-            QString iterationName=iterationNameList.last();
-            iterationNames.push_back(iterationName);
-            QString outputSubDir=outputDir+"/"+iterationName;
-            QDir().mkdir(outputSubDir);
-            streamSets.push_back(new StreamSet());
-            if ((error=streamSets.last()->setOuputStreams(outputSubDir))!=RETURN_OK){
-                qWarning().nospace()<<"Unable to set output streams";
-                return RETURN_ERR_INVALID_OUTPUT_STREAM;
-            }
-            if ((error=streamSets.last()->setInputStream(file))!=RETURN_OK){
-                qWarning().nospace()<<"Unable to set input streams";
-                return RETURN_ERR_INVALID_INPUT_STREAM;
+            QStringList regionNameList=basename.split('.');
+            QString regionName=regionNameList.last();
+            if (argumentManager->getRegions().size()==0||(argumentManager->getRegions().size()>0&&argumentManager->getRegions().contains(regionName))){
+                regions.push_back(regionName);
+                QString outputSubDir=outputDir+"/"+regionName;
+                QDir().mkdir(outputSubDir);
+                streamSets.push_back(new StreamSet());
+                if ((error=streamSets.last()->setOuputStreams(outputSubDir))!=RETURN_OK){
+                    qWarning().nospace()<<"Unable to set output streams";
+                    return RETURN_ERR_INVALID_OUTPUT_STREAM;
+                }
+                if ((error=streamSets.last()->setInputStream(file))!=RETURN_OK){
+                    qWarning().nospace()<<"Unable to set input streams";
+                    return RETURN_ERR_INVALID_INPUT_STREAM;
+                }
             }
         }
         dir.setNameFilters(QStringList() << CALLERDATA_REGIONS_FILE);
         dir.setFilter(QDir::Files);
-        regions=dir.entryList().first();
-        regionFile=new QFile(dir.path()+"/"+regions);
-        if (!regionFile->open(QIODevice::ReadOnly | QIODevice::Text)){
+        callerDataRegions=dir.entryList().first();
+        callerDataRegionFile=new QFile(dir.path()+"/"+callerDataRegions);
+        if (!callerDataRegionFile->open(QIODevice::ReadOnly | QIODevice::Text)){
            qWarning().nospace()<<"Unable to open region file";
            return RETURN_ERR_INVALID_REGION_FILE;
         }
-        regionStream=new QTextStream(regionFile);
+        callerDataRegionStream=new QTextStream(callerDataRegionFile);
 
         dir.setNameFilters(QStringList() << STATS_FILE);
         dir.setFilter(QDir::Files);
@@ -223,9 +225,9 @@ QTextStream *FileManager::getStatsStream() const
     return statsStream;
 }
 
-QTextStream *FileManager::getRegionStream() const
+QTextStream *FileManager::getCallerDataRegionStream() const
 {
-    return regionStream;
+    return callerDataRegionStream;
 }
 
 PrvFileManager *FileManager::getOutputPrvFiles() const
@@ -264,9 +266,9 @@ ArgumentManager *FileManager::getArgumentManager() const
     return argumentManager;
 }
 
-QVector<QString> FileManager::getIterationNames() const
+QVector<QString> FileManager::getRegions() const
 {
-    return iterationNames;
+    return regions;
 }
 
 

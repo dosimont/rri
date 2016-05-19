@@ -38,7 +38,7 @@ class FileManager
 public:
     FileManager(ArgumentManager* argumentManager);
     ~FileManager();
-    QVector<QString> getIterationNames() const;
+    QVector<QString> getRegions() const;
     ArgumentManager *getArgumentManager() const;
     QVector<QString> getCallerDataFileNames() const;
     QString getInputDir() const;
@@ -46,13 +46,10 @@ public:
     QVector<StreamSet *> getStreamSets() const;
     PrvFileManager *getInputPrvFiles() const;
     PrvFileManager *getOutputPrvFiles() const;
-    QTextStream *getRegionStream() const;
+    QTextStream *getCallerDataRegionStream() const;
     int init();
-
     QTextStream *getStatsStream() const;
-
     QTextStream *getSlopeStream() const;
-
     QTextStream *getProfilingStream() const;
 
 protected:
@@ -60,9 +57,9 @@ protected:
     int set();
     QString inputDir;
     QString outputDir;
-    QString regions;
-    QFile* regionFile;
-    QTextStream* regionStream;
+    QString callerDataRegions;
+    QFile* callerDataRegionFile;
+    QTextStream* callerDataRegionStream;
     QString stats;
     QFile* statsFile;
     QTextStream* statsStream;
@@ -73,7 +70,7 @@ protected:
     QFile* profilingFile;
     QTextStream* profilingStream;
     QVector<QString> callerDataFileNames;
-    QVector<QString> iterationNames;
+    QVector<QString> regions;
     QVector<StreamSet*> streamSets;
     PrvFileManager* inputPrvFiles;
     PrvFileManager* outputPrvFiles;

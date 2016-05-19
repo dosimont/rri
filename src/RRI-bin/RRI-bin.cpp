@@ -58,15 +58,18 @@ int main(int argc, char *argv[])
     if (!argumentManager->getUniqueFile()){
         regionWriter->setInputPrvFile(fileManager->getInputPrvFiles());
         regionWriter->setOutputPrvFile(fileManager->getOutputPrvFiles());
-        regionWriter->parseRegions(fileManager->getRegionStream());
+        regionWriter->parseRegions(fileManager->getCallerDataRegionStream());
         regionWriter->setEventTypeBlockItems();
         regionWriter->pushRRIRegionHeader();
         rriProfiling=new RRIProfiling(fileManager->getStatsStream(), fileManager->getSlopeStream(), fileManager->getProfilingStream());
     }
     rriProfiling->parse();
     RRICore* core;
-    for (int i=0; i<fileManager->getIterationNames().size(); i++){
-        qDebug().nospace()<<"Iteration "<<i+1<<", session: "<<fileManager->getIterationNames()[i];
+    if (fileManager->getRegions().size()==0){
+        qWarning().nospace()<<"No corresponding regions have been found";
+    }
+    for (int i=0; i<fileManager->getRegions().size(); i++){
+        qDebug().nospace()<<"Iteration "<<i+1<<", region: "<<fileManager->getRegions()[i];
         qDebug().nospace()<<"Input file: "<<fileManager->getStreamSets()[i]->getInputFile()->fileName();
         core = new RRICore();
         core->getParameters()->setAnalysisType(rri::RRI);
@@ -152,8 +155,8 @@ int main(int argc, char *argv[])
         *infoStream<<"Local inflection point: p = "<<core->getCurrentP()<<endl;
         *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
-            regionWriter->pushRRIRegion(fileManager->getIterationNames()[i], core);
-            rriProfiling->computeRoutines(fileManager->getIterationNames()[i], core);
+            regionWriter->pushRRIRegion(fileManager->getRegions()[i], core);
+            rriProfiling->computeRoutines(fileManager->getRegions()[i], core);
         }
         fileManager->getStreamSets()[i]->close();
         delete core;

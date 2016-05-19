@@ -50,6 +50,7 @@ void ArgumentManager::printUsage()
     qDebug().nospace()<<"\t\t\t"<<"-ts --timeslices [integer]: "<<"timeslice number used to discretize the time period ("<<TSNUMBER<<" by default)";
     qDebug().nospace()<<"\t\t\t"<<"-th --threshold [float]: "<<"minimal distance between two parameters p ("<<THRESHOLD<<" by default)";
     qDebug().nospace()<<"\t\t\t"<<"-mp --minprop [float]: "<<"routine minimal proportion ("<<MINPROP<<" by default)";
+    qDebug().nospace()<<"\t\t\t"<<"-r --region [string]: "<<"apply rri on a region; may be used several times to involve several regions";
     //qDebug().nospace()<<"\t\t\t"<<"-nv --novoid: "<<"dynamically reduce the timeslice number to prevent empty timeslices";
 }
 
@@ -119,6 +120,9 @@ void ArgumentManager::processArguments()
                 conform=false;
                 return;
             }
+        }else if(OPT("-r")||OPT("--region")){
+            regions.push_back(VAL);
+            i++;
         }else if (OPT("-nv")||OPT("--novoid")){
             novoid=true;
         }else if (OPT("-o")||OPT("--output")){
@@ -141,6 +145,11 @@ void ArgumentManager::processArguments()
         conform=false;
         return;
     }
+}
+
+QStringList ArgumentManager::getRegions() const
+{
+    return regions;
 }
 
 bool ArgumentManager::getNovoid() const

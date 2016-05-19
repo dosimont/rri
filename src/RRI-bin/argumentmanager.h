@@ -47,11 +47,13 @@ public:
     float getMinprop() const;
     float getThreshold() const;
     bool getNovoid() const;
+    QStringList getRegions() const;
 
 private:
     void processArguments();
     QString command;
     QStringList arguments;
+    QStringList regions;
     QString input;
     QString output;
     int timeSliceNumber;
