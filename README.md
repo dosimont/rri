@@ -48,7 +48,12 @@ depending of the version of qt you want to use.
 
     $ make install
 
-Missing R libraries will be automatically installed if you have enabled RRI-bin compilation. You can also manually install them. They are listed in `script/rri-install.R`.
+## Install R libraries
+
+Missing R libraries can be automatically installed using:
+
+    # sudo make install_R-dependencies
+
 
 ## Apply RRI on a folding directory
 
