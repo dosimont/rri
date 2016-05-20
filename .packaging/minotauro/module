@@ -24,10 +24,10 @@ module-verbosity {on}
 conflict ${PROG_NAME}
 set curMod [module-info name]
 if { [ module-info mode remove ] } {
-  module remove R
+  module remove R/3.2.4
 }
 if { [ module-info mode load ] } {
-  module load R
+  module load R/3.2.4
 }
 
 ### This shows info about loaded/unloaded module
