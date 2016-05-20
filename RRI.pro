@@ -2,6 +2,8 @@ include(config.pri)
 
 TEMPLATE = subdirs
 
+QMAKE_STRIP = echo
+
 SUBDIRS += \
            RRI-csv \
 

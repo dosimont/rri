@@ -3,8 +3,6 @@ include(../../config.pri)
 QT += core
 QT -= gui
 
-QMAKE_STRIP = echo
-
 TARGET = rri
 CONFIG += console
 CONFIG -= app_bundle
