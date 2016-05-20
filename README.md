@@ -25,9 +25,13 @@
 *Edit* `options.pri` *to enable or disable the compilation of subsidiary functionalities*.
 
     $ qmake-qt5
+
 or
+
     $ qmake-qt4
+
 or
+
     $ qmake
 
 depending of the version of qt you want to use.
