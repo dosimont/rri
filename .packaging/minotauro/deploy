@@ -1,11 +1,8 @@
 #!/bin/bash
 
-BOOST=/apps/BOOST/1.52.0
-LIBTOOLS=/apps/CEPBATOOLS/deps/libtools/1.0.3
+LPAGGREG=/apps/CEPBATOOLS/lpaggreg/default/default
 
-#module load GCC
-#module load AUTOCONF
-#module load AUTOTOOLS
+module load /apps/modules/modulefiles/compilers/gcc/4.7.0
 script=$(readlink -f "$0")
 scriptpath=$(dirname "$script")
 srcpath=$scriptpath/../..
@@ -16,8 +13,7 @@ dest=$versionpath/default
 mkdir -p $dest
 cd $srcpath
 make distclean
-./bootstrap
-./configure --prefix=$dest --with-libtools=$LIBTOOLS --with-boost=$BOOST
+qmake "CONFIG+=GLOBAL_VAR" "PREFIX=$dest" "LPAGGREG_PATH=$LPAGGREG"
 make
 make install
 path=$versionpath/..

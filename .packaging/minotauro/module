@@ -22,10 +22,17 @@ module-verbosity {on}
 # This application cannot be loaded if another $PROG_NAME modulefile was previously loaded
 
 conflict ${PROG_NAME}
+set curMod [module-info name]
+if { [ module-info mode remove ] } {
+  module remove R
+}
+if { [ module-info mode load ] } {
+  module load R
+}
 
 ### This shows info about loaded/unloaded module
 if { [module-info mode] != "whatis" } {
-   puts stderr "[module-info mode] [module-info name] (PATH)"
+   puts stderr "[module-info mode] [module-info name] (PATH, LD_LIBRARY_PATH)"
 }
 
 prepend-path	PATH	        ${RRI_LOCATION}/bin

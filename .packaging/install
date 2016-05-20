@@ -17,6 +17,7 @@ target=$APPDIR/$APP/$version/src
 cmd=`ssh $SSHTARGET "rm -fr $target && mkdir -p $target"`
 cd $apppath
 repo=${PWD##*/}
+make clean
 make distclean
 cd $scriptpath
 scp -r $apppath/../$repo $SSHTARGET:$target/
