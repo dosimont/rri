@@ -37,4 +37,13 @@ RRI-gui.subdir  = src/RRI-gui
 RRI-gui.depends = RRI-core
 }
 
+install_R-packages.commands =  R --slave --vanilla < $$PROJECT_ROOT_DIRECTORY/scripts/rri-install.R
+
+target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
+target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-visualize
+target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-profiling
+target_scripts.path = $$PREFIX/bin
+INSTALLS += target_scripts
+
 QMAKE_CLEAN += $$QMAKE_TARGET $$DESTDIR/*
+QMAKE_EXTRA_TARGETS += install_R-packages
