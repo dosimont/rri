@@ -64,8 +64,8 @@ string2color<- function(string){
   g=substr(digested,3,4)
   b=substr(digested,5,6)
   h<-paste(r,g,b,sep="")
-  if ((r>200&g>200&b>200)|(r<50&g<50&b<50)){
-    h = string2color(paste(string,":270:Republique",sep=""))
+  if ((r>215&g>215&b>215)|(r<30&g<30&b<30)){
+    h = string2color(paste(string,":-o",sep=""))
   }
   h
 }
@@ -256,7 +256,12 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot + guides(color=FALSE)
+  plot<-plot + theme(legend.text = element_text(size = 6))
   plot<-plot + theme(legend.position="bottom")
+  ylabel<-"Callstack level"
+  title<-("Callstack vs Time")
+  plot<-plot+ggtitle(title)
+  plot<-plot+labs(y=ylabel)
   plot
 }
 
@@ -274,9 +279,24 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
   func<-unique(parts_temp[["Function"]])
-  plot<-plot+scale_fill_manual(values = color_generator(func))
+  vcolors=color_generator(func)
+  parts_temp$LABEL=as.character(parts_temp$Function)
+  parts_temp$LABEL1=as.character(substr(parts_temp$LABEL,1,3))
+  parts_temp$LABEL2=as.character(substr(parts_temp$LABEL,nchar(as.character(parts_temp$LABEL))-labelmax+1+3,nchar(as.character(parts_temp$LABEL))))
+  parts_temp$LABEL3=as.character(paste(parts_temp$LABEL1,"...",parts_temp$LABEL2,sep=""))
+  parts_temp[nchar(as.character(parts_temp$LABEL))>labelmax,"LABEL"]=as.character(parts_temp[nchar(as.character(parts_temp$LABEL))>labelmax, "LABEL3"])
+  names(func)=func
+  vlabels<-vector(, length(func))
+  names(vlabels)=func
+  for (n in func){
+    labeltemps=as.vector(parts_temp$LABEL[parts_temp$Function %in% n])
+    vlabels[n]=as.character(labeltemps[1])
+  }
+  plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
+  plot<-plot + guides(color=FALSE)
+  plot<-plot + theme(legend.text = element_text(size = 6))
   plot
 }
 
