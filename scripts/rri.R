@@ -415,7 +415,11 @@ for (counter in counterlist){
   }
   else{
     plot3=print_perf_counter_slope(slope_temp, counter)
+    counters_output <- paste(arg_output_directory,"/.",counter, "_slope.pdf", sep="")
+    ggsave(counters_output, plot = plot3, width = w, height = h, dpi=d)
     plot4=print_perf_counter(dump_temp, interpolate_temp, counter)
+    counters_output <- paste(arg_output_directory,"/.",counter, ".pdf", sep="")
+    ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
     g <- arrangeGrob(plot1, plot3, plot4, nrow=3, heights=c(1/3,1/3,1/3)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
     ggsave(parts_output, g, width = w, height = h*2, dpi=d)
