@@ -38,7 +38,7 @@ cheader_dump<-c("TYPE", "INSTANCE", "GROUP", "TS", "COUNTER", "VALUE")
 cheader_interpolate<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE")
 cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
-labelmax=25
+labelmax=22
 
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
@@ -228,17 +228,54 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   func<-unique(dtemp[["Function"]])
   vcolors=color_generator(func, as.character(aggString))
+  if (!showSelected){
+    for (i in 1:nrow(dtemp)){
+      for (j in 1:nrow(dtemp)){
+        if ((dtemp[i,"END"]!=dtemp[i,"START"])&&(dtemp[i,"END"]!=dtemp[i,"START"])){
+          if (((dtemp[i,"Function"])==(dtemp[j,"Function"]))&&((dtemp[i,"Ratio"])==(dtemp[j,"Ratio"]))&&((dtemp[i,"Callstack"])==(dtemp[j,"Callstack"]))){
+            if ((dtemp[i,"END"])==(dtemp[j,"START"])){
+              dtemp[i,"END"]=dtemp[j,"END"]
+              dtemp[j,"START"]=dtemp[j,"END"]
+            }
+            else if ((dtemp[j,"END"])==(dtemp[i,"START"])){
+              dtemp[j,"END"]=dtemp[i,"END"]
+              dtemp[i,"START"]=dtemp[i,"END"]
+            }
+          }
+        }
+      }
+    }
+  }
+  dtemp$DURATION<-dtemp$END-dtemp$START
+  dtemp<-dtemp[dtemp$DURATION >= 0,]
   dtemp$LABEL=as.character(dtemp$Function)
   dtemp$LABEL1=as.character(substr(dtemp$LABEL,1,3))
   dtemp$LABEL2=as.character(substr(dtemp$LABEL,nchar(as.character(dtemp$LABEL))-labelmax+1+3,nchar(as.character(dtemp$LABEL))))
   dtemp$LABEL3=as.character(paste(dtemp$LABEL1,"...",dtemp$LABEL2,sep=""))
   dtemp[nchar(as.character(dtemp$LABEL))>labelmax,"LABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>labelmax, "LABEL3"])
+  dtemp$VSLABEL=as.character(dtemp$Function)
+  dtemp$VSLABEL1=as.character(substr(dtemp$VSLABEL,1,2))
+  dtemp$VSLABEL2=as.character(substr(dtemp$VSLABEL,nchar(as.character(dtemp$VSLABEL))-1,nchar(as.character(dtemp$VSLABEL))))
+  dtemp$VSLABEL=as.character(paste(dtemp$VSLABEL1,"..",dtemp$VSLABEL2,sep=""))
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
   for (n in func){
     labeltemps=as.vector(dtemp$LABEL[dtemp$Function %in% n])
     vlabels[n]=as.character(labeltemps[1])
+  }
+  dtemp$SLABEL=as.character("")
+  for (n in func){
+    for (c in unique(dtemp[(dtemp$Function %in% n),"Callstack"])){
+      indices=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.12)&(dtemp$Callstack %in% c)
+      i=which.max(dtemp[indices,"DURATION"])
+      dtemp[indices,][i, "SLABEL"]= dtemp[indices,][i, "LABEL"]
+      if (length(i)==0){
+        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.02)&(dtemp$Callstack %in% c)
+        i=which.max(dtemp[indices2,"DURATION"])
+        dtemp[indices2,][i, "SLABEL"]= dtemp[indices2,][i, "VSLABEL"]
+      }
+    }
   }
   if (jesus){
     plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function, colour=Function))
@@ -253,10 +290,11 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
     }
   }
+  plot<-plot+geom_text(data=dtemp, aes(x=START+DURATION/2, y=OFFSET+(Ratio/2), label=SLABEL), color="white",size = 1)
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot + guides(color=FALSE)
-  plot<-plot + theme(legend.text = element_text(size = 6))
+  plot<-plot + theme(legend.text = element_text(size = 8))
   plot<-plot + theme(legend.position="bottom")
   ylabel<-"Callstack level"
   title<-("Callstack vs Time")
@@ -296,7 +334,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
   plot<-plot + guides(color=FALSE)
-  plot<-plot + theme(legend.text = element_text(size = 6))
+  plot<-plot + theme(legend.text = element_text(size = 8))
   plot
 }
 
@@ -307,7 +345,7 @@ print_perf_counter_slope <- function(slope, counter){
   #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude"
-  title<-paste(counter,"/s vs Time", "- Max =", slope_max, "- Mean =", slope_mean)
+  title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
   plot<-plot+labs(y=ylabel)
