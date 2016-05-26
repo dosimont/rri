@@ -70,12 +70,12 @@ color_generator <- function(stringlist, aggString=c("")){
 print_mid <- function(data, counter){
   plot<-ggplot(data=data,aes(x=1,y=Function))
   plot<-plot+geom_text(aes(label=Function))
-  plot<-plot+geom_segment(aes(x=0.94,xend=0.96,yend=Function))
-  plot<-plot+geom_segment(aes(x=1.04,xend=1.065,yend=Function))
+  plot<-plot+geom_segment(aes(x=0.935,xend=0.940,yend=Function))
+  plot<-plot+geom_segment(aes(x=1.06,xend=1.065,yend=Function))
   plot<-plot+ggtitle("")
   plot<-plot+ylab(NULL)
-  plot<-plot+scale_x_continuous(expand=c(0,0),limits=c(0.94,1.065))
-  plot<-plot+theme(axis.title=element_blank(),panel.grid=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),panel.background=element_blank(),axis.text.x=element_text(color=NA),axis.ticks.x=element_line(color=NA),plot.margin = unit(c(1,-1,1,-1), "mm"))
+  plot<-plot+scale_x_continuous(expand=c(0,0),limits=c(0.935,1.065))
+  plot<-plot+theme(axis.title=element_blank(),panel.grid=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),panel.background=element_blank(),axis.text.x=element_text(color=NA, size=3),axis.ticks.x=element_line(color=NA),plot.margin = unit(c(1,-1,1,-1), "mm"))
   plot
 }
 
@@ -106,11 +106,10 @@ arg_output_directory=args[2]
 w=as.integer(args[3])
 h=as.integer(args[4])
 d=as.integer(args[5])
-print(w)
-print(h)
 input=list.files(arg_input_directory, pattern="\\.profiling\\.csv$")
 input_file <- paste(arg_input_directory,'/',input[1], sep="")
 data <-read(input_file, cheader_profiling, ';')
+data$Function <- factor(data$Function, levels = data[order(data$Duration),"Function"])
 counterlist<-make_counterlist(data)
 for (counter in counterlist){
   dtemp<-data[(data$Counter %in% counter),]

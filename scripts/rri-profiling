@@ -20,8 +20,8 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri-profiling.R
-width=12
-height=6
+width=20
+height=32
 dpi=300
 
 clean="false"
