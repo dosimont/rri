@@ -39,6 +39,7 @@ cheader_interpolate<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE")
 cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
 labelmax=22
+ulabelmax=33
 
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
@@ -253,26 +254,31 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp$TLABELtemp=as.character(paste(dtemp$TLABELtemp,"...",sep=""))
   dtemp$TLABEL=as.character(dtemp$Function)
   dtemp[nchar(as.character(dtemp$LABEL))>labelmax,"TLABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>labelmax, "TLABELtemp"])
+  dtemp$ULABELtemp1=as.character(substr(dtemp$LABEL,1,ulabelmax/2-2))
+  dtemp$ULABELtemp2=as.character(substr(dtemp$LABEL,nchar(as.character(dtemp$LABEL))-ulabelmax/2+1,nchar(as.character(dtemp$LABEL))))
+  dtemp$ULABELtemp=as.character(paste(dtemp$ULABELtemp1,"...",dtemp$ULABELtemp2,sep=""))
+  dtemp$ULABEL=as.character(dtemp$Function)
+  dtemp[nchar(as.character(dtemp$LABEL))>ulabelmax,"ULABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>ulabelmax, "ULABELtemp"])
+  dtemp$LABEL=dtemp$ULABEL
   dtemp$VSLABEL=as.character(dtemp$Function)
   dtemp$VSLABEL=as.character(substr(dtemp$VSLABEL,1,4))
   police_size=10
-  if (length(func)<10){
-    police_size=8
-  }else if (length(func)<15){
-    police_size=7
+  if (length(func)<15){
+    police_size=9
   }else if (length(func)<20){
-    police_size=6
+    police_size=8
   }else if (length(func)<25){
-    police_size=5
+    police_size=7
+  }else if (length(func)<30){
+    police_size=6
   }else{
-    dtemp$LABEL=dtemp$TLABEL
-    police_size=4
+    police_size=5
   }
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
   for (n in func){
-    labeltemps=as.vector(dtemp$TLABEL[dtemp$Function %in% n])
+    labeltemps=as.vector(dtemp$LABEL[dtemp$Function %in% n])
     vlabels[n]=as.character(labeltemps[1])
   }
   dtemp$SLABEL=as.character("")
@@ -315,8 +321,8 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
 }
 
 print_parts_codelines <- function(parts_data, codelines_data, p){
-  parts_temp<-parts_data[(parts_data$P %in% p),]
-  parts_temp<-parts_temp[!(parts_temp$Function %in% "void"),]
+  dtemp<-parts_data[(parts_data$P %in% p),]
+  dtemp<-dtemp[!(dtemp$Function %in% "void"),]
   codelines_temp<-codelines_data[(codelines_data$P %in% p),]
   xlabel<-paste("Time (relative), p=", p, sep="")
   ylabel<-"Codeline"
@@ -325,27 +331,47 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)
   plot<-plot+ggtitle(title)
-  plot<-plot+geom_rect(data=parts_temp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
+  plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
-  func<-unique(parts_temp[["Function"]])
+  func<-unique(dtemp[["Function"]])
   vcolors=color_generator(func)
-  parts_temp$LABEL=as.character(parts_temp$Function)
-  parts_temp$LABEL1=as.character(substr(parts_temp$LABEL,1,3))
-  parts_temp$LABEL2=as.character(substr(parts_temp$LABEL,nchar(as.character(parts_temp$LABEL))-labelmax+1+3,nchar(as.character(parts_temp$LABEL))))
-  parts_temp$LABEL3=as.character(paste(parts_temp$LABEL1,"...",parts_temp$LABEL2,sep=""))
-  parts_temp[nchar(as.character(parts_temp$LABEL))>labelmax,"LABEL"]=as.character(parts_temp[nchar(as.character(parts_temp$LABEL))>labelmax, "LABEL3"])
+  dtemp$LABEL=as.character(dtemp$Function)
+  dtemp$TLABELtemp=as.character(substr(dtemp$LABEL,1,labelmax))
+  dtemp$TLABELtemp=as.character(paste(dtemp$TLABELtemp,"...",sep=""))
+  dtemp$TLABEL=as.character(dtemp$Function)
+  dtemp[nchar(as.character(dtemp$LABEL))>labelmax,"TLABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>labelmax, "TLABELtemp"])
+  dtemp$ULABELtemp1=as.character(substr(dtemp$LABEL,1,ulabelmax/2-2))
+  dtemp$ULABELtemp2=as.character(substr(dtemp$LABEL,nchar(as.character(dtemp$LABEL))-ulabelmax/2+1,nchar(as.character(dtemp$LABEL))))
+  dtemp$ULABELtemp=as.character(paste(dtemp$ULABELtemp1,"...",dtemp$ULABELtemp2,sep=""))
+  dtemp$ULABEL=as.character(dtemp$Function)
+  dtemp[nchar(as.character(dtemp$LABEL))>ulabelmax,"ULABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>ulabelmax, "ULABELtemp"])
+  dtemp$LABEL=dtemp$ULABEL
+  dtemp$VSLABEL=as.character(dtemp$Function)
+  dtemp$VSLABEL=as.character(substr(dtemp$VSLABEL,1,4))
+  police_size=10
+  if (length(func)<15){
+    police_size=9
+  }else if (length(func)<20){
+    police_size=8
+  }else if (length(func)<25){
+    police_size=7
+  }else if (length(func)<30){
+    police_size=6
+  }else{
+    police_size=5
+  }
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
   for (n in func){
-    labeltemps=as.vector(parts_temp$LABEL[parts_temp$Function %in% n])
+    labeltemps=as.vector(dtemp$LABEL[dtemp$Function %in% n])
     vlabels[n]=as.character(labeltemps[1])
   }
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
   plot<-plot + guides(color=FALSE)
-  plot<-plot + theme(legend.text = element_text(size = 8))
+  plot<-plot + theme(legend.text = element_text(size = police_size))
   plot
 }
 

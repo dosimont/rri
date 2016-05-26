@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 #   RRI - Relevant Routine Identifier
 #   Copyright (C) 2016  Damien Dosimont
