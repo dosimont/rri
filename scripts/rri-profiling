@@ -19,6 +19,11 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
+rscript=$basedir/rri-profiling.R
+width=12
+height=6
+dpi=300
+
 clean="false"
 
 usage_fct(){
@@ -26,8 +31,25 @@ usage_fct(){
   echo "Options:"
   echo "-h --help: Print help"
   echo "-c --clean: Remove all the generated files"
+  echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
+  echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
+
   exit 2
 }
+
+if [ -f "rri-profiling.R" ]
+then
+  rscript=rri-profiling.R
+elif [[ ! -f "$rscript" ]]
+then
+  if [[ -f "${RRI_PATH}/rri-profiling.R" ]]
+  then
+    rscript=${RRI_PATH}/rri-profiling.R
+  else
+    echo "The required R script rri-profiling.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+    exit 1
+  fi
+fi
 
 #No arguments
 if [ $# -eq 0 ]
@@ -44,6 +66,16 @@ exit 0
 elif [ $1 = "-c" ] || [ $1 = "--clean" ]
 then
 clean="true"
+elif [ $1 = "-s" ] || [ $1 = "--size" ]
+then
+shift
+width=$1
+shift
+height=$1
+elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
+then
+shift
+dpi=$1
 fi
 shift
 done
@@ -68,4 +100,5 @@ sed -n "/$counter/p" $input_file > $output_dir/${counter}_temp
 sort -r -g -t";" -k4 $output_dir/${counter}_temp > $output_dir/$counter
 rm $output_dir/${counter}_temp 
 done
+R --slave --vanilla --args $input_dir $output_dir $width $height $dpi < $rscript
 fi

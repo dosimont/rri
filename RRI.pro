@@ -41,7 +41,8 @@ RRI-gui.depends = RRI-core
 
 install_R-packages.commands =  R --slave --vanilla < $$PROJECT_ROOT_DIRECTORY/scripts/rri-install.R
 
-target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri.R
+target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-visualize.R
+target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-profiling.R
 target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-visualize
 target_scripts.files += $$PROJECT_ROOT_DIRECTORY/scripts/rri-profiling
 target_scripts.path = $$PREFIX/bin

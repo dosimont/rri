@@ -1,0 +1,125 @@
+#   RRI - Relevant Routine Identifier
+#   Copyright (C) 2016  Damien Dosimont
+#
+#   This file is part of RRI.
+#
+#   RRI is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+library(ggplot2)
+library(RColorBrewer)
+library(grid)
+library(gridExtra)
+library(digest)
+#Sys.setlocale("LC_MESSAGES", 'en_US')
+
+cheader_profiling<-c("Function", "Counter", "Value", "Duration", "Regions")
+
+read <- function(file, cheader, sep=',') {
+  df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
+  names(df) <- cheader
+  df
+}
+
+make_counterlist <- function(data){
+  counterlist<-data[["Counter"]]
+  counterlist<-unique(counterlist)
+  counterlist
+}
+
+string2color<- function(string){
+  digested=digest(as.character(string), serialize=FALSE)
+  r=substr(digested,1,2)
+  g=substr(digested,3,4)
+  b=substr(digested,5,6)
+  h<-paste(r,g,b,sep="")
+  if ((r>215&g>215&b>215)|(r<30&g<30&b<30)){
+    h = string2color(paste(string,":-o",sep=""))
+  }
+  h
+}
+
+color_generator <- function(stringlist, aggString=c("")){
+  sorted<-sort(stringlist)
+  hashcoded<-rep(0, length(stringlist))
+  for (i in 1:length(sorted)){
+    if (sorted[i]==aggString){
+      hashcoded[i]=0
+    }
+    else{
+      hashcoded[i]=string2color(sorted[i])
+    }
+  }
+  hexed<-format(as.hexmode(hashcoded),width=6)
+  color=paste("#",hexed,sep="")
+  names(color)=sorted
+  color
+}
+
+print_mid <- function(data, counter){
+  plot<-ggplot(data=data,aes(x=1,y=Function))
+  plot<-plot+geom_text(aes(label=Function))
+  plot<-plot+geom_segment(aes(x=0.94,xend=0.96,yend=Function))
+  plot<-plot+geom_segment(aes(x=1.04,xend=1.065,yend=Function))
+  plot<-plot+ggtitle("")
+  plot<-plot+ylab(NULL)
+  plot<-plot+scale_x_continuous(expand=c(0,0),limits=c(0.94,1.065))
+  plot<-plot+theme(axis.title=element_blank(),panel.grid=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),panel.background=element_blank(),axis.text.x=element_text(color=NA),axis.ticks.x=element_line(color=NA),plot.margin = unit(c(1,-1,1,-1), "mm"))
+  plot
+}
+
+print_duration <- function(data, counter){
+  plot<-ggplot(data=data, aes(x = Function, y = Duration))
+  plot<-plot+geom_bar(stat = "identity")
+  plot<-plot+ggtitle("Duration (ms)")
+  plot<-plot+theme(axis.title.x = element_blank(),axis.title.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),plot.margin = unit(c(1,-1,1,0), "mm"))
+  plot<-plot+scale_y_reverse()
+  plot<-plot+coord_flip()
+  plot
+}
+
+print_value <- function(data, counter){
+  plot<-ggplot(data=data, aes(x = Function, y = Value))
+  plot<-plot+xlab(NULL)
+  plot<-plot+geom_bar(stat = "identity")
+  title=counter
+  plot<-plot+ggtitle(title)
+  plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,0,1,-1), "mm"))
+  plot<-plot+coord_flip()
+  plot
+}
+
+args <- commandArgs(trailingOnly = TRUE)
+arg_input_directory=args[1]
+arg_output_directory=args[2]
+w=as.integer(args[3])
+h=as.integer(args[4])
+d=as.integer(args[5])
+print(w)
+print(h)
+input=list.files(arg_input_directory, pattern="\\.profiling\\.csv$")
+input_file <- paste(arg_input_directory,'/',input[1], sep="")
+data <-read(input_file, cheader_profiling, ';')
+counterlist<-make_counterlist(data)
+for (counter in counterlist){
+  dtemp<-data[(data$Counter %in% counter),]
+  plot1=print_duration(dtemp, counter)
+  plot2=print_mid(dtemp, counter)
+  plot3=print_value(dtemp, counter)
+  g <- arrangeGrob(plot1, plot2, plot3, ncol=3, widths=c(1/3,1/3,1/3)) #generates g
+  output <- paste(arg_output_directory,'/',counter,".pdf", sep="")
+  ggsave(output, g, width = w, height = h, dpi=d)
+}
+#warnings()
+

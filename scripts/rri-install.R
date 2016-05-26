@@ -16,6 +16,6 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-list.of.packages <- c("ggplot2", "RColorBrewer", "gridExtra", "digest")
+list.of.packages <- c("ggplot2", "grid", "RColorBrewer", "gridExtra", "digest")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos='http://cran.us.r-project.org')

@@ -19,7 +19,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
-rscript=$basedir/rri.R
+rscript=$basedir/rri-visualize.R
 width=12
 height=6
 dpi=300
@@ -37,16 +37,16 @@ usage_fct(){
   exit 2
 }
 
-if [ -f "rri.R" ]
+if [ -f "rri-visualize.R" ]
 then
   rscript=rri.R
 elif [[ ! -f "$rscript" ]]
 then
-  if [[ -f "${RRI_PATH}/rri.R" ]]
+  if [[ -f "${RRI_PATH}/rri-visualize.R" ]]
   then
-    rscript=${RRI_PATH}/rri.R
+    rscript=${RRI_PATH}/rri-visualize.R
   else
-    echo "The required R script rri.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+    echo "The required R script rri-visualize.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
     exit 1
   fi
 fi
