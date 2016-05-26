@@ -290,7 +290,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
     }
   }
-  plot<-plot+geom_text(data=dtemp, aes(x=START+DURATION/2, y=OFFSET+(Ratio/2), label=SLABEL), color="white",size = 1)
+  plot<-plot+geom_text(data=dtemp, aes(x=START+DURATION/2, y=OFFSET+(Ratio/2), label=SLABEL), color="white",size = 3)
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot + guides(color=FALSE)
@@ -431,6 +431,8 @@ parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstac
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
+parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
+ggsave(parts_output, plot = plot2, width = w, height = h*2, dpi=d)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
