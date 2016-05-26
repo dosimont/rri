@@ -249,19 +249,30 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp$DURATION<-dtemp$END-dtemp$START
   dtemp<-dtemp[dtemp$DURATION >= 0,]
   dtemp$LABEL=as.character(dtemp$Function)
-  dtemp$LABEL1=as.character(substr(dtemp$LABEL,1,3))
-  dtemp$LABEL2=as.character(substr(dtemp$LABEL,nchar(as.character(dtemp$LABEL))-labelmax+1+3,nchar(as.character(dtemp$LABEL))))
-  dtemp$LABEL3=as.character(paste(dtemp$LABEL1,"...",dtemp$LABEL2,sep=""))
-  dtemp[nchar(as.character(dtemp$LABEL))>labelmax,"LABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>labelmax, "LABEL3"])
+  dtemp$TLABELtemp=as.character(substr(dtemp$LABEL,1,labelmax))
+  dtemp$TLABELtemp=as.character(paste(dtemp$TLABELtemp,"...",sep=""))
+  dtemp$TLABEL=as.character(dtemp$Function)
+  dtemp[nchar(as.character(dtemp$LABEL))>labelmax,"TLABEL"]=as.character(dtemp[nchar(as.character(dtemp$LABEL))>labelmax, "TLABELtemp"])
   dtemp$VSLABEL=as.character(dtemp$Function)
-  dtemp$VSLABEL1=as.character(substr(dtemp$VSLABEL,1,2))
-  dtemp$VSLABEL2=as.character(substr(dtemp$VSLABEL,nchar(as.character(dtemp$VSLABEL))-1,nchar(as.character(dtemp$VSLABEL))))
-  dtemp$VSLABEL=as.character(paste(dtemp$VSLABEL1,"..",dtemp$VSLABEL2,sep=""))
+  dtemp$VSLABEL=as.character(substr(dtemp$VSLABEL,1,4))
+  police_size=10
+  if (length(func)<10){
+    police_size=8
+  }else if (length(func)<15){
+    police_size=7
+  }else if (length(func)<20){
+    police_size=6
+  }else if (length(func)<25){
+    police_size=5
+  }else{
+    dtemp$LABEL=dtemp$TLABEL
+    police_size=4
+  }
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
   for (n in func){
-    labeltemps=as.vector(dtemp$LABEL[dtemp$Function %in% n])
+    labeltemps=as.vector(dtemp$TLABEL[dtemp$Function %in% n])
     vlabels[n]=as.character(labeltemps[1])
   }
   dtemp$SLABEL=as.character("")
@@ -269,9 +280,9 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
     for (c in unique(dtemp[(dtemp$Function %in% n),"Callstack"])){
       indices=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.12)&(dtemp$Callstack %in% c)
       i=which.max(dtemp[indices,"DURATION"])
-      dtemp[indices,][i, "SLABEL"]= dtemp[indices,][i, "LABEL"]
+      dtemp[indices,][i, "SLABEL"]= dtemp[indices,][i, "TLABEL"]
       if (length(i)==0){
-        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.02)&(dtemp$Callstack %in% c)
+        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.01)&(dtemp$Callstack %in% c)
         i=which.max(dtemp[indices2,"DURATION"])
         dtemp[indices2,][i, "SLABEL"]= dtemp[indices2,][i, "VSLABEL"]
       }
@@ -294,7 +305,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot + guides(color=FALSE)
-  plot<-plot + theme(legend.text = element_text(size = 8))
+  plot<-plot + theme(legend.text = element_text(size = police_size))
   plot<-plot + theme(legend.position="bottom")
   ylabel<-"Callstack level"
   title<-("Callstack vs Time")
