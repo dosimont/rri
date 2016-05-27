@@ -146,7 +146,13 @@ for (counter in counterlist){
     dtemp=dtemp[(nrow(dtemp)-set_size):nrow(dtemp),]
     h=set_size*coeff_h
   }else{
-    h=nrow(dtemp)*coeff_h
+    set_size=49.0/coeff_h
+    if (set_size>nrow(dtemp)){
+      h=nrow(dtemp)*coeff_h
+    }else{
+      dtemp=dtemp[(nrow(dtemp)-set_size):nrow(dtemp),]
+      h=set_size*coeff_h
+    }
   }
   w=0
   for (funct in unique(dtemp$Function)){
@@ -154,6 +160,9 @@ for (counter in counterlist){
     if (w_temp>w){
       w=w_temp
     }
+  }
+  if (w>=50){
+    w=49
   }
   plot1=print_duration(dtemp, counter)
   plot2=print_mid(dtemp, counter)
