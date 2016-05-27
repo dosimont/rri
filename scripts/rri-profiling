@@ -20,8 +20,8 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri-profiling.R
-width=20
-height=32
+width=0
+height=0
 dpi=300
 func=0
 
@@ -32,7 +32,7 @@ usage_fct(){
   echo "Options:"
   echo "-h --help: Print help"
   echo "-c --clean: Remove all the generated files"
-  echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
+# echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
   echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
   echo "-f --functions [n]: Limit the number of printed functions in the pdf files to the n functions with the longest duration"
   exit 2

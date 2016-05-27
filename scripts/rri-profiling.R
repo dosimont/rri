@@ -94,7 +94,7 @@ print_duration <- function(data, counter){
   plot
 }
 
-print_value <- function(data, counter){
+print_value <- function(data, counter, correlation){
   plot<-ggplot(data=data, aes(x = Function, y = Value, fill = Value))
   plot<-plot+xlab(NULL)
   plot<-plot+geom_bar(stat = "identity")
@@ -102,7 +102,14 @@ print_value <- function(data, counter){
   plot<-plot+ggtitle(title)
   plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,0,1,-1), "mm"))
   plot<-plot+coord_flip()
-  plot<-plot+scale_fill_gradient2(low = "red", mid = "gold", high = "green3", midpoint = mean(dtemp$Value), na.value = "grey50")
+  if (is.na(correlation)|correlation>=0){
+    high=as.character("green3")
+    low=as.character("red")
+  }else{
+    high=as.character("red")
+    low=as.character("green3")
+  }
+  plot<-plot+scale_fill_gradient2(low = low, mid = "gold", high = high, midpoint = mean(dtemp$Value), na.value = "grey50")
   plot<-plot + guides(fill=FALSE)
   plot
 }
@@ -126,11 +133,13 @@ if (nrow(dref)>0){
   dref=dref[order(dref$Duration),]
 }
 for (counter in counterlist){
+  c_value=0
   dtemp<-data[(data$Counter %in% counter),]
   dtemp$Function <- factor(dtemp$Function, levels = dtemp[order(dtemp$Duration),"Function"])
   dtemp=dtemp[order(dtemp$Duration),]
   if (correlate){
-    c=paste("Correlation: PAPI_TOT_INS vs",counter,"=", cor(dtemp$Value, dref$Value))
+    c_value= cor(dtemp$Value, dref$Value)
+    c=paste("Correlation: PAPI_TOT_INS vs",counter,"=",c_value)
     print(c)
   }
   if (set_size>0){
@@ -148,7 +157,7 @@ for (counter in counterlist){
   }
   plot1=print_duration(dtemp, counter)
   plot2=print_mid(dtemp, counter)
-  plot3=print_value(dtemp, counter)
+  plot3=print_value(dtemp, counter,c_value)
   g <- arrangeGrob(plot1, plot2, plot3, ncol=3, widths=c(1/3,1/3,1/3)) #generates g
   output <- paste(arg_output_directory,'/',counter,".pdf", sep="")
   ggsave(output, g, width = w, height = h, dpi=d)
