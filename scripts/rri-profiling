@@ -23,6 +23,7 @@ rscript=$basedir/rri-profiling.R
 width=20
 height=32
 dpi=300
+func=0
 
 clean="false"
 
@@ -33,7 +34,7 @@ usage_fct(){
   echo "-c --clean: Remove all the generated files"
   echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
   echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
-
+  echo "-f --functions [n]: Limit the number of printed functions in the pdf files to the n functions with the longest duration"
   exit 2
 }
 
@@ -54,51 +55,55 @@ fi
 #No arguments
 if [ $# -eq 0 ]
 then
-usage_fct
+  usage_fct
 fi
 #Test arguments
 while [ $# -gt 1 ]
 do
-if [ $1 = "-h" ] || [ $1 = "--help" ]
-then
-usage_fct
-exit 0
-elif [ $1 = "-c" ] || [ $1 = "--clean" ]
-then
-clean="true"
-elif [ $1 = "-s" ] || [ $1 = "--size" ]
-then
-shift
-width=$1
-shift
-height=$1
-elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
-then
-shift
-dpi=$1
-fi
-shift
+  if [ $1 = "-h" ] || [ $1 = "--help" ]
+  then
+    usage_fct
+    exit 0
+  elif [ $1 = "-c" ] || [ $1 = "--clean" ]
+  then
+    clean="true"
+  elif [ $1 = "-s" ] || [ $1 = "--size" ]
+  then
+    shift
+    width=$1
+    shift
+    height=$1
+  elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
+  then
+    shift
+    dpi=$1
+  elif [ $1 = "-f" ] || [ $1 = "--functions" ]
+  then
+    shift
+    func=$1
+  fi
+  shift
 done
 if [ ! -d $1 ]
 then
-echo "$1 is not a valid directory"
-usage_fct
-exit 1
+  echo "$1 is not a valid directory"
+  usage_fct
+  exit 1
 fi
 input_dir=$1
 output_dir=$input_dir/$input_dir.profiling
 if [ $clean = "true" ]
 then
-echo "Cleaning $output_dir directory"
-rm -fr  $output_dir
+  echo "Cleaning $output_dir directory"
+  rm -fr  $output_dir
 else
-mkdir -p $output_dir
-input_file=$input_dir/*rri.profiling.csv
-for counter in `awk -vFPAT="([^;]+)|(\"[^\"]+\")" '{print $2}' $input_file | sort | uniq`
-do
-sed -n "/$counter/p" $input_file > $output_dir/${counter}_temp
-sort -r -g -t";" -k4 $output_dir/${counter}_temp > $output_dir/$counter
-rm $output_dir/${counter}_temp 
-done
-R --slave --vanilla --args $input_dir $output_dir $width $height $dpi < $rscript
+  mkdir -p $output_dir
+  input_file=$input_dir/*rri.profiling.csv
+  for counter in `awk -vFPAT="([^;]+)|(\"[^\"]+\")" '{print $2}' $input_file | sort | uniq`
+  do
+    sed -n "/$counter/p" $input_file > $output_dir/${counter}_temp
+    sort -r -g -t";" -k4 $output_dir/${counter}_temp > $output_dir/$counter
+    rm $output_dir/${counter}_temp 
+  done
+  R --slave --vanilla --args $input_dir $output_dir $func $width $height $dpi < $rscript
 fi

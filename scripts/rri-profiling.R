@@ -24,6 +24,9 @@ library(gridExtra)
 library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
+coeff_h=0.5
+coeff_w_text=0.083
+
 cheader_profiling<-c("Function", "Counter", "Value", "Duration", "Regions")
 
 read <- function(file, cheader, sep=',') {
@@ -70,49 +73,68 @@ color_generator <- function(stringlist, aggString=c("")){
 print_mid <- function(data, counter){
   plot<-ggplot(data=data,aes(x=1,y=Function))
   plot<-plot+geom_text(aes(label=Function))
-  plot<-plot+geom_segment(aes(x=0.935,xend=0.940,yend=Function))
-  plot<-plot+geom_segment(aes(x=1.06,xend=1.065,yend=Function))
+  #plot<-plot+geom_segment(aes(x=0.935,xend=0.940,yend=Function))
+  #plot<-plot+geom_segment(aes(x=1.06,xend=1.065,yend=Function))
   plot<-plot+ggtitle("")
   plot<-plot+ylab(NULL)
-  plot<-plot+scale_x_continuous(expand=c(0,0),limits=c(0.935,1.065))
+ # plot<-plot+scale_x_continuous(expand=c(0,0),limits=c(0.940,1.060))
   plot<-plot+theme(axis.title=element_blank(),panel.grid=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),panel.background=element_blank(),axis.text.x=element_text(color=NA, size=3),axis.ticks.x=element_line(color=NA),plot.margin = unit(c(1,-1,1,-1), "mm"))
   plot
 }
 
 print_duration <- function(data, counter){
-  plot<-ggplot(data=data, aes(x = Function, y = Duration))
+  plot<-ggplot(data=data, aes(x = Function, y = Duration, fill = Duration))
   plot<-plot+geom_bar(stat = "identity")
   plot<-plot+ggtitle("Duration (ms)")
   plot<-plot+theme(axis.title.x = element_blank(),axis.title.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),plot.margin = unit(c(1,-1,1,0), "mm"))
   plot<-plot+scale_y_reverse()
   plot<-plot+coord_flip()
+  plot<-plot+scale_fill_gradient2(low = "red", mid = "gold", high = "green3", midpoint = mean(dtemp$Duration), space = "rgb", na.value = "grey50")
+  plot<-plot + guides(fill=FALSE)
   plot
 }
 
 print_value <- function(data, counter){
-  plot<-ggplot(data=data, aes(x = Function, y = Value))
+  plot<-ggplot(data=data, aes(x = Function, y = Value, fill = Value))
   plot<-plot+xlab(NULL)
   plot<-plot+geom_bar(stat = "identity")
   title=counter
   plot<-plot+ggtitle(title)
   plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,0,1,-1), "mm"))
   plot<-plot+coord_flip()
+  plot<-plot+scale_fill_gradient2(low = "red", mid = "gold", high = "green3", midpoint = mean(dtemp$Value), space = "rgb", na.value = "grey50")
+  plot<-plot + guides(fill=FALSE)
   plot
 }
 
 args <- commandArgs(trailingOnly = TRUE)
 arg_input_directory=args[1]
 arg_output_directory=args[2]
-w=as.integer(args[3])
-h=as.integer(args[4])
-d=as.integer(args[5])
+set_size=as.integer(args[3])
+w=as.integer(args[4])
+h=as.integer(args[5])
+d=as.integer(args[6])
 input=list.files(arg_input_directory, pattern="\\.profiling\\.csv$")
 input_file <- paste(arg_input_directory,'/',input[1], sep="")
 data <-read(input_file, cheader_profiling, ';')
-data$Function <- factor(data$Function, levels = data[order(data$Duration),"Function"])
 counterlist<-make_counterlist(data)
 for (counter in counterlist){
   dtemp<-data[(data$Counter %in% counter),]
+  dtemp$Function <- factor(dtemp$Function, levels = dtemp[order(dtemp$Duration),"Function"])
+  dtemp=dtemp[order(dtemp$Duration),]
+  if (set_size>0){
+    dtemp=dtemp[(nrow(dtemp)-set_size):nrow(dtemp),]
+    h=set_size*coeff_h
+  }else{
+    h=nrow(dtemp)*coeff_h
+  }
+  w=0
+  for (funct in unique(dtemp$Function)){
+    w_temp=nchar(as.character(funct))*coeff_w_text*3.0
+    if (w_temp>w){
+      w=w_temp
+    }
+  }
   plot1=print_duration(dtemp, counter)
   plot2=print_mid(dtemp, counter)
   plot3=print_value(dtemp, counter)
