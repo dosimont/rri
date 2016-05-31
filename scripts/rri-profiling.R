@@ -23,6 +23,7 @@ library(grid)
 library(gridExtra)
 library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
+options(error = quote({dump.frames(to.file=TRUE); q()}))
 
 coeff_h=0.5
 coeff_w_text=0.083
@@ -140,18 +141,17 @@ for (counter in counterlist){
   if (correlate){
     c_value= cor(dtemp$Value, dref$Value)
     c=paste("Correlation: PAPI_TOT_INS vs",counter,"=",c_value)
-    print(c)
   }
   if (set_size>0){
     dtemp=dtemp[(nrow(dtemp)-set_size):nrow(dtemp),]
     h=set_size*coeff_h
   }else{
-    set_size=49.0/coeff_h
-    if (set_size>nrow(dtemp)){
+    set_size2=49.0/coeff_h
+    if (set_size2>nrow(dtemp)){
       h=nrow(dtemp)*coeff_h
     }else{
-      dtemp=dtemp[(nrow(dtemp)-set_size):nrow(dtemp),]
-      h=set_size*coeff_h
+      dtemp=dtemp[(nrow(dtemp)-set_size2):nrow(dtemp),]
+      h=set_size2*coeff_h
     }
   }
   w=0
