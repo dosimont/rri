@@ -1,0 +1,161 @@
+#!/bin/bash
+
+#   RRI - Relevant Routine Identifier
+#   Copyright (C) 2016  Damien Dosimont
+#
+#   This file is part of RRI.
+#
+#   RRI is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+basedir=$(dirname $0)
+threads=8
+run_folding=false
+run_rri=false
+run_post=false
+folding_args=
+folding_sep="Cluster ID"
+
+usage_fct(){
+  echo "Usage : $0 [options] <paraver-trace>"
+  echo "Options:"
+  echo "-h --help: Print help"
+  echo "-t --threads [n]: Enable multithreading using n threads"
+  echo "--folding-only: Run only the folding step"
+  echo "--rri-only: Run only the RRI step"
+  echo "--postprocess-only: Run only the post process step"
+  echo "--folding-args [\"arg1 arg2 etc.\"]: Arguments for folding"
+  echo "--folding-sep [sep]: Instance separator for folding"
+  exit 2
+}
+which folding
+pr_folding=$?
+which rri
+pr_rri=$?
+which rri-visualize
+pr_visu=$?
+which rri-profiling
+pr_prof=$?
+if [ $pr_folding -ne 0 ]
+then
+  echo "Folding has not been found. Exiting..."
+fi
+if [ $pr_rri -ne 0 ]
+then
+  echo "RRI has not been found. Exiting..."
+fi
+if [ $pr_visu -ne 0 ]
+then
+  echo "RRI visualizer has not been found. Exiting..."
+fi
+if [ $pr_prof -ne 0 ]
+then
+  echo "RRI profiler  has not been found. Exiting..."
+fi
+#No arguments
+if [ $# -eq 0 ]
+then
+  usage_fct
+fi
+#Test arguments
+while [ $# -gt 1 ]
+do
+  if [ $1 = "-h" ] || [ $1 = "--help" ]
+  then
+    usage_fct
+    exit 0
+  elif [ $1 = "-t" ] || [ $1 = "--threads" ]
+  then
+    shift
+    threads=$1
+    echo "Using $threads threads"
+  elif [ $1 = "--folding-only" ]
+  then
+    run_folding=true
+  elif [ $1 = "--rri-only" ]
+  then
+    run_rri=true
+  elif [ $1 = "--postprocess-only" ]
+  then
+    run_post=true
+  elif [ $1 = "--folding-args" ]
+  then
+    shift
+    folding_args=$1
+  elif [ $1 = "--folding-sep" ]
+  then
+    shift
+    folding_sep=$1
+  else
+    echo "Error: unrecognized argument $1"
+    exit 6
+  fi
+  shift
+done
+if [ ! -f $1 ]
+then
+  echo "$1 is not a valid paraver trace"
+  usage_fct
+  exit 1
+fi
+prv_trace=$1
+if [ $run_folding = false ] && [ $run_rri = false ] && [ $run_post = false ]
+then
+  run_folding=true
+  run_rri=true
+  run_post=true
+fi
+dir_trace=`pwd -P $prv_trace`
+prv_trace_basename=${prv_trace%.prv}
+dir_folding=$dir_trace/$prv_trace_basename.folding
+dir_rri=$dir_trace/$prv_trace_basename.folding.rri
+if [ $run_folding = true ]
+then
+  rm -fr $dir_folding
+  folding $folding_args $prv_trace "$folding_sep"
+  if [ $? -ne 0 ]
+  then
+    echo "Folding: something went wrong... Exiting"
+    exit 2
+  fi
+fi
+if [ $run_rri = true ]
+then
+  if [ ! -d $dir_folding ]
+  then
+    echo "$dir_folding has not been found... Exiting"
+    exit 5
+  fi
+  rm -fr $dir_rri
+  rri $dir_folding
+  if [ $? -ne 0 ]
+  then
+    echo "RRI: something went wrong... Exiting"
+    exit 3
+  fi
+fi
+if [ $run_post = true ]
+then
+  if [ ! -d $dir_rri ]
+  then
+    echo "$dir_rri has not been found... Exiting"
+    exit 7
+  fi
+  rri-visualize -c -t $threads $dir_rri && rri-profiling $dir_rri
+  if [ $? -ne 0 ]
+  then
+    echo "RRI post process: something went wrong... Exiting"
+    exit 4
+  fi
+fi
+
