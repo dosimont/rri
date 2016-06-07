@@ -72,8 +72,8 @@ color_generator <- function(stringlist, aggString=c("")){
 }
 
 print_mid <- function(data, counter){
-  plot<-ggplot(data=data,aes(x=1,y=Function))
-  plot<-plot+geom_text(aes(label=Function))
+  plot<-ggplot(data=data)
+  plot<-plot+geom_text(aes(x=1,y=Function,label=Label))
   #plot<-plot+geom_segment(aes(x=0.935,xend=0.940,yend=Function))
   #plot<-plot+geom_segment(aes(x=1.06,xend=1.065,yend=Function))
   plot<-plot+ggtitle("")
@@ -99,7 +99,7 @@ print_value <- function(data, counter, correlation){
   plot<-ggplot(data=data, aes(x = Function, y = Value, fill = Value))
   plot<-plot+xlab(NULL)
   plot<-plot+geom_bar(stat = "identity")
-  title=counter
+  title=paste(counter, "/s")
   plot<-plot+ggtitle(title)
   plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,0,1,-1), "mm"))
   plot<-plot+coord_flip()
@@ -155,7 +155,9 @@ for (counter in counterlist){
     }
   }
   w=0
-  for (funct in unique(dtemp$Function)){
+  dtemp$Regions=gsub("Cluster_", "", dtemp$Regions)
+  dtemp$Label=paste(dtemp$Function, " (", dtemp$Regions, ")", sep="")
+  for (funct in unique(dtemp$Label)){
     w_temp=nchar(as.character(funct))*coeff_w_text*3.0
     if (w_temp>w){
       w=w_temp
