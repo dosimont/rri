@@ -38,14 +38,19 @@ usage_fct(){
   echo "--folding-sep [sep]: Instance separator for folding"
   exit 2
 }
+echo "Checking the presence of folding..."
 which folding
 pr_folding=$?
+echo "Checking the presence of RRI..."
 which rri
 pr_rri=$?
+echo "Checking the presence of RRI visualize..."
 which rri-visualize
 pr_visu=$?
+echo "Checking the presence of RRI profiler..."
 which rri-profiling
 pr_prof=$?
+echo "------------------------------------------"
 if [ $pr_folding -ne 0 ]
 then
   echo "Folding has not been found. Exiting..."
@@ -98,6 +103,7 @@ do
     folding_sep=$1
   else
     echo "Error: unrecognized argument $1"
+    usage_fct
     exit 6
   fi
   shift
@@ -122,6 +128,9 @@ dir_rri=$dir_trace/$prv_trace_basename.folding.rri
 if [ $run_folding = true ]
 then
   rm -fr $dir_folding
+  echo "------------------------------------------"
+  echo "Executing folding"
+  echo "------------------------------------------"
   folding $folding_args $prv_trace "$folding_sep"
   if [ $? -ne 0 ]
   then
@@ -137,6 +146,9 @@ then
     exit 5
   fi
   rm -fr $dir_rri
+  echo "------------------------------------------"
+  echo "Executing RRI"
+  echo "------------------------------------------"
   rri $dir_folding
   if [ $? -ne 0 ]
   then
@@ -151,6 +163,9 @@ then
     echo "$dir_rri has not been found... Exiting"
     exit 7
   fi
+  echo "------------------------------------------"
+  echo "Executing RRI post process"
+  echo "------------------------------------------"
   rri-visualize -c -t $threads $dir_rri && rri-profiling $dir_rri
   if [ $? -ne 0 ]
   then
