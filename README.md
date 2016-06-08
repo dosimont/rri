@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-- [lpaggreg library](https://github.com/bsc-performance-tools/lpaggreg). Present as a submodule, located at src/lpaggreg, but must be compiled and installed separately.
+- [lpaggreg library](https://github.com/bsc-performance-tools/lpaggreg). Present as a submodule, located at external/lpaggreg, but must be compiled and installed separately.
 - gcc 5
 - qt, qt-devel
 - qmake
@@ -22,7 +22,7 @@
 
 ## Compile and install lpaggreg
 
-    $ cd src/lpaggreg
+    $ cd external/lpaggreg
 
 *Follow README.md instructions*
 Once done, go back to RRI root directory
