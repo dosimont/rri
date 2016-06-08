@@ -109,7 +109,6 @@ do
     folding_sep=$1
   elif [ $1 = "--no-recompute" ]
   then
-    shift
     recompute=false
   else
     echo "Error: unrecognized argument $1"
@@ -141,15 +140,16 @@ then
   then
     echo "Folding results already existing... Passing"
   else
-  rm -fr $dir_folding
-  echo "------------------------------------------"
-  echo "Executing folding"
-  echo "------------------------------------------"
-  folding $folding_args $prv_trace "$folding_sep"
-  if [ $? -ne 0 ]
-  then
-    echo "Folding: something went wrong... Exiting"
-    exit 2
+    rm -fr $dir_folding
+    echo "------------------------------------------"
+    echo "Executing folding"
+    echo "------------------------------------------"
+    folding $folding_args $prv_trace "$folding_sep"
+    if [ $? -ne 0 ]
+    then
+      echo "Folding: something went wrong... Exiting"
+      exit 2
+    fi
   fi
 fi
 if [ $run_rri = true ]
