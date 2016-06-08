@@ -1,0 +1,3 @@
+[submodule "src/lpaggreg"]
+	path = src/lpaggreg
+	url = git@github.com:bsc-performance-tools/lpaggreg.git
