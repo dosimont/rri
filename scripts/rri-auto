@@ -25,15 +25,17 @@ run_rri=false
 run_post=false
 folding_args=
 folding_sep="Cluster ID"
+recompute=true
 
 usage_fct(){
   echo "Usage : $0 [options] <paraver-trace>"
   echo "Options:"
   echo "-h --help: Print help"
-  echo "-t --threads [n]: Enable multithreading using n threads"
+  echo "-t --threads [n]: Enable postprocess multithreading using n threads"
   echo "--folding-only: Run only the folding step"
   echo "--rri-only: Run only the RRI step"
   echo "--postprocess-only: Run only the post process step"
+  echo "--no-recompute: Disable the folding step if generated files are already present"
   echo "--folding-args [\"arg1 arg2 etc.\"]: Arguments for folding"
   echo "--folding-sep [sep]: Instance separator for folding"
   exit 2
@@ -54,18 +56,22 @@ echo "------------------------------------------"
 if [ $pr_folding -ne 0 ]
 then
   echo "Folding has not been found. Exiting..."
+  exit 10
 fi
 if [ $pr_rri -ne 0 ]
 then
   echo "RRI has not been found. Exiting..."
+  exit 11
 fi
 if [ $pr_visu -ne 0 ]
 then
   echo "RRI visualizer has not been found. Exiting..."
+  exit 12
 fi
 if [ $pr_prof -ne 0 ]
 then
   echo "RRI profiler  has not been found. Exiting..."
+  exit 13
 fi
 #No arguments
 if [ $# -eq 0 ]
@@ -101,6 +107,10 @@ do
   then
     shift
     folding_sep=$1
+  elif [ $1 = "--no-recompute" ]
+  then
+    shift
+    recompute=false
   else
     echo "Error: unrecognized argument $1"
     usage_fct
@@ -127,6 +137,10 @@ dir_folding=$dir_trace/$prv_trace_basename.folding
 dir_rri=$dir_trace/$prv_trace_basename.folding.rri
 if [ $run_folding = true ]
 then
+  if [ -d $dir_folding ] && [ $recompute = false ]
+  then
+    echo "Folding results already existing... Passing"
+  else
   rm -fr $dir_folding
   echo "------------------------------------------"
   echo "Executing folding"
