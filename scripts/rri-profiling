@@ -107,4 +107,11 @@ else
     rm $output_dir/${counter}_temp 
   done
   R --slave --vanilla --args $input_dir $output_dir $func $width $height $dpi < $rscript
+  for counter in `awk -vFPAT="([^;]+)|(\"[^\"]+\")" '{print $2}' $input_file | sort | uniq`
+  do
+  echo "---------------------------------------------------"
+  echo "Profiling files:"
+  echo "$counter: $output_dir/$counter"
+  echo "---------------------------------------------------"
+  done
 fi
