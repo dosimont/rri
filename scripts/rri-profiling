@@ -111,7 +111,7 @@ else
   do
   echo "---------------------------------------------------"
   echo "Profiling files:"
-  echo "$counter: $output_dir/$counter"
+  echo "$counter: $output_dir/$counter.pdf"
   echo "---------------------------------------------------"
   done
 fi
