@@ -14,7 +14,7 @@
 
 ## Get the sources
 
-    $ git clone -- recursive https://github.com/bsc-performance-tools/RRI.git
+    $ git clone --recursive https://github.com/bsc-performance-tools/RRI.git
 
 ## Go into the directory
 
