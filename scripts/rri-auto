@@ -130,10 +130,9 @@ then
   run_rri=true
   run_post=true
 fi
-dir_trace=`pwd -P $prv_trace`
 prv_trace_basename=${prv_trace%.prv}
-dir_folding=$dir_trace/$prv_trace_basename.folding
-dir_rri=$dir_trace/$prv_trace_basename.folding.rri
+dir_folding=$prv_trace_basename.folding
+dir_rri=$prv_trace_basename.folding.rri
 if [ $run_folding = true ]
 then
   if [ -d $dir_folding ] && [ $recompute = false ]
@@ -144,7 +143,7 @@ then
     echo "------------------------------------------"
     echo "Executing folding"
     echo "------------------------------------------"
-    folding $folding_args $prv_trace "$folding_sep"
+    folding $folding_args -region "Cluster_1" -counter "PAPI_TOT_INS" $prv_trace "$folding_sep"
     if [ $? -ne 0 ]
     then
       echo "Folding: something went wrong... Exiting"
