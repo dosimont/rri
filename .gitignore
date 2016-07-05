@@ -1,6 +1,6 @@
 # Binaries
 /bin
-/generated_files
+/build
 
 # Generated files
 *.pdf
