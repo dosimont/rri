@@ -2,52 +2,32 @@
 
 ## Dependencies
 
-- [lpaggreg library](https://github.com/bsc-performance-tools/lpaggreg). Present as a submodule, located at external/lpaggreg, but must be compiled and installed separately.
-- gcc 5
-- qt, qt-devel
-- qmake
+- gcc
+- qt4
 - R
+- cmake
 
 ## Related tools
 
-- [folding tool](https://github.com/bsc-performance-tools/folding). Requires version 1.2.1.
+- [folding tool](https://github.com/bsc-performance-tools/folding). Requires at least version 1.2.1.
 
 ## Get the sources
 
-    $ git clone --recursive https://github.com/bsc-performance-tools/RRI.git
+    $ git clone --recursive https://github.com/bsc-performance-tools/rri.git
 
 ## Go into the directory
 
-    $ cd RRI
+    $ cd rri
 
-## Compile and install lpaggreg
+##Generate makefile##
 
-    $ cd external/lpaggreg
+    $ mkdir build
+    $ cd build
+    $ cmake ..
 
-*Follow README.md instructions*
-Once done, go back to RRI root directory
+You may want to install rri in a custom location:
 
-    $ cd ../..
-
-## Configure
-
-*Edit* `options.pri` *to enable or disable the compilation of subsidiary functionalities*.
-
-    $ qmake-qt5
-
-or
-
-    $ qmake-qt4
-
-or
-
-    $ qmake
-
-depending of the version of qt you want to use.
-
-*You may want to change the installation directory, and/or define the lpaggreg library location*
-
-    $ qmake-qt[n] "CONFIG+=GLOBAL_VAR" "PREFIX=[target_location]" "LPAGGREG_PATH=[lpaggreg_location]"
+    $ cmake -DCMAKE_INSTALL_PREFIX=/your/installation/directory/ ..
 
 ## Compile
 
@@ -61,7 +41,7 @@ depending of the version of qt you want to use.
 
 Missing R libraries can be automatically installed using:
 
-    # sudo make install_R-dependencies
+    # sudo make installR
 
 
 ## Apply RRI on a folding directory
