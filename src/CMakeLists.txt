@@ -1,3 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 add_subdirectory(rri-csv)
 add_subdirectory(rri-core)
+add_subdirectory(rri-prv)
+add_subdirectory(rri-profiling)
+add_subdirectory(rri-bin)
