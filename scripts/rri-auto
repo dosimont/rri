@@ -167,6 +167,9 @@ then
   then
     echo "RRI: something went wrong... Exiting"
     exit 3
+  else
+    trace=`ls $dir_rri/*prv`
+    echo "RRI trace: $trace"
   fi
 fi
 if [ $run_post = true ]
