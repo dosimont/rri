@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#   RRI - Relevant Routine Identifier
+#   Copyright (C) 2016  Damien Dosimont
+#
+#   This file is part of RRI.
+#
+#   RRI is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# set term postscript eps solid color;
+# set term pdfcairo solid color lw 2;
+# set term png size 800,600;
+# set term wxt size 800,600;
+
+
+echo "set terminal svg size 800,600" > $1.rri-gnuplot
+echo "set output '$1.svg'" >> $1.rri-gnuplot
+cat $1 >> $1.rri-gnuplot
+gnuplot -p $1.rri-gnuplot
+rm $1.rri-gnuplot

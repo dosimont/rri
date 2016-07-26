@@ -385,7 +385,7 @@ print_perf_counter_slope <- function(slope, counter){
   title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
-  plot<-plot+labs(y=ylabel)
+  plot<-plot+scale_y_continuous(name=ylabel, expand =c(0,0))
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+ggtitle(title)
   plot<-plot+theme_bw()
@@ -410,7 +410,7 @@ print_perf_counter <- function(dump, interpolate, counter){
   plot<-ggplot(total, aes(x=TS,y=VALUE,colour=TYPE))
   plot<-plot+geom_point(data=total[total$SAMPLES %in% 1,])
   plot<-plot+geom_line(data=total[total$SAMPLES %in% 0,], size=1.2)
-  plot<-plot+labs(y=ylabel)
+  plot<-plot+scale_y_continuous(name=ylabel, expand =c(0,0))
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+ggtitle(title)
   plot<-plot + scale_colour_manual(name="",breaks = c("i", "u", "un", "e"), labels = c("e"="Excluded samples ", "i"="Interpolation ", "u"="Used samples ", "un"="Unused samples "), values = c("i"="green", "u"="red", "un"="yellow", "e"="grey"))
@@ -497,12 +497,12 @@ for (counter in counterlist){
     plot4=print_perf_counter(dump_temp, interpolate_temp, counter)
     counters_output <- paste(arg_output_directory,"/.",counter, ".pdf", sep="")
     ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
-    g <- arrangeGrob(plot1, plot3, plot4, nrow=3, heights=c(1/3,1/3,1/3)) #generates g
+    g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
     ggsave(parts_output, g, width = w, height = h*2, dpi=d)
-    g <- arrangeGrob(plot2, plot3, plot4, nrow=3, heights=c(1/2,1/4,1/4)) #generates g
+    g <- arrangeGrob(plot2, plot3, nrow=2, heights=c(2/3,1/3)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,"_callstack.pdf", sep="")
-    ggsave(parts_output, g, width = w, height = h*3, dpi=d)
+    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
   }
 }
 #warnings()
