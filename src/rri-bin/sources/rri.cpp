@@ -158,8 +158,7 @@ int main(int argc, char *argv[])
         core->selectMacroscopicModel();
         core->buildRedistributedModel()<<",";
         *infoStream<<core->getCurrentP();
-        *infoStream<<"Local inflection point: p = "<<core->getCurrentP()<<endl;
-        *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
+        *infoStream<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
             regionWriter->pushRRIRegion(fileManager->getRegions()[i], core);
             core->setP(rri::MIN);

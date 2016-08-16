@@ -23,6 +23,7 @@ library(gridExtra)
 library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
+info_input_file="info.csv"
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
 details_input_file="detailed_partition.csv"
@@ -30,6 +31,7 @@ codelines_input_file="routines.csv"
 parts_output_basename="parts"
 qualities_output_file="qualities.pdf"
 qualities2_output_file="qualities2.pdf"
+cheader_info<-c("SCORE", "INFLEX", "INFLEX2", "BEST", "TS")
 cheader_parts<-c("P", "START", "END", "Function")
 cheader_details<-c("P", "START", "END", "Function", "Ratio", "Callstack", "SELECTED")
 cheader_codelines<-c("P", "TS", "Codeline")
@@ -445,22 +447,26 @@ qualities_output <- paste(arg_output_directory,'/',qualities_output_file, sep=""
 ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = h, dpi=d)
 qualities2_output <- paste(arg_output_directory,'/',qualities2_output_file, sep="")
 ggsave(qualities2_output, plot = print_qualities2(qualities_data), width = w, height = h, dpi=d)
+info_input <- paste(arg_instance_directory,'/',info_input_file, sep="")
+info_data <-read(info_input, cheader_info)
 parts_input <- paste(arg_instance_directory,'/',parts_input_file, sep="")
 details_input <- paste(arg_instance_directory,'/',details_input_file, sep="")
 codelines_input <- paste(arg_instance_directory,'/',codelines_input_file, sep="")
 parts_data <-read(parts_input, cheader_parts)
 details_data <-read(details_input, cheader_details)
 codelines_data <-read(codelines_input, cheader_codelines)
-plist<-make_plist(parts_data)
-for (p in plist){
-  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
-  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-}
-p<-inflex_p(qualities_data)
-parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
-ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-p<-inflex2_p(qualities_data)
-parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
+#plist<-make_plist(parts_data)
+#for (p in plist){
+#  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
+#  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
+#}
+#p<-inflex_p(qualities_data)
+#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
+#ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
+#p<-inflex2_p(qualities_data)
+#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
+p<-info_data[1, "BEST"]
+parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
