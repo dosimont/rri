@@ -156,8 +156,8 @@ int main(int argc, char *argv[])
         *infoStream<<core->getCurrentP()<<",";
         core->setP(rri::NORM_BEST);
         core->selectMacroscopicModel();
-        core->buildRedistributedModel()<<",";
-        *infoStream<<core->getCurrentP();
+        core->buildRedistributedModel();
+        *infoStream<<core->getCurrentP()<<",";
         *infoStream<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
             regionWriter->pushRRIRegion(fileManager->getRegions()[i], core);
