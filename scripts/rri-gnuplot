@@ -24,8 +24,8 @@
 # set term wxt size 800,600;
 
 
-echo "set terminal svg size 800,600" > $1.rri-gnuplot
-echo "set output '$1.svg'" >> $1.rri-gnuplot
+echo "set terminal png size 800,600" > $1.rri-gnuplot
+echo "set output '$1.png'" >> $1.rri-gnuplot
 cat $1 >> $1.rri-gnuplot
 gnuplot -p $1.rri-gnuplot
 rm $1.rri-gnuplot

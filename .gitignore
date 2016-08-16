@@ -35,6 +35,7 @@ Makefile*
 # QtCreator
 
 *.autosave
+*.user
 
 # QtCtreator Qml
 *.qmlproject.user
@@ -48,9 +49,8 @@ Makefile*
 *.Rhistory
 
 #Perso
-
 *.bak
 
 #samples
-
 samples/nemo.exe.128tasks.chop1.clustered.folding.rri/
+

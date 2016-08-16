@@ -66,6 +66,7 @@ public:
 private:
     void setNormInflect();
     void setNormInflect2();
+    void setNormBest();
     Parameters* parameters;
     MicroscopicModel* microscopicModel;
     MacroscopicModel* macroscopicModel;

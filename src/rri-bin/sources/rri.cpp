@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         qWarning().nospace()<<"No corresponding regions have been found";
     }
     for (int i=0; i<fileManager->getRegions().size(); i++){
-        qDebug().nospace()<<"Iteration "<<i+1<<", region: "<<fileManager->getRegions()[i];
+        qDebug().nospace()<<"Region: "<<fileManager->getRegions()[i];
         qDebug().nospace()<<"Input file: "<<fileManager->getStreamSets()[i]->getInputFile()->fileName();
         core = new RRICore();
         core->getParameters()->setAnalysisType(rri::RRI);
@@ -144,18 +144,27 @@ int main(int argc, char *argv[])
             }
 
         }
-        *infoStream<<"Overall aggregation score (negative: possible issue, 0: bad, 100: good) = "<<core->getMacroscopicModel()->getAggregationScore()<<endl;
+        *infoStream<<"#Score, Global_inflex_point, Local_inflex_point, Best_point, Timeslice_number"<<endl;
+        *infoStream<<core->getMacroscopicModel()->getAggregationScore()<<",";
         core->setP(rri::NORM_INFLECT);
         core->selectMacroscopicModel();
         core->buildRedistributedModel();
-        *infoStream<<"Global inflection point: p = "<<core->getCurrentP()<<endl;
+        *infoStream<<core->getCurrentP()<<",";
         core->setP(rri::NORM_INFLECT2);
         core->selectMacroscopicModel();
         core->buildRedistributedModel();
+        *infoStream<<core->getCurrentP()<<",";
+        core->setP(rri::NORM_BEST);
+        core->selectMacroscopicModel();
+        core->buildRedistributedModel()<<",";
+        *infoStream<<core->getCurrentP();
         *infoStream<<"Local inflection point: p = "<<core->getCurrentP()<<endl;
         *infoStream<<"Time slice number = "<<core->getParameters()->getTimesliceNumber()<<endl;
         if (!argumentManager->getUniqueFile()){
             regionWriter->pushRRIRegion(fileManager->getRegions()[i], core);
+            core->setP(rri::MIN);
+            core->selectMacroscopicModel();
+            core->buildRedistributedModel();
             rriProfiling->computeRoutines(fileManager->getRegions()[i], core);
         }
         fileManager->getStreamSets()[i]->close();

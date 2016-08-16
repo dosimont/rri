@@ -43,13 +43,16 @@
 //Default rendering parameters
 #define DEFAULT_ROUTINE_MINPROP 0.8
 
+//Best p minimum gain
+#define NORM_BEST_MIN_GAIN 0.1
+
 namespace rri {
 
 //Analysis type
     enum InputFileType { RRI, DEFAULT };
 
 //P default value
-    enum PDefaultValue { MAX, MIN, NORM_INFLECT, NORM_INFLECT2 };
+    enum PDefaultValue { MAX, MIN, NORM_INFLECT, NORM_INFLECT2, NORM_BEST };
 }
 
 

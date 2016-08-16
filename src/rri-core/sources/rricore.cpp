@@ -171,6 +171,8 @@ void RRICore::setP(rri::PDefaultValue defaultValue)
         break;
     case rri::NORM_INFLECT2:setNormInflect2();
         break;
+    case rri::NORM_BEST:setNormBest();
+        break;
     default:setP(1.0);
         break;
     }
@@ -210,6 +212,18 @@ void RRICore::setNormInflect()
         }
     }
     setCurrentPIndex(index);
+}
+
+void RRICore::setNormBest()
+{
+   setNormInflect2();
+   //float pInflex=getCurrentP();
+   double gainInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getGain();
+   //double lossInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getLoss();
+   if (gainInflex<NORM_BEST_MIN_GAIN){
+       setNormBest();
+   }
+
 }
 
 void RRICore::setNormInflect2()
