@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
             }
 
         }
-        *infoStream<<"#Score, Global_inflex_point, Local_inflex_point, Best_point, Timeslice_number"<<endl;
+        //*infoStream<<"#Score, Global_inflex_point, Local_inflex_point, Best_point, Timeslice_number"<<endl;
         *infoStream<<core->getMacroscopicModel()->getAggregationScore()<<",";
         core->setP(rri::NORM_INFLECT);
         core->selectMacroscopicModel();
