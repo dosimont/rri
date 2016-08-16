@@ -221,7 +221,7 @@ void RRICore::setNormBest()
    double gainInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getGain();
    //double lossInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getLoss();
    if (gainInflex<NORM_BEST_MIN_GAIN){
-       setNormBest();
+       setNormInflect();
    }
 
 }
