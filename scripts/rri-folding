@@ -1,0 +1,98 @@
+#!/bin/bash
+
+#   RRI - Relevant Routine Identifier
+#   Copyright (C) 2016  Damien Dosimont
+#
+#   This file is part of RRI.
+#
+#   RRI is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+basedir=$(dirname $0)
+rscript=$basedir/rri-folding.R
+width=12
+height=6
+dpi=300
+clean="false"
+threads=1
+
+usage_fct(){
+  echo "Usage : $0 [options] <folding-directory>"
+  echo "Options:"
+  echo "-h --help: Print help"
+  echo "-c --clean: Remove all the generated pdf"
+  echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
+  echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
+  exit 2
+}
+
+if [ -f "rri-visualize.R" ]
+then
+  rscript=rri.R
+elif [[ ! -f "$rscript" ]]
+then
+  if [[ -f "${RRI_PATH}/rri-visualize.R" ]]
+  then
+    rscript=${RRI_PATH}/rri-visualize.R
+  else
+    echo "The required R script rri-visualize.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+    exit 1
+  fi
+fi
+#No arguments
+if [ $# -eq 0 ]
+then
+  usage_fct
+fi
+#Test arguments
+while [ $# -gt 1 ]
+do
+  if [ $1 = "-h" ] || [ $1 = "--help" ]
+  then
+    usage_fct
+    exit 0
+  elif [ $1 = "-c" ] || [ $1 = "--clean" ]
+  then
+    clean="true"
+  elif [ $1 = "-s" ] || [ $1 = "--size" ]
+  then
+    shift
+    width=$1
+    shift
+    height=$1
+  elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
+  then
+    shift
+    dpi=$1
+  fi
+  shift
+done
+if [ ! -d $1 ]
+then
+  echo "$1 is not a valid directory"
+  usage_fct
+  exit 1
+fi
+input_dir=$1
+if [ $clean = "true" ]
+then
+  rm -fr $input_dir/*.pdf
+else
+  for region in `cat $input_dir/*.fused.regions`
+  do
+    for counter in `cat $input_dir/*.fused.counters`
+    do
+      grep "set obj rect" | grep -o "[0-9].[0-9][0-9][0-9]\*FACTOR"
+    done
+  done
+fi
