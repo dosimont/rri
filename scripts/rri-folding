@@ -36,16 +36,16 @@ usage_fct(){
   exit 2
 }
 
-if [ -f "rri-visualize.R" ]
+if [ -f "rri-folding.R" ]
 then
   rscript=rri.R
 elif [[ ! -f "$rscript" ]]
 then
-  if [[ -f "${RRI_PATH}/rri-visualize.R" ]]
+  if [[ -f "${RRI_PATH}/rri-folding.R" ]]
   then
-    rscript=${RRI_PATH}/rri-visualize.R
+    rscript=${RRI_PATH}/rri-folding.R
   else
-    echo "The required R script rri-visualize.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+    echo "The required R script rri-folding.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
     exit 1
   fi
 fi
@@ -84,15 +84,20 @@ then
   exit 1
 fi
 input_dir=$1
-if [ $clean = "true" ]
-then
-  rm -fr $input_dir/*.pdf
-else
-  for region in `cat $input_dir/*.fused.regions`
+rm -fr $input_dir/*.pdf
+rm -fr $input_dir/*.parts
+for region in `sed -n '2,$p' $input_dir/*.callerdata.regions | cut -d';' -f1`
   do
     for counter in `cat $input_dir/*.fused.counters`
     do
-      grep "set obj rect" | grep -o "[0-9].[0-9][0-9][0-9]\*FACTOR"
+      ts=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "[0-9].[0-9][0-9][0-9]\*FACTOR" | grep -o "[0-9].[0-9][0-9][0-9]"` )
+      func=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "# Routine:.*" | sed -e 's/#\ Routine: //g' | cut -d' ' -f1` )
+      e=`expr ${#func[@]} - 1` 
+      for i in `seq 0 $e`
+      do
+      i1=`expr $i \\* 2`
+      i2=`expr $i1 + 1`
+      echo ${ts[$i1]}, ${ts[$i2]}, ${func[$i]} >> $input_dir/$region.$counter.parts
     done
   done
-fi
+done
