@@ -421,8 +421,6 @@ print_perf_counter <- function(dump, interpolate, counter){
   plot
 }
 
-
-
 args <- commandArgs(trailingOnly = TRUE)
 arg_perf_directory=args[1]
 arg_instance_directory=args[2]

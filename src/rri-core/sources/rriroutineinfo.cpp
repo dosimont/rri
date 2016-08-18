@@ -148,7 +148,11 @@ int RRIRoutineInfo::getCount() const
 
 QString RRIRoutineInfo::toString()
 {
+#ifdef ROUTINE_SHORT_NAMES
+    QString string=name;
+#else
     QString string=file+":"+name;
+#endif
     if (string.contains(",")){
         string = "\""+string+"\"";
     }

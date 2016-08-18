@@ -61,9 +61,6 @@ do
   then
     usage_fct
     exit 0
-  elif [ $1 = "-c" ] || [ $1 = "--clean" ]
-  then
-    clean="true"
   elif [ $1 = "-s" ] || [ $1 = "--size" ]
   then
     shift
@@ -84,10 +81,12 @@ then
   exit 1
 fi
 input_dir=$1
-rm -fr $input_dir/*.pdf
-rm -fr $input_dir/*.parts
+rm -fr $input_dir/parts/
+mkdir -p $input_dir/parts
 for region in `sed -n '2,$p' $input_dir/*.callerdata.regions | cut -d';' -f1`
   do
+  sub_dir=$input_dir/parts/$region
+  mkdir -p $sub_dir
     for counter in `cat $input_dir/*.fused.counters`
     do
       ts=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "[0-9].[0-9][0-9][0-9]\*FACTOR" | grep -o "[0-9].[0-9][0-9][0-9]"` )
@@ -97,7 +96,9 @@ for region in `sed -n '2,$p' $input_dir/*.callerdata.regions | cut -d';' -f1`
       do
       i1=`expr $i \\* 2`
       i2=`expr $i1 + 1`
-      echo ${ts[$i1]}, ${ts[$i2]}, ${func[$i]} >> $input_dir/$region.$counter.parts
+      echo ${ts[$i1]}, ${ts[$i2]}, ${func[$i]} >> $sub_dir/parts.csv
     done
+    break
   done
+  R --slave --vanilla --args $input_dir $sub_dir $region $sub_dir $width $height $dpi < $rscript
 done

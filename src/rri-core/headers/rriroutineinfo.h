@@ -21,6 +21,7 @@
 #define RRIROUTINEINFO_H
 
 #include <QString>
+#include "core_constants.h"
 
 class RRIRoutineInfo
 {
