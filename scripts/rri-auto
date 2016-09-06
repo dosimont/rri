@@ -182,7 +182,7 @@ then
   echo "------------------------------------------"
   echo "Executing RRI post process"
   echo "------------------------------------------"
-  rri-visualize -c -t $threads $dir_rri && rri-profiling $dir_rri
+  rri-visualize -c $dir_rri && rri-visualize -t $threads $dir_rri && rri-profiling -c $dir_rri && rri-profiling $dir_rri
   if [ $? -ne 0 ]
   then
     echo "RRI post process: something went wrong... Exiting"
