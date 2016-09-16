@@ -84,21 +84,24 @@ input_dir=$1
 rm -fr $input_dir/parts/
 mkdir -p $input_dir/parts
 for region in `sed -n '2,$p' $input_dir/*.callerdata.regions | cut -d';' -f1`
-  do
+do
   sub_dir=$input_dir/parts/$region
   mkdir -p $sub_dir
-    for counter in `cat $input_dir/*.fused.counters`
-    do
+  for counter in `cat $input_dir/*.fused.counters`
+  do
+    if [ -f $input_dir/*$region.*$counter.gnuplot ]
+    then
       ts=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "[0-9].[0-9][0-9][0-9]\*FACTOR" | grep -o "[0-9].[0-9][0-9][0-9]"` )
       func=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "# Routine:.*" | sed -e 's/#\ Routine: //g' | cut -d' ' -f1` )
       e=`expr ${#func[@]} - 1` 
       for i in `seq 0 $e`
       do
-      i1=`expr $i \\* 2`
-      i2=`expr $i1 + 1`
-      echo ${ts[$i1]}, ${ts[$i2]}, ${func[$i]} >> $sub_dir/parts.csv
-    done
-    break
+        i1=`expr $i \\* 2`
+        i2=`expr $i1 + 1`
+        echo ${ts[$i1]}, ${ts[$i2]}, ${func[$i]} >> $sub_dir/parts.csv
+      done
+      break
+    fi
   done
   R --slave --vanilla --args $input_dir $sub_dir $region $sub_dir $width $height $dpi < $rscript
 done
