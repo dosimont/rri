@@ -85,7 +85,6 @@ print_parts_codelines <- function(parts_data, codelines_data, instance){
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)
-  plot<-plot+ggtitle(title)
   plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=VALUE), color="black", size=0.2)
   func<-unique(dtemp[["Function"]])
