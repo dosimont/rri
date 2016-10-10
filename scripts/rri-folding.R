@@ -82,7 +82,6 @@ print_parts_codelines <- function(parts_data, codelines_data, instance){
   codelines_temp$VALUE<-as.numeric(as.character(codelines_temp$LINE))
   xlabel<-"Time (relative)"
   ylabel<-"Codeline"
-  title<-"Folding"
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)

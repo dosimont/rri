@@ -316,7 +316,6 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot<-plot + theme(legend.text = element_text(size = police_size))
   plot<-plot + theme(legend.position="bottom")
   ylabel<-"Callstack level"
-  title<-("Callstack vs Time")
   plot<-plot+ggtitle(title)
   plot<-plot+labs(y=ylabel)
   plot
@@ -328,7 +327,6 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   codelines_temp<-codelines_data[(codelines_data$P %in% p),]
   xlabel<-paste("Time (relative), p=", p, sep="")
   ylabel<-"Codeline"
-  title<-("Relevant Routines")
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)
@@ -453,27 +451,22 @@ codelines_input <- paste(arg_instance_directory,'/',codelines_input_file, sep=""
 parts_data <-read(parts_input, cheader_parts)
 details_data <-read(details_input, cheader_details)
 codelines_data <-read(codelines_input, cheader_codelines)
-#plist<-make_plist(parts_data)
-#for (p in plist){
-#  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
-#  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-#}
-#p<-inflex_p(qualities_data)
-#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
-#ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-#p<-inflex2_p(qualities_data)
-#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
-p<-info_data[1, "BEST"]
+plist<-make_plist(parts_data)
+for (p in plist){
+  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
+  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
+}
+<-info_data[1, "BEST"]
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, TRUE), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_jesus", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, TRUE), width = w, height = h, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
-ggsave(parts_output, plot = plot2, width = w, height = h*2, dpi=d)
+ggsave(parts_output, plot = plot2, width = w, height = h, dpi=d)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
