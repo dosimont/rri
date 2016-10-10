@@ -21,7 +21,7 @@
 basedir=$(dirname $0)
 rscript=$basedir/rri-visualize.R
 width=8
-height=3
+height=2
 dpi=300
 clean="false"
 threads=8
