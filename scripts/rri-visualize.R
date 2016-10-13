@@ -453,7 +453,9 @@ plist<-make_plist(parts_data)
 for (p in plist){
   parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
   ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-}
+  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_callstack_filter_", p, ".pdf", sep="")
+  ggsave(parts_output, plot=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE), width = w, height = h, dpi=d)
+ }
 p<-info_data[1, "BEST"]
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
