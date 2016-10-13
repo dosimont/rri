@@ -42,6 +42,7 @@ cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
 labelmax=22
 ulabelmax=33
+codelinenumber=4000
 
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
@@ -324,6 +325,9 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   dtemp<-parts_data[(parts_data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
   codelines_temp<-codelines_data[(codelines_data$P %in% p),]
+  codelines_temp<-codelines_temp[order(codelines_temp$TS),]
+  modulo=max(1,nrow(codelines_temp)%/%codelinenumber)
+  codelines_temp<-codelines_temp[seq(1, to=nrow(codelines_temp),modulo),]
   xlabel<-paste("Time (relative), p=", p, sep="")
   ylabel<-"Codeline"
   plot<-ggplot()
@@ -383,7 +387,7 @@ print_perf_counter_slope <- function(slope, counter){
   #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
-  plot<-plot+scale_y_continuous(name=ylabel, expand =c(0,0))
+  plot<-plot+scale_y_continuous(name=ylabel, limits =c(0,1.1*slope_max))
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   #plot<-plot+ggtitle(title)
   plot<-plot+theme_bw()
@@ -460,8 +464,8 @@ parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", "
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
-parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_0", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, 0, FALSE, TRUE, 0, FALSE), width = w, height =2*h, dpi=d)
+#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_0", ".pdf", sep="")
+#ggsave(parts_output, plot = print_details_aggreg(details_data, 0, FALSE, TRUE, 0, FALSE), width = w, height =2*h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_jesus", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)

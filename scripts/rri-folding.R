@@ -32,6 +32,7 @@ cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
 labelmax=22
 ulabelmax=33
+codelinenumber=4000
 
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
@@ -80,6 +81,9 @@ print_parts_codelines <- function(parts_data, codelines_data, instance){
   codelines_temp<-codelines_temp[(codelines_temp$TYPE %in% "cl"),]
   codelines_temp<-codelines_temp[(codelines_temp$INSTANCE %in% instance),]
   codelines_temp$VALUE<-as.numeric(as.character(codelines_temp$LINE))
+  codelines_temp<-codelines_temp[order(codelines_temp$TS),]
+  modulo=max(1,nrow(codelines_temp)%/%codelinenumber)
+  codelines_temp<-codelines_temp[seq(1, to=nrow(codelines_temp),modulo),]
   xlabel<-"Time (relative)"
   ylabel<-"Codeline"
   plot<-ggplot()
