@@ -228,7 +228,7 @@ for (counter in counterlist){
     ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
     g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
-    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+    ggsave(parts_output, g, width = w, height = h*3, dpi=d)
   }
 }
 #warnings()

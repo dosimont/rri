@@ -25,7 +25,7 @@ library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 options(error = quote({dump.frames(to.file=TRUE); q()}))
 
-coeff_h=0.5
+coeff_h=0.35
 coeff_w_text=0.083
 
 cheader_profiling<-c("Function", "Counter", "Value", "Duration", "Regions")
@@ -99,7 +99,12 @@ print_value <- function(data, counter, correlation){
   plot<-ggplot(data=data, aes(x = Function, y = Value, fill = Value))
   plot<-plot+xlab(NULL)
   plot<-plot+geom_bar(stat = "identity")
-  title=paste(counter, "/s")
+  title=counter
+  if (title == "PAPI_TOT_INS"){
+    title="MIPS"
+  }else{
+    title=paste(title, "/s")
+  }
   plot<-plot+ggtitle(title)
   plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,0,1,-1), "mm"))
   plot<-plot+coord_flip()
