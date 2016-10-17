@@ -19,12 +19,12 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
-rscript=$basedir/rri-fds.R
-width=12
-height=6
+rscript=$basedir/rri-visualize.R
+width=8
+height=2
 dpi=300
 clean="false"
-threads=1
+threads=8
 
 usage_fct(){
   echo "Usage : $0 [options] <rri-directory>"
