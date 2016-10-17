@@ -32,6 +32,7 @@ cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
 labelmax=22
 ulabelmax=33
+codelinenumber=4000
 
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
@@ -80,13 +81,14 @@ print_parts_codelines <- function(parts_data, codelines_data, instance){
   codelines_temp<-codelines_temp[(codelines_temp$TYPE %in% "cl"),]
   codelines_temp<-codelines_temp[(codelines_temp$INSTANCE %in% instance),]
   codelines_temp$VALUE<-as.numeric(as.character(codelines_temp$LINE))
+  codelines_temp<-codelines_temp[order(codelines_temp$TS),]
+  modulo=max(1,nrow(codelines_temp)%/%codelinenumber)
+  codelines_temp<-codelines_temp[seq(1, to=nrow(codelines_temp),modulo),]
   xlabel<-"Time (relative)"
   ylabel<-"Codeline"
-  title<-"Folding"
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)
-  plot<-plot+ggtitle(title)
   plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=VALUE), color="black", size=0.2)
   func<-unique(dtemp[["Function"]])
@@ -230,7 +232,7 @@ for (counter in counterlist){
     ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
     g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
-    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+    ggsave(parts_output, g, width = w, height = h*3, dpi=d)
   }
 }
 #warnings()

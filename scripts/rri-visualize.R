@@ -42,6 +42,7 @@ cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
 labelmax=22
 ulabelmax=33
+codelinenumber=4000
 
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
@@ -316,8 +317,6 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot<-plot + theme(legend.text = element_text(size = police_size))
   plot<-plot + theme(legend.position="bottom")
   ylabel<-"Callstack level"
-  title<-("Callstack vs Time")
-  plot<-plot+ggtitle(title)
   plot<-plot+labs(y=ylabel)
   plot
 }
@@ -326,13 +325,14 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   dtemp<-parts_data[(parts_data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
   codelines_temp<-codelines_data[(codelines_data$P %in% p),]
+  codelines_temp<-codelines_temp[order(codelines_temp$TS),]
+  modulo=max(1,nrow(codelines_temp)%/%codelinenumber)
+  codelines_temp<-codelines_temp[seq(1, to=nrow(codelines_temp),modulo),]
   xlabel<-paste("Time (relative), p=", p, sep="")
   ylabel<-"Codeline"
-  title<-("Relevant Routines")
   plot<-ggplot()
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   plot<-plot+scale_y_reverse(name=ylabel)
-  plot<-plot+ggtitle(title)
   plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, fill=Function), color="white", ymin=-Inf, ymax=Inf)
   plot<-plot+geom_point(data=codelines_temp, aes(x=TS, y=Codeline), color="black", size=0.2)
   func<-unique(dtemp[["Function"]])
@@ -384,12 +384,12 @@ print_perf_counter_slope <- function(slope, counter){
   #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude"
-  title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
+  #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
-  plot<-plot+scale_y_continuous(name=ylabel, expand =c(0,0))
+  plot<-plot+scale_y_continuous(name=ylabel, limits =c(0,1.1*slope_max))
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
-  plot<-plot+ggtitle(title)
+  #plot<-plot+ggtitle(title)
   plot<-plot+theme_bw()
   plot
 }
@@ -453,27 +453,25 @@ codelines_input <- paste(arg_instance_directory,'/',codelines_input_file, sep=""
 parts_data <-read(parts_input, cheader_parts)
 details_data <-read(details_input, cheader_details)
 codelines_data <-read(codelines_input, cheader_codelines)
-#plist<-make_plist(parts_data)
+plist<-make_plist(parts_data)
 #for (p in plist){
 #  parts_output <- paste(arg_output_directory,'/.',parts_output_basename, "_" , p, ".pdf", sep="")
 #  ggsave(parts_output, plot=print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 #}
-#p<-inflex_p(qualities_data)
-#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_main_inflex", ".pdf", sep="")
-#ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
-#p<-inflex2_p(qualities_data)
-#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
+
 p<-info_data[1, "BEST"]
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
+#parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_0", ".pdf", sep="")
+#ggsave(parts_output, plot = print_details_aggreg(details_data, 0, FALSE, TRUE, 0, FALSE), width = w, height =2*h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_jesus", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
-ggsave(parts_output, plot = plot2, width = w, height = h*2, dpi=d)
+ggsave(parts_output, plot = plot2, width = w, height = 1.5*h, dpi=d)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
@@ -503,10 +501,10 @@ for (counter in counterlist){
     ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
     g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
-    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+    ggsave(parts_output, g, width = w, height = h*3, dpi=d)
     g <- arrangeGrob(plot2, plot3, nrow=2, heights=c(2/3,1/3)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,"_callstack.pdf", sep="")
-    ggsave(parts_output, g, width = w, height = h*2, dpi=d)
+    ggsave(parts_output, g, width = w, height = h*3, dpi=d)
   }
 }
 #warnings()

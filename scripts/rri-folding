@@ -20,11 +20,10 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri-folding.R
-width=12
-height=6
+width=8
+height=2
 dpi=300
 clean="false"
-threads=1
 
 usage_fct(){
   echo "Usage : $0 [options] <folding-directory>"
