@@ -1,0 +1,127 @@
+#!/bin/bash
+
+#   RRI - Relevant Routine Identifier
+#   Copyright (C) 2016  Damien Dosimont
+#
+#   This file is part of RRI.
+#
+#   RRI is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+basedir=$(dirname $0)
+rscript=$basedir/rri-fds.R
+width=12
+height=6
+dpi=300
+clean="false"
+threads=1
+
+usage_fct(){
+  echo "Usage : $0 [options] <rri-directory>"
+  echo "Options:"
+  echo "-h --help: Print help"
+  echo "-c --clean: Remove all the generated pdf"
+  echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
+  echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
+  echo "-t --threads [n]: Enable multithreading using n threads"
+  exit 2
+}
+
+if [ -f "rri-visualize.R" ]
+then
+  rscript=rri.R
+elif [[ ! -f "$rscript" ]]
+then
+  if [[ -f "${RRI_PATH}/rri-visualize.R" ]]
+  then
+    rscript=${RRI_PATH}/rri-visualize.R
+  else
+    echo "The required R script rri-visualize.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+    exit 1
+  fi
+fi
+#No arguments
+if [ $# -eq 0 ]
+then
+  usage_fct
+fi
+#Test arguments
+while [ $# -gt 1 ]
+do
+  if [ $1 = "-h" ] || [ $1 = "--help" ]
+  then
+    usage_fct
+    exit 0
+  elif [ $1 = "-c" ] || [ $1 = "--clean" ]
+  then
+    clean="true"
+  elif [ $1 = "-s" ] || [ $1 = "--size" ]
+  then
+    shift
+    width=$1
+    shift
+    height=$1
+  elif [ $1 = "-d" ] || [ $1 = "--dpi" ]
+  then
+    shift
+    dpi=$1
+  elif [ $1 = "-t" ] || [ $1 = "--threads" ]
+  then
+    shift
+    threads=$1
+    echo "Using $threads threads"
+  fi
+  shift
+done
+if [ ! -d $1 ]
+then
+  echo "$1 is not a valid directory"
+  usage_fct
+  exit 1
+fi
+input_dir=$1
+if [ $clean = "true" ]
+then
+  for sub_dir in $input_dir/*
+  do
+    if [ -d $sub_dir ]
+    then
+      if [[ $sub_dir != *"rri.profiling" ]]
+      then
+        echo "Cleaning $sub_dir directory"
+        rm -f $sub_dir/*.pdf $sub_dir/.*.pdf
+      fi
+    fi
+  done
+else
+  it=0
+  for sub_dir in $input_dir/*
+  do
+    if [ -d $sub_dir ]
+    then
+      if [[ $sub_dir != *"rri.profiling" ]]
+      then
+        echo "Processing $sub_dir directory"
+        instance=`basename $sub_dir`
+        R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript &
+        it=$((it + 1))
+        if [ $it -eq $threads ]
+        then
+          it=0
+          wait
+        fi
+      fi
+    fi
+  done
+  wait
+fi
