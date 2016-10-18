@@ -164,6 +164,10 @@ print_qualities2 <- function(data){
 print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
+  #######
+  dtemp<-dtemp[(dtemp$Callstack > 2),]
+  dtemp$Callstack<-dtemp$Callstack-2
+  #######
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
   aggCallstackDepth<-0
   aggVector=c()
