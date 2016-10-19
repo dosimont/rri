@@ -40,8 +40,8 @@ cheader_dump<-c("TYPE", "INSTANCE", "GROUP", "TS", "COUNTER", "VALUE")
 cheader_interpolate<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE")
 cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
-labelmax=22
-ulabelmax=33
+labelmax=10
+ulabelmax=20
 codelinenumber=4000
 
 read <- function(file, cheader, sep=',') {
@@ -164,11 +164,11 @@ print_qualities2 <- function(data){
 print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
-  #######
-  dtemp<-dtemp[(dtemp$Callstack > 2),]
-  dtemp$Callstack<-dtemp$Callstack-2
-  #######
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
+  callstackDepth<-callstackDepth-2
+  #######
+  dtemp<-dtemp[(dtemp$Callstack < callstackDepth),]
+  #######
   aggCallstackDepth<-0
   aggVector=c()
   aggString=c("")
@@ -279,7 +279,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   }else if (length(func)<30){
     police_size=6
   }else{
-    police_size=5
+    police_size=7
   }
   names(func)=func
   vlabels<-vector(, length(func))
@@ -295,7 +295,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       i=which.max(dtemp[indices,"DURATION"])
       dtemp[indices,][i, "SLABEL"]= dtemp[indices,][i, "TLABEL"]
       if (length(i)==0){
-        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.01)&(dtemp$Callstack %in% c)
+        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.02)&(dtemp$Callstack %in% c)
         i=which.max(dtemp[indices2,"DURATION"])
         dtemp[indices2,][i, "SLABEL"]= dtemp[indices2,][i, "VSLABEL"]
       }
@@ -433,7 +433,7 @@ arg_output_directory=args[4]
 w=as.integer(args[5])
 h=as.integer(args[6])
 d=as.integer(args[7])
-filter=10
+filter=25
 dump_input=list.files(arg_perf_directory, pattern="\\.dump\\.csv$")
 interpolate_input=list.files(arg_perf_directory, pattern="\\.interpolate\\.csv$")
 slope_input=list.files(arg_perf_directory, pattern="\\.slope\\.csv$")
@@ -465,7 +465,7 @@ plist<-make_plist(parts_data)
 
 p<-info_data[1, "BEST"]
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
-ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
+ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = 1.2*h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
 #parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_0", ".pdf", sep="")
@@ -475,7 +475,7 @@ ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0,
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
-ggsave(parts_output, plot = plot2, width = w, height = 2.5*h, dpi=d)
+ggsave(parts_output, plot = plot2, width = w, height = 3*h, dpi=d)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]

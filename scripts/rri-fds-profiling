@@ -19,37 +19,39 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
-rscript=$basedir/rri-fds.R
-width=8
-height=2
+rscript=$basedir/rri-fds-profiling.R
+width=0
+height=0
 dpi=300
+func=0
+
 clean="false"
-threads=8
 
 usage_fct(){
   echo "Usage : $0 [options] <rri-directory>"
   echo "Options:"
   echo "-h --help: Print help"
-  echo "-c --clean: Remove all the generated pdf"
-  echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
+  echo "-c --clean: Remove all the generated files"
+# echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
   echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
-  echo "-t --threads [n]: Enable multithreading using n threads"
+  echo "-f --functions [n]: Limit the number of printed functions in the pdf files to the n functions with the longest duration"
   exit 2
 }
 
-if [ -f "rri-fds.R" ]
+if [ -f "rri--fds-profiling.R" ]
 then
-  rscript=rri.R
+  rscript=rri-fds-profiling.R
 elif [[ ! -f "$rscript" ]]
 then
-  if [[ -f "${RRI_PATH}/rri-fds.R" ]]
+  if [[ -f "${RRI_PATH}/rri-fds-profiling.R" ]]
   then
-    rscript=${RRI_PATH}/rri-fds.R
+    rscript=${RRI_PATH}/rri-fds-profiling.R
   else
-    echo "The required R script rri-fds.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
+    echo "The required R script rri-fds-profiling.R has not been found. Set the environment variable RRI_PATH to the directory that contains it. Leaving..."
     exit 1
   fi
 fi
+
 #No arguments
 if [ $# -eq 0 ]
 then
@@ -75,11 +77,10 @@ do
   then
     shift
     dpi=$1
-  elif [ $1 = "-t" ] || [ $1 = "--threads" ]
+  elif [ $1 = "-f" ] || [ $1 = "--functions" ]
   then
     shift
-    threads=$1
-    echo "Using $threads threads"
+    func=$1
   fi
   shift
 done
@@ -90,38 +91,27 @@ then
   exit 1
 fi
 input_dir=$1
+input_dir_basename=`basename $input_dir`
+output_dir=$input_dir/$input_dir_basename.profiling
 if [ $clean = "true" ]
 then
-  for sub_dir in $input_dir/*
-  do
-    if [ -d $sub_dir ]
-    then
-      if [[ $sub_dir != *"rri.profiling" ]]
-      then
-        echo "Cleaning $sub_dir directory"
-        rm -f $sub_dir/*.pdf $sub_dir/.*.pdf
-      fi
-    fi
-  done
+  echo "Cleaning $output_dir directory"
+  rm -fr  $output_dir
 else
-  it=0
-  for sub_dir in $input_dir/Cluster_1
+  mkdir -p $output_dir
+  input_file=$input_dir/*rri.profiling.csv
+  for counter in `awk -vFPAT="([^;]+)|(\"[^\"]+\")" '{print $2}' $input_file | sort | uniq`
   do
-    if [ -d $sub_dir ]
-    then
-      if [[ $sub_dir != *"rri.profiling" ]]
-      then
-        echo "Processing $sub_dir directory"
-        instance=`basename $sub_dir`
-        R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript &
-        it=$((it + 1))
-        if [ $it -eq $threads ]
-        then
-          it=0
-          wait
-        fi
-      fi
-    fi
+    sed -n "/$counter/p" $input_file > $output_dir/${counter}_temp
+    sort -r -g -t";" -k4 $output_dir/${counter}_temp > $output_dir/$counter
+    rm $output_dir/${counter}_temp 
   done
-  wait
+  R --slave --vanilla --args $input_dir $output_dir $func $width $height $dpi < $rscript
+  echo "---------------------------------------------------"
+  echo "Profiling files:"
+  for counter in `awk -vFPAT="([^;]+)|(\"[^\"]+\")" '{print $2}' $input_file | sort | uniq`
+  do
+  echo "$counter: $output_dir/$counter.pdf"
+  done
+  echo "---------------------------------------------------"
 fi
