@@ -389,6 +389,9 @@ print_perf_counter_slope <- function(slope, counter){
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude"
   #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
+  if (counter %in% "PAPI_TOT_INS"){
+    ylabel="MIPS"
+  }
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
   plot<-plot+scale_y_continuous(name=ylabel, limits =c(0,1.1*slope_max))

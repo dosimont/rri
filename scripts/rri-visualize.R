@@ -384,6 +384,9 @@ print_perf_counter_slope <- function(slope, counter){
   #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude"
+  if (counter %in% "PAPI_TOT_INS"){
+    ylabel="MIPS"
+  }
   #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
@@ -393,6 +396,31 @@ print_perf_counter_slope <- function(slope, counter){
   plot<-plot+theme_bw()
   plot
 }
+
+print_perf_counter_ratio <- function(slope1, counter, slope2){
+  #Stats
+  slope<-slope1
+  slope$VALUE<-100*slope1$VALUE/slope2$VALUE
+  slope_max<-slope[which.max(slope[,"VALUE"]),"VALUE"]
+  slope_mean<-mean(slope[["VALUE"]])
+  #Printing
+  xlabel<-"Time (relative)"
+  ylabel<-"Amplitude"
+  if (counter %in% "PAPI_L1_DCM"){
+    ylabel="Miss/Instruction (%)"
+  }
+  #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
+  plot<-ggplot(slope, aes(x=TS,y=VALUE))
+  plot<-plot+geom_line(data=slope, size=1.2, color="blue")
+  plot<-plot+scale_y_continuous(name=ylabel, limits =c(0,1.1*slope_max))
+  plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
+  #plot<-plot+ggtitle(title)
+  plot<-plot+theme_bw()
+  plot
+}
+
+
+
 
 print_perf_counter <- function(dump, interpolate, counter){
   #Dump
@@ -484,6 +512,11 @@ if (length(discarded_counter)!=0){
   test_data<-test_data[(is.finite(test_data$VALUE)),]
 }
 counterlist<-make_counterlist(test_data)
+
+if ("PAPI_TOT_INS" %in% counterlist){
+  slope_ratio<-slope_data[(slope_data$COUNTER %in% "PAPI_TOT_INS"),]
+}
+
 for (counter in counterlist){
  # print(counter)
   dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
@@ -499,6 +532,11 @@ for (counter in counterlist){
     plot4=print_perf_counter(dump_temp, interpolate_temp, counter)
     counters_output <- paste(arg_output_directory,"/.",counter, ".pdf", sep="")
     ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
+    if ("PAPI_TOT_INS" %in% counterlist){
+      plot5=print_perf_counter_ratio(slope_temp, counter, slope_ratio)
+      counters_output <- paste(arg_output_directory,"/.",counter, "_instruction_ratio.pdf", sep="")
+      ggsave(counters_output, plot = plot5, width = w, height = h, dpi=d)
+    }
     g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
     ggsave(parts_output, g, width = w, height = h*3, dpi=d)
