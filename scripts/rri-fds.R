@@ -40,8 +40,8 @@ cheader_dump<-c("TYPE", "INSTANCE", "GROUP", "TS", "COUNTER", "VALUE")
 cheader_interpolate<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE")
 cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 
-labelmax=10
-ulabelmax=20
+labelmax=22
+ulabelmax=33
 codelinenumber=4000
 
 read <- function(file, cheader, sep=',') {
@@ -64,12 +64,18 @@ make_counterlist <- function(data){
 
 string2color<- function(string){
   digested=digest(as.character(string), serialize=FALSE)
-  r=substr(digested,1,2)
-  g=substr(digested,3,4)
-  b=substr(digested,5,6)
+  r=substr(digested,1,10)
+  r=digest(as.character(r), serialize=FALSE)
+  g=substr(digested,11,20)
+  g=digest(as.character(g), serialize=FALSE)
+  b=substr(digested,21,30)
+  b=digest(as.character(b), serialize=FALSE)
+  r=substr(r,1,2)
+  g=substr(g,1,2)
+  b=substr(b,1,2)
   h<-paste(r,g,b,sep="")
-  if ((r>215&g>215&b>215)|(r<30&g<30&b<30)){
-    h = string2color(paste(string,":-o",sep=""))
+  if ((r>230&g>230&b>230)|(r<30&g<30&b<30)){
+    h = string2color(paste(string,":-o",string,sep=""))
   }
   h
 }
@@ -164,11 +170,9 @@ print_qualities2 <- function(data){
 print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp<-data[(data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
-  callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
-  callstackDepth<-callstackDepth-2
-  #######
-  dtemp<-dtemp[(dtemp$Callstack < callstackDepth),]
-  #######
+  callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]-3
+  dtemp<-dtemp[dtemp$Callstack<=callstackDepth,]
+  dtemp$Callstack=dtemp$Callstack-3
   aggCallstackDepth<-0
   aggVector=c()
   aggString=c("")
@@ -279,8 +283,9 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   }else if (length(func)<30){
     police_size=6
   }else{
-    police_size=7
+    police_size=5
   }
+  police_size=6
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
@@ -295,7 +300,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       i=which.max(dtemp[indices,"DURATION"])
       dtemp[indices,][i, "SLABEL"]= dtemp[indices,][i, "TLABEL"]
       if (length(i)==0){
-        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.02)&(dtemp$Callstack %in% c)
+        indices2=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.01)&(dtemp$Callstack %in% c)
         i=which.max(dtemp[indices2,"DURATION"])
         dtemp[indices2,][i, "SLABEL"]= dtemp[indices2,][i, "VSLABEL"]
       }
@@ -377,6 +382,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
   plot<-plot + guides(color=FALSE)
+  plot<-plot + guides(fill=FALSE)
   plot<-plot + theme(legend.text = element_text(size = police_size))
   plot
 }
@@ -388,10 +394,10 @@ print_perf_counter_slope <- function(slope, counter){
   #Printing
   xlabel<-"Time (relative)"
   ylabel<-"Amplitude"
-  #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   if (counter %in% "PAPI_TOT_INS"){
     ylabel="MIPS"
   }
+  #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
   plot<-ggplot(slope, aes(x=TS,y=VALUE))
   plot<-plot+geom_line(data=slope, size=1.2, color="blue")
   plot<-plot+scale_y_continuous(name=ylabel, limits =c(0,1.1*slope_max))
@@ -400,6 +406,31 @@ print_perf_counter_slope <- function(slope, counter){
   plot<-plot+theme_bw()
   plot
 }
+
+print_perf_counter_ratio <- function(slope1, counter, slope2){
+  #Stats
+  slope<-slope1
+  slope$VALUE<-100*slope1$VALUE/slope2$VALUE
+  slope_max<-slope[which.max(slope[,"VALUE"]),"VALUE"]
+  slope_mean<-mean(slope[["VALUE"]])
+  #Printing
+  xlabel<-"Time (relative)"
+  ylabel<-"Amplitude"
+  if (counter %in% "PAPI_L1_DCM"){
+    ylabel="Miss/Instruction (%)"
+  }
+  #title<-paste(counter,"/s vs Time", "- Max =", ceiling(slope_max), "- Mean =", ceiling(slope_mean))
+  plot<-ggplot(slope, aes(x=TS,y=VALUE))
+  plot<-plot+geom_line(data=slope, size=1.2, color="blue")
+  plot<-plot+scale_y_continuous(name=ylabel, limits =c(0,1.1*slope_max))
+  plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
+  #plot<-plot+ggtitle(title)
+  plot<-plot+theme_bw()
+  plot
+}
+
+
+
 
 print_perf_counter <- function(dump, interpolate, counter){
   #Dump
@@ -468,17 +499,17 @@ plist<-make_plist(parts_data)
 
 p<-info_data[1, "BEST"]
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
-ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = 1.2*h, dpi=d)
+ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = 0.9*h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
 #parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_0", ".pdf", sep="")
 #ggsave(parts_output, plot = print_details_aggreg(details_data, 0, FALSE, TRUE, 0, FALSE), width = w, height =2*h, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_jesus", ".pdf", sep="")
-ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, FALSE), width = w, height = 2*h, dpi=d)
+ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0, FALSE), width = w, height = 4.5*h, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
-ggsave(parts_output, plot = plot2, width = w, height = 3*h, dpi=d)
+ggsave(parts_output, plot = plot2, width = w, height = 3.5*h, dpi=d)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
@@ -491,6 +522,11 @@ if (length(discarded_counter)!=0){
   test_data<-test_data[(is.finite(test_data$VALUE)),]
 }
 counterlist<-make_counterlist(test_data)
+
+if ("PAPI_TOT_INS" %in% counterlist){
+  slope_ratio<-slope_data[(slope_data$COUNTER %in% "PAPI_TOT_INS"),]
+}
+
 for (counter in counterlist){
  # print(counter)
   dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
@@ -506,6 +542,13 @@ for (counter in counterlist){
     plot4=print_perf_counter(dump_temp, interpolate_temp, counter)
     counters_output <- paste(arg_output_directory,"/.",counter, ".pdf", sep="")
     ggsave(counters_output, plot = plot4, width = w, height = h, dpi=d)
+    #if ("PAPI_TOT_INS" %in% counterlist){
+    #  if ((counter %in% "PAPI_L1_DCM")){
+    #    plot5=print_perf_counter_ratio(slope_temp, counter, slope_ratio)
+    #    counters_output <- paste(arg_output_directory,"/.",counter, "_instruction_ratio.pdf", sep="")
+    #    ggsave(counters_output, plot = plot5, width = w, height = h, dpi=d)
+    #  }
+    #}
     g <- arrangeGrob(plot1, plot3, nrow=2, heights=c(1/2,1/2)) #generates g
     parts_output <- paste(arg_output_directory,'/',parts_output_basename,"_",counter,".pdf", sep="")
     ggsave(parts_output, g, width = w, height = h*3, dpi=d)

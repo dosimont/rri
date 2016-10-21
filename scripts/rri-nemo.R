@@ -64,18 +64,12 @@ make_counterlist <- function(data){
 
 string2color<- function(string){
   digested=digest(as.character(string), serialize=FALSE)
-  r=substr(digested,1,10)
-  r=digest(as.character(r), serialize=FALSE)
-  g=substr(digested,11,20)
-  g=digest(as.character(g), serialize=FALSE)
-  b=substr(digested,21,30)
-  b=digest(as.character(b), serialize=FALSE)
-  r=substr(r,1,2)
-  g=substr(g,1,2)
-  b=substr(b,1,2)
+  r=substr(digested,1,2)
+  g=substr(digested,3,4)
+  b=substr(digested,5,6)
   h<-paste(r,g,b,sep="")
   if ((r>230&g>230&b>230)|(r<30&g<30&b<30)){
-    h = string2color(paste(string,":-o",string,sep=""))
+    h = string2color(paste(string,":-o",sep=""))
   }
   h
 }
@@ -283,7 +277,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   }else{
     police_size=5
   }
-  police_size=11
+  police_size=10
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
@@ -369,6 +363,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   }else{
     police_size=5
   }
+  police_size=11
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
@@ -507,7 +502,7 @@ ggsave(parts_output, plot = print_details_aggreg(details_data, p, TRUE, TRUE, 0,
 plot1=print_parts_codelines(parts_data, codelines_data, p)
 plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
-ggsave(parts_output, plot = plot2, width = w, height = 2*h, dpi=d)
+ggsave(parts_output, plot = plot2, width = w, height = 1.4*h, dpi=d)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]

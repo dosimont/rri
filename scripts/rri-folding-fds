@@ -19,22 +19,20 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
-rscriptname=rri-nemo.R
+rscriptname=rri-folding-fds.R
 rscript=$basedir/$rscriptname
 width=6
 height=1
 dpi=300
 clean="false"
-threads=8
 
 usage_fct(){
-  echo "Usage : $0 [options] <rri-directory>"
+  echo "Usage : $0 [options] <folding-directory>"
   echo "Options:"
   echo "-h --help: Print help"
   echo "-c --clean: Remove all the generated pdf"
   echo "-s --size [w] [h]: Set pdf outputs width and height in inch (default: $width $height)"
   echo "-d --dpi [n]: Set pdf outputs dpi (default: $dpi)"
-  echo "-t --threads [n]: Enable multithreading using n threads"
   exit 2
 }
 
@@ -63,9 +61,6 @@ do
   then
     usage_fct
     exit 0
-  elif [ $1 = "-c" ] || [ $1 = "--clean" ]
-  then
-    clean="true"
   elif [ $1 = "-s" ] || [ $1 = "--size" ]
   then
     shift
@@ -76,11 +71,6 @@ do
   then
     shift
     dpi=$1
-  elif [ $1 = "-t" ] || [ $1 = "--threads" ]
-  then
-    shift
-    threads=$1
-    echo "Using $threads threads"
   fi
   shift
 done
@@ -91,38 +81,27 @@ then
   exit 1
 fi
 input_dir=$1
-if [ $clean = "true" ]
-then
-  for sub_dir in $input_dir/*
+rm -fr $input_dir/parts/
+mkdir -p $input_dir/parts
+for region in "Cluster_1"
+do
+  sub_dir=$input_dir/parts/$region
+  mkdir -p $sub_dir
+  for counter in `cat $input_dir/*.fused.counters`
   do
-    if [ -d $sub_dir ]
+    if [ -f $input_dir/*$region.*$counter.gnuplot ]
     then
-      if [[ $sub_dir != *"rri.profiling" ]]
-      then
-        echo "Cleaning $sub_dir directory"
-        rm -f $sub_dir/*.pdf $sub_dir/.*.pdf
-      fi
+      ts=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "[0-9].[0-9][0-9][0-9]\*FACTOR" | grep -o "[0-9].[0-9][0-9][0-9]"` )
+      func=( `grep "set obj rect" $input_dir/*$region.*$counter.gnuplot | grep -o "# Routine:.*" | sed -e 's/#\ Routine: //g' | cut -d' ' -f1` )
+      e=`expr ${#func[@]} - 1` 
+      for i in `seq 0 $e`
+      do
+        i1=`expr $i \\* 2`
+        i2=`expr $i1 + 1`
+        echo ${ts[$i1]}, ${ts[$i2]}, ${func[$i]} >> $sub_dir/parts.csv
+      done
+      break
     fi
   done
-else
-  it=0
-  for sub_dir in $input_dir/Cluster_1
-  do
-    if [ -d $sub_dir ]
-    then
-      if [[ $sub_dir != *"rri.profiling" ]]
-      then
-        echo "Processing $sub_dir directory"
-        instance=`basename $sub_dir`
-        R --slave --vanilla --args $input_dir $sub_dir $instance $sub_dir $width $height $dpi < $rscript &
-        it=$((it + 1))
-        if [ $it -eq $threads ]
-        then
-          it=0
-          wait
-        fi
-      fi
-    fi
-  done
-  wait
-fi
+  R --slave --vanilla --args $input_dir $sub_dir $region $sub_dir $width $height $dpi < $rscript
+done

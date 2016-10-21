@@ -21,8 +21,8 @@
 basedir=$(dirname $0)
 rscriptname=rri-alya.R
 rscript=$basedir/$rscriptname
-width=10
-height=2
+width=6
+height=1
 dpi=300
 clean="false"
 threads=8
