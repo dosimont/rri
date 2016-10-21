@@ -277,7 +277,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   }else{
     police_size=5
   }
-  police_size=10
+  police_size=11
   names(func)=func
   vlabels<-vector(, length(func))
   names(vlabels)=func
@@ -311,7 +311,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
     }
   }
-  plot<-plot+geom_text(data=dtemp, aes(x=START+DURATION/2, y=OFFSET+(Ratio/2), label=SLABEL), color="white",size = 3)
+  plot<-plot+geom_text(data=dtemp, aes(x=START+DURATION/2, y=OFFSET+(Ratio/2), label=SLABEL), color="white",size = 4)
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot + guides(color=FALSE)
