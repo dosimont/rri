@@ -219,8 +219,8 @@ void RRICore::setNormBest()
     int index=0;
     double score=RAND_MAX;
     for (int i=0; i<getPs().size();i++){
-      gain=getMacroscopicModel()->getQualities()[i]->getGain();
-      loss=getMacroscopicModel()->getQualities()[i]->getLoss();
+      double gain=getMacroscopicModel()->getQualities()[i]->getGain();
+      double loss=getMacroscopicModel()->getQualities()[i]->getLoss();
       double currentScore=(gain-1)*(gain-1)+loss*loss
         if (currentScore<=score){
             score=currentScore;
