@@ -48,12 +48,18 @@ make_counterlist <- function(data){
 
 string2color<- function(string){
   digested=digest(as.character(string), serialize=FALSE)
-  r=substr(digested,1,2)
-  g=substr(digested,3,4)
-  b=substr(digested,5,6)
+  r=substr(digested,1,10)
+  r=digest(as.character(r), serialize=FALSE)
+  g=substr(digested,11,20)
+  g=digest(as.character(g), serialize=FALSE)
+  b=substr(digested,21,30)
+  b=digest(as.character(b), serialize=FALSE)
+  r=substr(r,1,2)
+  g=substr(g,1,2)
+  b=substr(b,1,2)
   h<-paste(r,g,b,sep="")
-  if ((r>215&g>215&b>215)|(r<30&g<30&b<30)){
-    h = string2color(paste(string,":-o",sep=""))
+  if ((r>230&g>230&b>230)|(r<30&g<30&b<30)){
+    h = string2color(paste(string,":-o",string,sep=""))
   }
   h
 }
@@ -129,6 +135,7 @@ print_parts_codelines <- function(parts_data, codelines_data, instance){
   plot<-plot + theme_bw()
   plot<-plot+ theme(legend.position="bottom")
   plot<-plot + guides(color=FALSE)
+  plot<-plot + guides(fill=FALSE)
   plot<-plot + theme(legend.text = element_text(size = police_size))
   plot
 }

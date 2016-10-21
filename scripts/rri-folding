@@ -20,7 +20,7 @@
 
 basedir=$(dirname $0)
 rscript=$basedir/rri-folding.R
-width=8
+width=10
 height=2
 dpi=300
 clean="false"

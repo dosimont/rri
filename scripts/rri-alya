@@ -19,9 +19,9 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
-rscriptname=rri-fds.R
+rscriptname=rri-alya.R
 rscript=$basedir/$rscriptname
-width=8
+width=10
 height=2
 dpi=300
 clean="false"

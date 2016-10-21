@@ -19,7 +19,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 basedir=$(dirname $0)
-rscriptname=rri-fds.R
+rscriptname=rri-nemo.R
 rscript=$basedir/$rscriptname
 width=8
 height=2
