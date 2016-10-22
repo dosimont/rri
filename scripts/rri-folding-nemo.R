@@ -202,7 +202,7 @@ parts_input <- paste(arg_instance_directory,'/', "parts.csv", sep="")
 parts_data <-read(parts_input, cheader_parts)
 codelines_data <- read(dump_input, cheader_codelines, ';')
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, ".pdf", sep="")
-ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, arg_instance_name), width = w, height = 0.9*h, dpi=d)
+ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, arg_instance_name), width = w, height = 0.8*h, dpi=d)
 plot1=print_parts_codelines(parts_data, codelines_data, arg_instance_name)
 instance=arg_instance_name
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
