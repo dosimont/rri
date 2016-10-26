@@ -214,16 +214,19 @@ void RRICore::setNormInflect()
     setCurrentPIndex(index);
 }
 
-void RRICore::setNormBest()
-{
-   setNormInflect2();
-   //float pInflex=getCurrentP();
-   double gainInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getGain();
-   //double lossInflex=getMacroscopicModel()->getQualities()[getCurrentPIndex()]->getLoss();
-   if (gainInflex<NORM_BEST_MIN_GAIN){
-       setNormInflect();
-   }
-
+void RRICore::setNormBest(){
+    int index=0;
+    double score=RAND_MAX;
+    for (int i=0; i<getPs().size();i++){
+        double gain=getMacroscopicModel()->getQualities()[i]->getGain();
+        double loss=getMacroscopicModel()->getQualities()[i]->getLoss();
+        double currentScore=(gain-1)*(gain-1)+loss*loss;
+        if (currentScore<=score){
+            score=currentScore;
+            index=i;
+        }
+    }
+    setCurrentPIndex(index);
 }
 
 void RRICore::setNormInflect2()
