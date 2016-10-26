@@ -154,12 +154,10 @@ QString RRIRoutineInfo::toString()
     QString string=file+":"+name;
 #endif
     if (string.contains(",")){
-        //string = "\""+string+"\"";
-        string.replace(",","-");
+        string = "\""+string+"\"";
     }
-    if (string.contains(";")){
-        //string = "\""+string+"\"";
-        string.replace(";","-");
+    if (string.compare("")==0){
+        string ="???";
     }
     return string;
 }
