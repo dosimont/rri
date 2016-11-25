@@ -3,6 +3,16 @@
 FileManager::FileManager(ArgumentManager *argumentManager)
 {
     this->argumentManager=argumentManager;
+    callerDataRegionFile=NULL;
+    callerDataRegionStream=NULL;
+    statsFile=NULL;
+    statsStream=NULL;
+    slopeFile=NULL;
+    slopeStream=NULL;
+    profilingFile=NULL;
+    profilingStream=NULL;
+    inputPrvFiles=NULL;
+    outputPrvFiles=NULL;
 }
 
 FileManager::~FileManager()
