@@ -39,6 +39,7 @@
 
 int main(int argc, char *argv[])
 {
+    qDebug().nospace()<<"RRI version "<<__BUILD_VERSION__;
     int error;
     ArgumentManager* argumentManager = new ArgumentManager(argc, argv);
     if (!argumentManager->getConform()||argumentManager->getHelp()){
