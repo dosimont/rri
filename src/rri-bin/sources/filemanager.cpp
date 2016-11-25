@@ -150,6 +150,10 @@ int FileManager::set()
         }
         dir.setNameFilters(QStringList() << CALLERDATA_REGIONS_FILE);
         dir.setFilter(QDir::Files);
+        if (dir.entryList().size()==0){
+            qWarning().nospace()<<"No region file found";
+            return RETURN_ERR_INVALID_REGION_FILE;
+        }
         callerDataRegions=dir.entryList().first();
         callerDataRegionFile=new QFile(dir.path()+"/"+callerDataRegions);
         if (!callerDataRegionFile->open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -160,6 +164,10 @@ int FileManager::set()
 
         dir.setNameFilters(QStringList() << STATS_FILE);
         dir.setFilter(QDir::Files);
+        if (dir.entryList().size()==0){
+            qWarning().nospace()<<"No stat file found";
+            return RETURN_ERR_INVALID_STATS_FILE;
+        }
         stats=dir.entryList().first();
         statsFile=new QFile(dir.path()+"/"+stats);
         if (!statsFile->open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -170,6 +178,10 @@ int FileManager::set()
 
         dir.setNameFilters(QStringList() << SLOPE_FILE);
         dir.setFilter(QDir::Files);
+        if (dir.entryList().size()==0){
+            qWarning().nospace()<<"No slope file found";
+            return RETURN_ERR_INVALID_SLOPE_FILE;
+        }
         slopes=dir.entryList().first();
         slopeFile=new QFile(dir.path()+"/"+slopes);
         if (!slopeFile->open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -180,6 +192,10 @@ int FileManager::set()
 
         dir.setNameFilters(QStringList() << PRV_INPUT_FILE);
         dir.setFilter(QDir::Files);
+        if (dir.entryList().size()==0){
+            qWarning().nospace()<<"No input trace file found";
+            return RETURN_ERR_INVALID_INPUT_TRACE;
+        }
         inputPrvFiles=new PrvFileManager();
         if ((error=inputPrvFiles->initStreams(dir.path()+"/"+dir.entryList().first(), QIODevice::ReadOnly | QIODevice::Text))!=RETURN_OK){
             qWarning().nospace()<<"Unable to open input trace file";
@@ -195,14 +211,14 @@ int FileManager::set()
         }
         outputPrvFiles=new PrvFileManager();
         if ((error=outputPrvFiles->initStreams(outputPrv, QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append))!=RETURN_OK){
-            qWarning().nospace()<<"Unable to open output trace file";
+            qWarning().nospace()<<"Unable to create output trace file";
             return RETURN_ERR_INVALID_OUTPUT_TRACE;
         }
 
         profiling=outputDir + "/" + inputPrvBaseName + RRI_DIR_PATTERN + "." + PROFILING_FILE;
         profilingFile=new QFile(profiling);
         if (!profilingFile->open(QIODevice::ReadWrite | QIODevice::Text)){
-           qWarning().nospace()<<"Unable to open profiling file";
+           qWarning().nospace()<<"Unable to create profiling file";
            return RETURN_ERR_INVALID_PROFILING_FILE;
         }
         profilingStream=new QTextStream(profilingFile);
