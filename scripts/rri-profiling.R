@@ -115,6 +115,9 @@ print_value <- function(data, counter, correlation){
   plot
 }
 
+#MAIN
+
+#managing the arguments
 args <- commandArgs(trailingOnly = TRUE)
 arg_input_directory=args[1]
 arg_output_directory=args[2]
@@ -122,10 +125,16 @@ set_size=as.integer(args[3])
 w=as.integer(args[4])
 h=as.integer(args[5])
 d=as.integer(args[6])
+#retrieving the input files
 input=list.files(arg_input_directory, pattern="\\.profiling\\.csv$")
 input_file <- paste(arg_input_directory,'/',input[1], sep="")
+#reading
 data <-read(input_file, cheader_profiling, ';')
+#determining the counterlist
 counterlist<-make_counterlist(data)
+#selecting PAPI_TOT_INS as reference to determine how to apply the color gradient: red=bad, green=good
+#ex: low MIPS=bad=red but low cache misses=good=green
+#principle: compute the correlation between PAPI_TOT_INS and the current counter: if positive, keep same gradient, else, invert it
 dref<-data[(data$Counter %in% "PAPI_TOT_INS"),]
 correlate=FALSE
 if (nrow(dref)>0){
@@ -133,15 +142,19 @@ if (nrow(dref)>0){
   dref$Function <- factor(dref$Function, levels = dref[order(dref$Duration),"Function"])
   dref=dref[order(dref$Duration),]
 }
+#for each counter, print the profiling view
 for (counter in counterlist){
   c_value=0
   dtemp<-data[(data$Counter %in% counter),]
   dtemp$Function <- factor(dtemp$Function, levels = dtemp[order(dtemp$Duration),"Function"])
+  #sort routines by duration
   dtemp=dtemp[order(dtemp$Duration),]
+  #compute the correlation
   if (correlate){
     c_value= cor(dtemp$Value, dref$Value)
     c=paste("Correlation: PAPI_TOT_INS vs",counter,"=",c_value)
   }
+  #manage the size of each column + the size of the height
   if (set_size>0){
     dtemp=dtemp[(nrow(dtemp)-set_size):nrow(dtemp),]
     h=set_size*coeff_h
@@ -155,6 +168,7 @@ for (counter in counterlist){
     }
   }
   w=0
+  #processing the label, removing "Cluster_" to gain room
   dtemp$Regions=gsub("Cluster_", "", dtemp$Regions)
   dtemp$Label=paste(dtemp$Function, " (", dtemp$Regions, ")", sep="")
   for (funct in unique(dtemp$Label)){
@@ -166,9 +180,13 @@ for (counter in counterlist){
   if (w>=50){
     w=49
   }
+  #build duration histogram
   plot1=print_duration(dtemp, counter)
+  #build column center with routine names
   plot2=print_mid(dtemp, counter)
+  #build performance value histogram
   plot3=print_value(dtemp, counter,c_value)
+  #merge the three histograms
   g <- arrangeGrob(plot1, plot2, plot3, ncol=3, widths=c(1/3,1/3,1/3)) #generates g
   output <- paste(arg_output_directory,'/',counter,".pdf", sep="")
   ggsave(output, g, width = w, height = h, dpi=d)
