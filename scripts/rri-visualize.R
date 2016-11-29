@@ -23,6 +23,8 @@ library(gridExtra)
 library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 
+#"Static" variables
+
 info_input_file="info.csv"
 parts_input_file="partitions.csv"
 qualities_input_file="qualities.csv"
@@ -43,24 +45,28 @@ cheader_slope<-c("INSTANCE", "GROUP", "COUNTER", "TS", "VALUE", "CUMUL")
 labelmax=22
 ulabelmax=33
 
+#function to read a csv file
 read <- function(file, cheader, sep=',') {
   df <- read.csv(file, header=FALSE, sep = sep, strip.white=TRUE)
   names(df) <- cheader
   df
 }
 
+#function to generate a vector containing all the p
 make_plist <- function(data){
   plist<-data[["P"]]
   plist<-unique(plist)
   plist
 }
 
+#function to generate a vector containing all the counters
 make_counterlist <- function(data){
   counterlist<-data[["COUNTER"]]
   counterlist<-unique(counterlist)
   counterlist
 }
 
+#from a string, generate a color using a hash
 string2color<- function(string){
   digested=digest(as.character(string), serialize=FALSE)
   r=substr(digested,1,2)
@@ -73,6 +79,7 @@ string2color<- function(string){
   h
 }
 
+#wrapper for string2color
 color_generator <- function(stringlist, aggString=c("")){
   sorted<-sort(stringlist)
   hashcoded<-rep(0, length(stringlist))
@@ -90,6 +97,7 @@ color_generator <- function(stringlist, aggString=c("")){
   color
 }
 
+#not really usefull: other way of computing interest point
 inflex_p <- function(data){
   dtemp<-data
   dtemp$LOSSCOR<-dtemp$LOSS-dtemp$GAIN
@@ -98,6 +106,7 @@ inflex_p <- function(data){
   dtemp[i,"P"]
 }
 
+#not really usefull: other way of computing interest point
 inflex2_p <- function(data){
   dtemp1<-data
   dtemp2<-data
@@ -120,7 +129,7 @@ inflex2_p <- function(data){
   dtemp2[i,"P"]
 }
 
-
+#build the quality curves with p in x axis and gain/loss un y axis
 print_qualities <- function(data){
   dtemp<-data
   ntemp <- data.frame(P= dtemp[2:(nrow(dtemp)),1]-0.0000001, GAIN= dtemp[1:nrow(dtemp)-1,2], LOSS= dtemp[1:nrow(dtemp)-1,3])
@@ -142,6 +151,7 @@ print_qualities <- function(data){
   plot
 }
 
+#build the quality curves loss vs gain
 print_qualities2 <- function(data){
   dtemp<-data
   p<-inflex_p(data)
@@ -160,9 +170,14 @@ print_qualities2 <- function(data){
   plot
 }
 
+#build the callstack representation
+#arg: data, parameter p, jesus:bool no space between time aggregates, aggreg:bool should we aggregate the bottom, filter:float remove routines whose proportion is below this amount, showSelected:bool highlight the selected routine
 print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
+#filtering data related with the current p
   dtemp<-data[(data$P %in% p),]
+#removing the void routine
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
+#hacking the callstack: reverse the callstack, manage the cases in which we aggregate the callstack bottom
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
   aggCallstackDepth<-0
   aggVector=c()
@@ -191,17 +206,22 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   }
   dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack), ]
   callstackDepth<-dtemp[which.max(dtemp[,"Callstack"]),"Callstack"]
+#compute a "priority score" that determines, in case of conflict between two routines at the same callstack level, which one should be below/above
+#the first routine appearing over time in the region will be below
   for (i in 0:callstackDepth){
     func<-unique(dtemp[(dtemp$Callstack %in% i),"Function"])
     fv<-seq(1,length(func))
     names(fv)<-func
     dtemp$POSITION[(dtemp$Callstack %in% i)]<-fv[dtemp[(dtemp$Callstack %in% i),"Function"]]
   }
+#filtering the routines below a certain amount (variable filter)
   dtemp<-dtemp[dtemp$Ratio >= (filter/100),]
+#sorting the data
   dtemp<-dtemp[order(dtemp$START, -dtemp$Callstack, dtemp$POSITION),]
   xlabel<-  paste("Time (relative), p=", p, sep="")
   ylabel<-  paste("Execution time (relative), p=", p, sep="")
   legend<-  paste("Relevant routines, p=", p, sep="")
+#computing the graphical position of each routine rectangle
   dtemp$OFFSET<-0
   currentStart<-dtemp[1,"START"]
   currentCallstack<-dtemp[1,"Callstack"]
@@ -231,6 +251,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot<-plot+scale_x_continuous(name=xlabel, limits =c(0,1))
   func<-unique(dtemp[["Function"]])
   vcolors=color_generator(func, as.character(aggString))
+  #managing the case in which we do not have to print the selected routine
   if (!showSelected){
     for (i in 1:nrow(dtemp)){
       for (j in 1:nrow(dtemp)){
@@ -249,6 +270,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       }
     }
   }
+  #Manage the labels for each rectangle: we may need to trucate the label if it's too long, and we print the label for a routine only once, during the first occurence
   dtemp$DURATION<-dtemp$END-dtemp$START
   dtemp<-dtemp[dtemp$DURATION >= 0,]
   dtemp$LABEL=as.character(dtemp$Function)
@@ -264,6 +286,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   dtemp$LABEL=dtemp$ULABEL
   dtemp$VSLABEL=as.character(dtemp$Function)
   dtemp$VSLABEL=as.character(substr(dtemp$VSLABEL,1,4))
+  #manage the size of the legend
   police_size=10
   if (length(func)<15){
     police_size=9
@@ -284,6 +307,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
     vlabels[n]=as.character(labeltemps[1])
   }
   dtemp$SLABEL=as.character("")
+  #decide if we print the routine label entirely or not
   for (n in func){
     for (c in unique(dtemp[(dtemp$Function %in% n),"Callstack"])){
       indices=(dtemp$Function %in% n)&(dtemp$Ratio>0.2)&(dtemp$DURATION>0.12)&(dtemp$Callstack %in% c)
@@ -296,20 +320,27 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
       }
     }
   }
+  #filling the plot
+  #manage the jesus case: we do not print space between the rectangles
   if (jesus){
     plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function, colour=Function))
+    #show selected routine
     if (showSelected){
       plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize)
     }
     plot<-plot+scale_colour_manual(values = vcolors)
   }
+  #we print space
   else{
     plot<-plot+geom_rect(data=dtemp, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=Function), color="white", size=dsize)
+    #show selected routine
     if (showSelected){
       plot<-plot+geom_rect(data=dtemp2, mapping=aes(xmin=START, xmax=END, ymin=OFFSET, ymax=OFFSET+Ratio, fill=NA), color="black", size=dsize/3)
     }
   }
+  #printing the label
   plot<-plot+geom_text(data=dtemp, aes(x=START+DURATION/2, y=OFFSET+(Ratio/2), label=SLABEL), color="white",size = 3)
+  #managing the legends, labels, title, theme, etc.
   plot<-plot+scale_fill_manual(values = vcolors, breaks = sort(func), labels = vlabels)
   plot<-plot + theme_bw()
   plot<-plot + guides(color=FALSE)
@@ -322,6 +353,7 @@ print_details_aggreg <- function(data, p, jesus, aggreg, filter, showSelected){
   plot
 }
 
+#print the timeline + codelines
 print_parts_codelines <- function(parts_data, codelines_data, p){
   dtemp<-parts_data[(parts_data$P %in% p),]
   dtemp<-dtemp[!(dtemp$Function %in% "void"),]
@@ -377,6 +409,7 @@ print_parts_codelines <- function(parts_data, codelines_data, p){
   plot
 }
 
+#build the perf counter slope (most useful)
 print_perf_counter_slope <- function(slope, counter){
   #Stats
   slope_max<-slope[which.max(slope[,"VALUE"]),"VALUE"]
@@ -394,6 +427,7 @@ print_perf_counter_slope <- function(slope, counter){
   plot
 }
 
+#build the perf counter curve
 print_perf_counter <- function(dump, interpolate, counter){
   #Dump
   dump$SAMPLES<-1
@@ -421,6 +455,9 @@ print_perf_counter <- function(dump, interpolate, counter){
   plot
 }
 
+
+#MAIN
+
 args <- commandArgs(trailingOnly = TRUE)
 arg_perf_directory=args[1]
 arg_instance_directory=args[2]
@@ -429,19 +466,24 @@ arg_output_directory=args[4]
 w=as.integer(args[5])
 h=as.integer(args[6])
 d=as.integer(args[7])
+#filter routines below a certain percentage in callstack representation
 filter=10
+#managing the file names
 dump_input=list.files(arg_perf_directory, pattern="\\.dump\\.csv$")
 interpolate_input=list.files(arg_perf_directory, pattern="\\.interpolate\\.csv$")
 slope_input=list.files(arg_perf_directory, pattern="\\.slope\\.csv$")
 dump_input <- paste(arg_perf_directory,'/',dump_input[1], sep="")
 interpolate_input <- paste(arg_perf_directory,'/',interpolate_input[1], sep="")
 slope_input <- paste(arg_perf_directory,'/',slope_input[1], sep="")
+#get the data from folding csv files: performance counter curve data
 dump_data <-read(dump_input, cheader_dump, ';')
 interpolate_data <-read(interpolate_input, cheader_interpolate, ';')
 slope_data <-read(slope_input, cheader_slope, ';')
+#get the data from rri csv files
 qualities_input <- paste(arg_instance_directory,'/',qualities_input_file, sep="")
 qualities_data <-read(qualities_input, cheader_qualities)
 qualities_output <- paste(arg_output_directory,'/',qualities_output_file, sep="")
+#generating pdf for qualities
 ggsave(qualities_output, plot = print_qualities(qualities_data), width = w, height = w, dpi=d)
 qualities2_output <- paste(arg_output_directory,'/',qualities2_output_file, sep="")
 ggsave(qualities2_output, plot = print_qualities2(qualities_data), width = w, height = w, dpi=d)
@@ -463,9 +505,14 @@ codelines_data <-read(codelines_input, cheader_codelines)
 #ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
 #p<-inflex2_p(qualities_data)
 #parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_local_inflex", ".pdf", sep="")
+
+#selecting the best partition
 p<-info_data[1, "BEST"]
+#generate several pdf filesi
+#timeline
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_best", ".pdf", sep="")
 ggsave(parts_output, print_parts_codelines(parts_data, codelines_data, p), width = w, height = h, dpi=d)
+#different callstacks
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack", ".pdf", sep="")
 ggsave(parts_output, plot = print_details_aggreg(details_data, p, FALSE, TRUE, 0, TRUE), width = w*2, height = h*2, dpi=d)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_jesus", ".pdf", sep="")
@@ -475,6 +522,7 @@ plot2=print_details_aggreg(details_data, p, TRUE, TRUE, filter, FALSE)
 parts_output <- paste(arg_output_directory,'/',parts_output_basename, "_callstack_filter", ".pdf", sep="")
 ggsave(parts_output, plot = plot2, width = w, height = h*2, dpi=d)
 instance=arg_instance_name
+#filter folding files to take into account only the current cluster/instance
 interpolate_data<-interpolate_data[(interpolate_data$INSTANCE %in% instance),]
 slope_data<-slope_data[(slope_data$INSTANCE %in% instance),]
 dump_data<-dump_data[(dump_data$INSTANCE %in% instance),]
@@ -486,8 +534,10 @@ if (length(discarded_counter)!=0){
   test_data<-test_data[(is.finite(test_data$VALUE)),]
 }
 counterlist<-make_counterlist(test_data)
+#iterating over all the available counters
 for (counter in counterlist){
  # print(counter)
+  #print juste the performance counter curves
   dump_temp<-dump_data[(dump_data$COUNTER %in% counter),]
   slope_temp<-slope_data[(slope_data$COUNTER %in% counter),]
   interpolate_temp<-interpolate_data[(interpolate_data$COUNTER %in% counter),]
@@ -495,6 +545,7 @@ for (counter in counterlist){
   #  print("Invalid data, passing")
   }
   else{
+  #print timelines/callstack + performance counter curves
     plot3=print_perf_counter_slope(slope_temp, counter)
     counters_output <- paste(arg_output_directory,"/.",counter, "_slope.pdf", sep="")
     ggsave(counters_output, plot = plot3, width = w, height = h, dpi=d)
