@@ -25,8 +25,12 @@ library(digest)
 #Sys.setlocale("LC_MESSAGES", 'en_US')
 options(error = quote({dump.frames(to.file=TRUE); q()}))
 
-coeff_h=0.35
-coeff_w_text=0.083
+coeff_h=0.20
+coeff_w_text=0.084
+text_size=2.5
+tick_size=7
+title_size=8
+labelmax=20
 
 cheader_profiling<-c("Function", "Counter", "Value", "Duration", "Regions")
 
@@ -73,13 +77,13 @@ color_generator <- function(stringlist, aggString=c("")){
 
 print_mid <- function(data, counter){
   plot<-ggplot(data=data)
-  plot<-plot+geom_text(aes(x=1,y=Function,label=Label))
+  plot<-plot+geom_text(aes(x=1,y=Function,label=Label), size = text_size)
   #plot<-plot+geom_segment(aes(x=0.935,xend=0.940,yend=Function))
   #plot<-plot+geom_segment(aes(x=1.06,xend=1.065,yend=Function))
   plot<-plot+ggtitle("")
   plot<-plot+ylab(NULL)
  # plot<-plot+scale_x_continuous(expand=c(0,0),limits=c(0.940,1.060))
-  plot<-plot+theme(axis.title=element_blank(),panel.grid=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),panel.background=element_blank(),axis.text.x=element_text(color=NA, size=3),axis.ticks.x=element_line(color=NA),plot.margin = unit(c(1,-1,1,-1), "mm"))
+  plot<-plot+theme(axis.title=element_blank(),panel.grid=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),panel.background=element_blank(),axis.text.x=element_text(color=NA),axis.ticks.x=element_line(color=NA),plot.margin = unit(c(1,-1,1,-1), "mm"))
   plot
 }
 
@@ -87,7 +91,7 @@ print_duration <- function(data, counter){
   plot<-ggplot(data=data, aes(x = Function, y = Duration, fill = Duration))
   plot<-plot+geom_bar(stat = "identity")
   plot<-plot+ggtitle("Duration (ms)")
-  plot<-plot+theme(axis.title.x = element_blank(),axis.title.y = element_blank(),axis.text.y = element_blank(),axis.ticks.y = element_blank(),plot.margin = unit(c(1,-1,1,0), "mm"))
+  plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,1,1,1), "mm"),plot.title = element_text(hjust = 0.3, size=title_size), axis.text.x = element_text(size=tick_size))
   plot<-plot+scale_y_reverse()
   plot<-plot+coord_flip()
   plot<-plot+scale_fill_gradient2(low = "red", mid = "gold", high = "green3", midpoint = mean(dtemp$Duration), na.value = "grey50")
@@ -106,7 +110,7 @@ print_value <- function(data, counter, correlation){
     title=paste(title, "/s")
   }
   plot<-plot+ggtitle(title)
-  plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,0,1,-1), "mm"))
+  plot<-plot+theme(axis.title.x = element_blank(), axis.title.y = element_blank(),axis.text.y = element_blank(), axis.ticks.y = element_blank(),plot.margin = unit(c(1,1,1,1), "mm"),plot.title = element_text(hjust = 0.5, size=title_size), axis.text.x = element_text(size=tick_size))
   plot<-plot+coord_flip()
   if (is.na(correlation)|correlation>=0){
     high=as.character("green3")
@@ -161,7 +165,11 @@ for (counter in counterlist){
   }
   w=0
   dtemp$Regions=gsub("Cluster_", "", dtemp$Regions)
-  dtemp$Label=paste(dtemp$Function, " (", dtemp$Regions, ")", sep="")
+  dtemp$Label=as.character(dtemp$Function)
+  dtemp$LabelT=as.character(substr(dtemp$Label,1,labelmax))
+  dtemp$LabelT=as.character(paste(dtemp$LabelT,"...",sep=""))
+  dtemp[nchar(as.character(dtemp$Label))>labelmax,"Label"]=as.character(dtemp[nchar(as.character(dtemp$Label))>labelmax, "LabelT"])
+  dtemp$Label=paste(dtemp$Label, " (", dtemp$Regions, ")", sep="")
   for (funct in unique(dtemp$Label)){
     w_temp=nchar(as.character(funct))*coeff_w_text*1.6
     if (w_temp>w){
@@ -174,7 +182,7 @@ for (counter in counterlist){
   plot1=print_duration(dtemp, counter)
   plot2=print_mid(dtemp, counter)
   plot3=print_value(dtemp, counter,c_value)
-  g <- arrangeGrob(plot1, plot2, plot3, ncol=3, widths=c(1/5,3/5,1/5)) #generates g
+  g <- arrangeGrob(plot1, plot2, plot3, ncol=3, widths=c(2/5,2/5,2/5)) #generates g
   output <- paste(arg_output_directory,'/',counter,".pdf", sep="")
   ggsave(output, g, width = w, height = h, dpi=d)
 }
